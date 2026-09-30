@@ -18,7 +18,27 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .badge{display:inline-flex;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;border:1px solid transparent}.b-green{background:#e7f6ee;color:#126d4c;border-color:#c9e8d9}.b-red{background:#fcedef;color:#a32f3a;border-color:#f1d2d6}.b-amber{background:#fff4df;color:#98620b;border-color:#f0dfbd}.b-gray{background:#edf2f6;color:#5c6f80;border-color:#dce4ea}.progress{height:9px;background:#dfe8ef;border-radius:20px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(20,48,76,.08)}.progress>span{display:block;height:100%;background:linear-gradient(90deg,#16845a,#43ad7e);border-radius:20px}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px;color:#425b70}.field input,.field select,.field textarea{width:100%;border:1px solid #c7d6e2;border-radius:10px;padding:10px;background:#fff;box-shadow:inset 0 1px 2px rgba(20,48,76,.03);transition:all .2s ease}.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#2180bd;box-shadow:0 0 0 4px rgba(33,128,189,.12)}.field textarea{min-height:90px}.full{grid-column:1/-1}
 .modal{position:fixed;inset:0;background:rgba(4,23,43,.68);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.modal.open{display:flex}.modal-box{background:linear-gradient(145deg,#fff 0%,#f5f9fc 100%);border:1px solid rgba(255,255,255,.75);border-radius:18px;width:min(850px,96vw);max-height:92vh;overflow:auto;box-shadow:0 30px 90px rgba(3,24,45,.35)}.modal-head{padding:20px 24px;border-bottom:1px solid #dbe5ed;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(100deg,#edf5fb,#f9fbfd)}.modal-head h3{margin:0;color:#143b5b;font-size:18px}.modal-body{padding:24px}.modal-foot{padding:16px 24px;border-top:1px solid #dbe5ed;display:flex;justify-content:flex-end;gap:10px;background:#f4f8fb}
-.kpi-list{display:grid;gap:11px}.kpi-row{display:flex;justify-content:space-between;align-items:center;padding:13px;border:1px solid #dce5ed;border-radius:10px;background:linear-gradient(100deg,#fff,#f6f9fb);box-shadow:0 3px 9px rgba(20,48,76,.04)}.detail-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}.auth{font-size:14px;font-weight:850;padding:10px 14px;border-radius:10px}.auth.ok{background:#e7f6ee;color:#126d4c;border:1px solid #c9e8d9}.auth.no{background:#fcedef;color:#a32f3a;border:1px solid #f1d2d6}.notice{background:linear-gradient(100deg,#e9f5fc,#f4f9fc);border:1px solid #cfe2ef;border-left:4px solid #1478bd;padding:13px 15px;border-radius:9px;font-size:13px;margin-bottom:16px}.empty{text-align:center;padding:48px;color:#718599}.small{font-size:12px;color:#718599}.admin-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.admin-actions .btn{min-width:105px}
+.kpi-list{display:grid;gap:11px}.kpi-row{display:flex;justify-content:space-between;align-items:center;padding:13px;border:1px solid #dce5ed;border-radius:10px;background:linear-gradient(100deg,#fff,#f6f9fb);box-shadow:0 3px 9px rgba(20,48,76,.04)}.detail-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}.auth{font-size:14px;font-weight:850;padding:10px 14px;border-radius:10px}.auth.ok{background:#e7f6ee;color:#126d4c;border:1px solid #c9e8d9}.auth.no{background:#fcedef;color:#a32f3a;border:1px solid #f1d2d6}.notice{background:linear-gradient(100deg,#e9f5fc,#f4f9fc);border:1px solid #cfe2ef;border-left:4px solid #1478bd;padding:13px 15px;border-radius:9px;font-size:13px;margin-bottom:16px}.empty{text-align:center;padding:48px;color:#718599}.small{font-size:12px;color:#718599}.admin-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.admin-actions .btn{min-width:105px}.admin-tab{transition:.18s ease}.admin-tab.active{background:#0b5fa5!important;color:#fff!important;border-color:#0b5fa5!important;box-shadow:0 5px 14px rgba(11,95,165,.18)}
+
+/* Cumplimiento - mejoras visuales */
+.compliance-modal-box{background:linear-gradient(145deg,#5d86a8 0%,#739bb9 48%,#dceaf4 100%) !important;border:1px solid rgba(255,255,255,.55) !important;color:#102f49}
+.compliance-modal-box .modal-head{background:linear-gradient(100deg,#315f82,#4d7899) !important;color:#fff;border-bottom:1px solid rgba(255,255,255,.25)}
+.compliance-modal-box .modal-head h3{color:#fff !important}
+.compliance-modal-box .modal-head .btn{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.35)}
+.compliance-modal-box .modal-body{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.28))}
+.compliance-modal-box .field{background:rgba(255,255,255,.94);border-radius:12px;padding:10px 12px;box-shadow:0 6px 18px rgba(11,46,72,.12)}
+.compliance-modal-box .field.full{background:rgba(255,255,255,.96)}
+.compliance-modal-box .field label{color:#183f5e}
+.compliance-modal-box .modal-foot{background:rgba(18,57,84,.92);border-top:1px solid rgba(255,255,255,.22)}
+.compliance-action-bar{margin-top:16px;padding:16px;border-radius:14px;background:linear-gradient(100deg,#143f61,#275f86);display:flex;justify-content:center;align-items:center;box-shadow:0 10px 26px rgba(14,50,76,.18)}
+.compliance-action-bar .btn{min-width:300px;font-weight:800;font-size:14px}
+.compliance-duplicate-alert{display:none;margin:0 0 18px;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#fff3cd,#ffe4b5);border:2px solid #c47b18;box-shadow:0 10px 28px rgba(111,67,7,.18);color:#5d3a08}
+.compliance-duplicate-alert.show{display:flex;gap:14px;align-items:flex-start}
+.compliance-duplicate-alert .alert-icon{font-size:28px;line-height:1}
+.compliance-duplicate-alert strong{display:block;color:#713f00;font-size:16px;margin-bottom:4px}
+.compliance-duplicate-alert .alert-text{font-size:14px;line-height:1.45}
+.compliance-duplicate-alert .alert-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:640px){.compliance-action-bar .btn{width:100%;min-width:0}.compliance-duplicate-alert.show{flex-direction:column}}
 @media(max-width:1100px){
   .cards{grid-template-columns:repeat(3,1fr)}
   .grid2{grid-template-columns:1fr}
@@ -80,6 +100,297 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 }
 
 #authScreen{display:none !important;position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 70% 10%,rgba(35,126,194,.18),transparent 30%),linear-gradient(135deg,#061d38,#0b3158 55%,#0d4f86);padding:24px}.auth-box{width:min(430px,100%);background:#fff;border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.28);padding:34px}.auth-brand{display:flex;gap:10px;margin-bottom:22px}.auth-title{font-size:27px;font-weight:800;color:#071f3d;margin:0 0 7px}.auth-sub{color:#64788d;margin:0 0 24px}.auth-error{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;background:#fff1f2;color:#a51f2b;font-size:14px}.auth-error.show{display:block}.auth-success{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;background:#edf9f3;color:#116b49;font-size:14px}.auth-success.show{display:block}.auth-box .btn{width:100%;margin-top:8px;justify-content:center}.auth-loading{opacity:.65;pointer-events:none}
+
+/* Ajuste visual: los DOA funcionan como separadores negros, sin títulos redundantes. */
+.doa-detail-group{border:0;border-radius:0;box-shadow:none;margin-top:0;overflow:visible}
+.doa-detail-group + .doa-detail-group{border-top:3px solid #111;margin-top:18px;padding-top:4px}
+.doa-detail-group .detail-group-head{padding:16px 8px 10px;background:#fff;border-bottom:0}
+.doa-detail-group .detail-group-head h4{margin:0;font-size:17px;color:#111;font-weight:900;letter-spacing:.1px}
+.doa-detail-group .detail-group-count{margin-top:3px;color:#5f6b75;font-size:11px;font-weight:700}
+
+.master-duplicate-alert{display:none;margin:0 0 18px;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#fff3cd,#ffe7b0);border:2px solid #c47b18;box-shadow:0 10px 28px rgba(111,67,7,.18);color:#5d3a08}
+.master-duplicate-alert.show{display:flex;gap:14px;align-items:flex-start}
+.master-duplicate-alert .alert-icon{font-size:28px;line-height:1}
+.master-duplicate-alert strong{display:block;color:#713f00;font-size:16px;margin-bottom:4px}
+.master-duplicate-alert .alert-text{font-size:14px;line-height:1.45}
+.master-duplicate-alert .alert-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+
+
+/* POLISH VISUAL FINAL — SOLO COLOR Y FORMA, SIN CAMBIOS DE DATOS/LOGICA */
+#requisitos .page-title{margin-bottom:14px}
+#requisitos>.panel{padding:16px;border-radius:18px}
+#requisitos>.panel>.toolbar{margin-bottom:12px;padding:10px 12px;border-radius:14px;background:linear-gradient(100deg,#f5f9fc,#eef5fa);border:1px solid #dce7ef}
+#requisitos #reqCargo{height:44px;min-width:min(520px,100%);font-weight:650;border-color:#b9ccdc;background:#fff}
+#requisitos #reqDetail{margin-top:8px}
+#requisitos #reqDetail>.detail-head{margin:0 0 12px;padding:14px 16px;border-radius:14px;background:linear-gradient(110deg,#f5f9fc,#ffffff);border:1px solid #dce7ef;box-shadow:0 5px 14px rgba(20,48,76,.06)}
+#requisitos #reqDetail>.detail-head h3{font-size:18px;color:#123e61!important}
+#requisitos #reqDetail>.detail-head .subtitle{margin-top:3px;font-size:12px}
+#requisitos #reqDetail>.grid2{gap:12px;margin:10px 0!important;grid-template-columns:1fr 1fr}
+#requisitos #reqDetail>.grid2>.panel{padding:12px 14px!important;border-radius:13px;background:#fbfdff;border:1px solid #dce7ef}
+#requisitos #reqDetail>.grid2>.panel h3{font-size:13px;margin-bottom:9px;color:#234b69}
+#requisitos #reqDetail .kpi-list{gap:7px}
+#requisitos #reqDetail .kpi-row{padding:9px 11px;border-radius:9px;font-size:12px;box-shadow:none;background:#fff}
+#requisitos #reqDetail>div:last-child>.panel{margin-top:10px!important;border-left:4px solid #7b1e3a!important;border-radius:13px!important;background:#fff!important;box-shadow:0 5px 15px rgba(20,48,76,.06)!important}
+#requisitos #reqDetail>div:last-child>.panel>div:first-child{padding:11px 14px 8px!important}
+#requisitos #reqDetail>div:last-child>.panel h3{font-size:15px!important;color:#7b1e3a!important}
+#requisitos #reqDetail .table-wrap{border-radius:10px;box-shadow:none}
+#requisitos #reqDetail table{font-size:12px}
+#requisitos #reqDetail th,#requisitos #reqDetail td{padding:9px 10px}
+#requisitos #reqDetail th{background:linear-gradient(180deg,#edf5fa,#e3eef5);color:#294e6c}
+#requisitos #reqDetail tbody tr:hover td{background:#faf5f7}
+
+/* Cumplimiento: popup limpio, compacto y profesional */
+.compliance-modal-box{width:min(980px,96vw)!important;background:#f7fafc!important;border:1px solid #d7e2eb!important;border-radius:20px!important;box-shadow:0 28px 80px rgba(4,30,53,.28)!important;color:#173b58!important}
+.compliance-modal-box .modal-head{padding:17px 22px!important;background:linear-gradient(105deg,#0b3158,#0d5ea8)!important;border-bottom:0!important}
+.compliance-modal-box .modal-head h3{font-size:19px!important;color:#fff!important;letter-spacing:.1px}
+.compliance-modal-box .modal-head .btn{background:rgba(255,255,255,.12)!important;border-color:rgba(255,255,255,.28)!important;color:#fff!important;box-shadow:none!important}
+.compliance-modal-box .modal-body{padding:18px 20px 20px!important;background:#f7fafc!important}
+.compliance-modal-box .compliance-shared-fields{padding:12px;background:#fff;border:1px solid #dce6ee;border-radius:14px;box-shadow:0 4px 12px rgba(20,48,76,.05);gap:12px}
+.compliance-modal-box .compliance-shared-fields .field{background:transparent!important;padding:0!important;box-shadow:none!important;border-radius:0!important}
+.compliance-modal-box .compliance-entries-title{margin:14px 0 8px!important;padding:10px 13px!important;border-left:4px solid #7b1e3a!important;border-radius:9px!important;background:#fff!important;box-shadow:none!important;border-top:1px solid #e1e8ee;border-right:1px solid #e1e8ee;border-bottom:1px solid #e1e8ee}
+.compliance-modal-box .compliance-entries-title h4{font-size:14px!important;color:#173f5e!important}
+.compliance-modal-box .compliance-entries-title span{font-size:11px!important}
+.compliance-modal-box .compliance-entry{margin-top:10px!important;padding:13px!important;border:1px solid #d7e2ea!important;border-radius:14px!important;background:#fff!important;box-shadow:0 5px 15px rgba(20,48,76,.07)!important}
+.compliance-modal-box .compliance-entry-head{margin-bottom:11px!important;padding-bottom:9px!important;border-bottom:1px solid #dce6ee!important}
+.compliance-modal-box .compliance-entry-head>div{color:#173f5e!important}
+.compliance-modal-box .compliance-entry-number{width:28px!important;height:28px!important;background:#7b1e3a!important;box-shadow:0 3px 8px rgba(123,30,58,.2)}
+.compliance-modal-box .field{background:#fff!important;border:0!important;border-radius:8px!important;padding:0!important;box-shadow:none!important}
+.compliance-modal-box .field label{font-size:11px!important;color:#536a7d!important;margin-bottom:5px!important}
+.compliance-modal-box .field input,.compliance-modal-box .field select{height:39px!important;padding:8px 10px!important;border-radius:8px!important;border:1px solid #cbd9e4!important;background:#fbfdff!important;box-shadow:none!important}
+.compliance-modal-box .field input:focus,.compliance-modal-box .field select:focus{border-color:#1976c8!important;box-shadow:0 0 0 3px rgba(25,118,200,.10)!important}
+.compliance-modal-box .compliance-entry .full{padding:10px!important;border-radius:10px!important;background:#f7fafc!important;border:1px dashed #c8d7e3!important}
+.compliance-modal-box .compliance-entry .full input[type=file]{background:#fff!important}
+.compliance-modal-box .compliance-add-entry-wrap{margin:12px 0 0!important;padding:0!important;background:transparent!important;box-shadow:none!important;text-align:left!important}
+.compliance-modal-box .compliance-add-entry{min-width:0!important;padding:9px 13px!important;border:1px solid #b9ccda!important;background:#fff!important;color:#0d5ea8!important;border-radius:9px!important;font-size:12px!important;box-shadow:0 3px 9px rgba(20,48,76,.05)!important}
+.compliance-modal-box .compliance-add-entry:hover{background:#eef6fc!important;border-color:#8fb1c9!important}
+.compliance-modal-box .modal-foot{padding:13px 20px!important;background:#fff!important;border-top:1px solid #dce6ee!important}
+.compliance-modal-box .modal-foot .btn-primary{min-width:170px}
+.compliance-modal-box .compliance-duplicate-alert{margin-bottom:12px!important;padding:12px 14px!important;border-radius:11px!important;box-shadow:none!important;border-width:1px!important}
+@media(max-width:760px){#requisitos #reqDetail>.grid2{grid-template-columns:1fr}.compliance-modal-box .modal-body{padding:14px!important}.compliance-modal-box .form-grid{gap:10px!important}}
+
+</style>
+
+<style id="dashboard-premium">
+/* Dashboard premium — visual only; does not alter business logic */
+#dashboard .page-title{
+  margin-bottom:20px;
+}
+#dashboard .page-title h2{
+  font-size:30px;
+  letter-spacing:-.4px;
+}
+#dashboard .subtitle{
+  max-width:760px;
+}
+#dashboard .cards{
+  gap:16px;
+  margin-bottom:20px;
+}
+#dashboard .cards .card{
+  position:relative;
+  overflow:hidden;
+  min-height:112px;
+  border:1px solid rgba(20,52,84,.09);
+  box-shadow:0 10px 28px rgba(15,43,70,.07);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+#dashboard .cards .card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(15,43,70,.11);
+}
+#dashboard .cards .card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:3px;
+  background:linear-gradient(90deg,#0b5ea8,#7b1e3a);
+  opacity:.8;
+}
+#dashboard .cards .n{
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:-.5px;
+}
+#dashboard .cards .l{
+  margin-top:5px;
+  font-weight:600;
+}
+#dashboard .dashboard-main-panel{
+  width:100%;
+}
+#dashboard .dashboard-main-panel .panel{
+  padding:22px;
+  border:1px solid rgba(20,52,84,.09);
+  box-shadow:0 14px 36px rgba(15,43,70,.075);
+}
+#dashboard .dashboard-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:15px;
+  border-bottom:1px solid #e8edf3;
+}
+#dashboard .dashboard-panel-head h3{
+  margin:0 0 4px;
+  font-size:19px;
+}
+#dashboard .dashboard-live{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#f3f7fb;
+  color:#31536f;
+  font-size:12px;
+  font-weight:700;
+}
+#dashboard .live-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#168a4a;
+  box-shadow:0 0 0 4px rgba(22,138,74,.10);
+}
+#dashboard #dashUsers{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+#dashboard #dashUsers .kpi-row{
+  padding:14px 15px;
+  border:1px solid #e7edf3;
+  border-radius:12px;
+  background:linear-gradient(180deg,#fff,#fbfcfe);
+  box-shadow:0 3px 12px rgba(15,43,70,.035);
+  transition:border-color .18s ease, transform .18s ease;
+}
+#dashboard #dashUsers .kpi-row:hover{
+  border-color:#cbd9e7;
+  transform:translateX(2px);
+}
+#dashboard #dashUsers .progress{
+  height:8px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#e9eef4;
+}
+#dashboard #dashUsers .progress span{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0b5ea8,#1785c4);
+  transition:width .35s ease;
+}
+@media(max-width:760px){
+  #dashboard .dashboard-panel-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  #dashboard .dashboard-live{
+    align-self:flex-start;
+  }
+}
+</style>
+
+
+<style id="users-detail-professional">
+#usuarios .table-wrap{overflow:auto}
+#usuarios table th:nth-child(3),#usuarios table td:nth-child(3){min-width:220px}
+.doa-list{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.doa-chip{
+  display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;
+  background:#eef5fb;border:1px solid #d4e3ef;color:#17486d;font-size:12px;font-weight:700;
+}
+.empty-inline{color:#7c8b99;font-size:12px}
+.user-detail{display:flex;flex-direction:column;gap:18px}
+.user-detail-hero{
+  display:flex;justify-content:space-between;gap:18px;align-items:center;
+  padding:22px;border-radius:16px;
+  background:linear-gradient(135deg,#f4f8fc,#fff);
+  border:1px solid #dfe8f0;
+}
+.user-detail-hero h2{margin:4px 0 3px;font-size:26px;letter-spacing:-.3px}
+.detail-role{font-weight:600;color:#5d7183}
+.detail-kicker{font-size:10px;letter-spacing:1.3px;font-weight:800;color:#71869a}
+.detail-auth{text-align:right}
+.detail-percent{font-size:30px;font-weight:850;color:#123f63;margin-top:7px}
+.detail-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.detail-stat{
+  padding:14px;border:1px solid #e1e9f0;border-radius:12px;background:#fff;
+}
+.detail-stat span{display:block;font-size:11px;color:#718191;font-weight:700;margin-bottom:5px}
+.detail-stat b{font-size:21px;color:#173e5d}
+.detail-section{
+  border:1px solid #e1e9f0;border-radius:14px;background:#fff;padding:18px;
+}
+.detail-section-title{
+  display:flex;justify-content:space-between;gap:12px;align-items:center;
+  margin-bottom:13px;padding-bottom:11px;border-bottom:1px solid #edf1f5;
+}
+.detail-section-title h3{margin:0;font-size:16px}
+.detail-section-title span{font-size:12px;color:#718191;font-weight:700}
+.detail-group{border:1px solid #e2e9ef;border-radius:13px;overflow:hidden;margin-top:12px}
+.detail-group-head{
+  display:flex;justify-content:space-between;gap:15px;align-items:center;
+  padding:14px 16px;background:#f7fafc;border-bottom:1px solid #e5ebf0;
+}
+.detail-group-head h4{margin:3px 0 0;font-size:16px;color:#173e5d}
+.detail-standard{text-align:right}
+.detail-standard span{display:block;font-size:10px;color:#7a8997;text-transform:uppercase;font-weight:800;letter-spacing:.7px}
+.detail-standard b{font-size:12px;color:#40596d}
+.detail-course{padding:15px 16px;border-bottom:1px solid #edf1f4}
+.detail-course:last-child{border-bottom:0}
+.detail-course-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.detail-course-name{font-weight:800;color:#1d405c}
+.detail-course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.detail-course-grid div{padding:10px;background:#f8fafc;border-radius:9px}
+.detail-course-grid span{display:block;font-size:10px;color:#7a8997;font-weight:700;margin-bottom:4px}
+.detail-course-grid b{font-size:12px;color:#304b61}
+.detail-file{margin-top:10px;padding:9px 11px;border-radius:8px;background:#f4f7fa;font-size:12px;color:#3c566b}
+.detail-file.muted{color:#8493a0}
+@media(max-width:900px){
+  .detail-summary{grid-template-columns:repeat(3,1fr)}
+  .detail-course-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .user-detail-hero{align-items:flex-start;flex-direction:column}
+  .detail-auth{text-align:left}
+  .detail-summary{grid-template-columns:repeat(2,1fr)}
+  .detail-group-head{align-items:flex-start;flex-direction:column}
+  .detail-standard{text-align:left}
+  .detail-course-grid{grid-template-columns:1fr}
+}
+</style>
+
+<style id="users-detail-premium-colors">
+.user-detail{gap:20px}
+.user-detail-hero{position:relative;overflow:hidden;padding:24px;border:0;background:linear-gradient(135deg,#063f6b 0%,#0b5ea8 58%,#7b1e3a 150%);box-shadow:0 12px 28px rgba(9,55,91,.18);color:#fff}
+.user-detail-hero:after{content:"";position:absolute;right:-60px;top:-90px;width:230px;height:230px;border-radius:50%;background:rgba(255,255,255,.08)}
+.detail-identity{display:flex;align-items:center;gap:14px;position:relative;z-index:1}.detail-avatar{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);font-size:23px;font-weight:900}.user-detail-hero h2{color:#fff;margin:3px 0 3px}.user-detail-hero .detail-kicker,.user-detail-hero .detail-role,.user-detail-hero .small{color:rgba(255,255,255,.82)}.detail-auth{position:relative;z-index:1}.detail-percent{color:#fff}
+.detail-summary{gap:12px}.detail-stat{position:relative;overflow:hidden;padding:15px 16px;border:0;box-shadow:0 5px 16px rgba(20,52,76,.08)}.detail-stat:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#0b5ea8}.detail-stat span{font-size:11px}.detail-stat b{font-size:23px}.stat-ok:before{background:#218739}.stat-soon:before{background:#c58b00}.stat-expired:before{background:#b42318}.stat-pending:before{background:#7b1e3a}
+.detail-section{border:0;box-shadow:0 6px 20px rgba(20,52,76,.07);padding:20px}.doa-applicable-section{background:linear-gradient(180deg,#fff,#f8fbfd)}.detail-section-title h3{color:#173e5d}.detail-section-title small{display:block;color:#8291a0;font-size:11px;margin-top:3px}.doa-detail-group{border:1px solid #d9e5ee;box-shadow:0 5px 15px rgba(15,65,100,.06);margin-top:14px}.doa-detail-group .detail-group-head{padding:16px 18px;background:linear-gradient(90deg,#eef6fb,#fff);border-bottom:1px solid #dbe7ef}.doa-detail-group .detail-group-head h4{font-size:18px;color:#123f63}.doa-kicker{color:#7b1e3a}.detail-group-count{margin-top:5px;font-size:11px;font-weight:700;color:#71879a}.detail-group-accent{font-size:10px;font-weight:900;letter-spacing:1px;color:#7b1e3a;background:#f8eaf0;border:1px solid #eed0dc;border-radius:999px;padding:6px 10px}.detail-course{padding:16px 18px;background:#fff}.detail-course:nth-child(even){background:#fbfdfe}.detail-course-head{align-items:flex-start}.detail-course-title-wrap{display:flex;align-items:flex-start;gap:10px}.detail-course-index{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:#eaf3f9;color:#0b5ea8;font-weight:900;font-size:12px}.detail-course-name{font-size:14px;color:#123f63}.detail-meta{margin-top:4px;font-size:10px;color:#7a8997}.detail-meta span{font-weight:800;color:#536b7e}.detail-course-grid{gap:8px}.detail-course-grid div{background:#f6f9fb;border:1px solid #e8eef3}.detail-file{margin-top:11px}.detail-file-btn{width:100%;border:1px solid #d9e5ee;background:#f5f9fc;display:flex;align-items:center;gap:10px;text-align:left;cursor:pointer;color:#17486d}.detail-file-btn:hover{background:#eaf3f9;border-color:#b8d1e1}.detail-file-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:#7b1e3a;color:#fff;font-weight:900;flex:0 0 28px}.detail-file-btn b,.detail-file-btn small{display:block}.detail-file-btn b{font-size:12px}.detail-file-btn small{margin-top:2px;color:#718191;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.detail-identity{align-items:flex-start}.detail-avatar{width:46px;height:46px}.detail-group-accent{align-self:flex-start}.detail-course-title-wrap{max-width:100%}.detail-course-head{flex-direction:column}.detail-course-head>.badge{align-self:flex-start}}
+
+/* Cumplimiento - carga múltiple dentro del mismo modal */
+.compliance-entries-title{margin:18px 0 10px;padding:12px 15px;border-left:5px solid #7b1e3a;background:rgba(255,255,255,.82);border-radius:10px;box-shadow:0 5px 15px rgba(11,46,72,.08)}
+.compliance-entries-title h4{margin:0;color:#173f5e;font-size:16px}.compliance-entries-title span{font-size:12px;color:#667f93}
+.compliance-entry{margin-top:14px;padding:15px;border:1px solid rgba(255,255,255,.72);border-radius:16px;background:rgba(255,255,255,.78);box-shadow:0 9px 22px rgba(12,52,79,.12)}
+.compliance-entry-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:2px solid #173f5e}
+.compliance-entry-head>div{display:flex;align-items:center;gap:9px;color:#173f5e}
+.compliance-entry-number{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#7b1e3a;color:#fff;font-weight:800}
+.compliance-remove-entry{font-size:12px!important;padding:7px 10px!important}
+.compliance-add-entry-wrap{margin:16px 0 2px;padding:13px;border-radius:13px;background:linear-gradient(100deg,#123f61,#28668d);text-align:center;box-shadow:0 8px 20px rgba(14,50,76,.18)}
+.compliance-add-entry{min-width:280px;font-weight:800;background:#fff!important;color:#173f5e!important;border-color:#fff!important}
+.existing-attachment{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
+.btn-remove-attachment{color:#7b1e3a!important;border-color:#d8a9b8!important}
+.attachment-removed{display:inline-block;margin-top:7px;padding:7px 10px;border-radius:8px;background:#fff0f3;color:#7b1e3a;font-weight:700}
+@media(max-width:640px){.compliance-entry{padding:11px}.compliance-add-entry{width:100%;min-width:0}.compliance-entry-head{align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -107,7 +418,7 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 <div class="card"><div class="n" id="kSoon">0</div><div class="l">Próximos a vencer</div></div>
 <div class="card"><div class="n" id="kExpired">0</div><div class="l">Vencidos</div></div>
 </div>
-<div class="grid2"><div class="panel"><h3>Usuarios y autorización</h3><div id="dashUsers"></div></div><div class="panel"><h3>Resumen de requisitos</h3><div class="kpi-list" id="dashReq"></div></div></div>
+<div class="dashboard-main-panel"><div class="panel"><div class="dashboard-panel-head"><div><h3>Usuarios y autorización</h3><div class="small">Cumplimiento calculado según Cargo, DOA aplicables y registros de Cumplimiento</div></div><div class="dashboard-live"><span class="live-dot"></span> Datos en tiempo real</div></div><div id="dashUsers"></div></div></div>
 </section>
 
 <section id="usuarios" class="view">
@@ -129,7 +440,7 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 
 <section id="admin" class="view">
 <div class="page-title"><div><h2>Administración</h2><div class="subtitle">Configuración maestra y mantenimiento de información</div></div><button class="btn btn-primary" onclick="requireAdmin(()=>{alert('Acceso de administración habilitado. Las funciones de mantenimiento están activas.');})">Acceso protegido</button></div>
-<div class="toolbar"><button class="btn btn-primary" onclick="showAdmin('users')">Gestión de Usuarios</button><button class="btn btn-light" onclick="showAdmin('profiles')">Perfiles</button><button class="btn btn-light" onclick="showAdmin('standards')">Estándares y DOA</button><button class="btn btn-light" onclick="showAdmin('compliance')">Cumplimientos</button><button class="btn btn-light" onclick="requireAdmin(()=>showAdmin('history'))">Historial de cambios</button></div>
+<div id="adminTabs" class="toolbar"><button class="btn btn-primary admin-tab active" data-admin-tab="users" onclick="showAdmin('users')">Gestión de Usuarios</button><button class="btn btn-light admin-tab" data-admin-tab="profiles" onclick="showAdmin('profiles')">Perfiles</button><button class="btn btn-light admin-tab" data-admin-tab="standards" onclick="showAdmin('standards')">Estándares y DOA</button><button class="btn btn-light admin-tab" data-admin-tab="compliance" onclick="showAdmin('compliance')">Cumplimientos</button><button class="btn btn-light admin-tab" data-admin-tab="history" onclick="requireAdmin(()=>showAdmin('history'))">Historial de cambios</button></div>
 <div id="adminContent"></div>
 </section>
 </main></div>
@@ -155,8 +466,9 @@ async function adminSignIn(){const email=$('adminEmail')?.value.trim(),password=
 async function signOut(){clearSession();adminUnlocked=false;pendingAdminAction=null;await refresh()}
 function goToAdministration(){const b=document.querySelector('.nav[data-view="admin"]');if(b)b.click()}
 async function bootData(){await all('perfiles');await all('estandares');await all('usuarios');await all('cumplimientos')}
-function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.created_at||'',usuario:x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.informacion_anterior||null,nueva:x.informacion_nueva||null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
-function normalizeCompliance(x,users,standards){const user=users.find(u=>String(u.id)===String(x.usuario)||u.nombre===x.usuario);const std=standards.find(r=>String(r.estandar)===String(x.estandar)&&String(r.doa)===String(x.doa)&&String(r.curso)===String(x.curso_entrenamiento));const docs=Array.isArray(x.documentos)?x.documentos:[];return {id:String(x.id),usuarioId:user?String(user.id):String(x.usuario||''),cargo:x.cargo||user?.cargo||'',estandarId:std?String(std.id):'',cursoId:std?String(std.id):'',estandar:x.estandar||std?.estandar||'',doa:x.doa||std?.doa||'',curso:x.curso_entrenamiento||std?.curso||'',metodo:x.metodo_entrega||std?.metodo||'',frecuenciaAnios:Number(x.frecuencia_anios||std?.frecuenciaAnios||0),frecuenciaDias:Number(x.frecuencia_dias||std?.frecuenciaDias||0),fechaRealizacion:x.fecha_realizacion||'',fechaFin:x.fecha_fin||'',estado:x.estado||'',archivos:docs,archivoNombre:docs[0]?.nombre||'',archivoTipo:docs[0]?.tipo||'',archivoData:docs[0]?.data||''}}
+function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.created_at||'',usuario:x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.informacion_anterior||null,nueva:x.informacion_nueva||null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeRel(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
+function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
+function normalizeCompliance(x,users,standards){const user=users.find(u=>String(u.id)===String(x.usuario||''))||users.find(u=>normalizeRel(u.nombre)===normalizeRel(x.usuario||''));const std=standards.find(r=>normalizeRel(r.estandar)===normalizeRel(x.estandar)&&normalizeRel(r.doa)===normalizeRel(x.doa)&&normalizeRel(r.curso)===normalizeRel(x.curso_entrenamiento));const docs=Array.isArray(x.documentos)?x.documentos:[];return {id:String(x.id),usuarioId:user?String(user.id):String(x.usuario||''),usuarioNombre:user?.nombre||String(x.usuario||''),cargo:x.cargo||user?.cargo||'',estandarId:std?String(std.id):'',cursoId:std?String(std.id):'',estandar:x.estandar||std?.estandar||'',doa:x.doa||std?.doa||'',curso:x.curso_entrenamiento||std?.curso||'',metodo:x.metodo_entrega||std?.metodo||'',frecuenciaAnios:Number(x.frecuencia_anios||std?.frecuenciaAnios||0),frecuenciaDias:Number(x.frecuencia_dias||std?.frecuenciaDias||0),fechaRealizacion:x.fecha_realizacion||'',fechaFin:x.fecha_fin||'',estado:x.estado||'',archivos:docs,archivoNombre:docs[0]?.nombre||'',archivoTipo:docs[0]?.tipo||'',archivoData:docs[0]?.data||''}}
 async function all(s){if(s==='usuarios')return (await api('usuarios?select=*&order=id')).map(normalizeUser);if(s==='perfiles')return (await api('perfiles?select=*&order=id')).map(normalizeProfile);if(s==='estandares')return (await api('estandares_doa?select=*&order=id')).map(normalizeStandard);if(s==='cumplimientos'){const [cs,us,ss]=await Promise.all([api('cumplimiento?select=*&order=id'),api('usuarios?select=*&order=id'),api('estandares_doa?select=*&order=id')]);const nu=us.map(normalizeUser),ns=ss.map(normalizeStandard);return cs.map(x=>normalizeCompliance(x,nu,ns))}if(s==='historial')return (await api('historial_cambios?select=*&order=created_at.desc&limit=500')).map(normalizeHistory);return []}
 function dbPayload(s,o){if(s==='usuarios')return {nombre_completo:o.nombre||'',cargo:o.cargo||''};if(s==='perfiles')return {cargo:o.cargo||'',doa:o.doa||''};if(s==='estandares')return {estandar:o.estandar||'',doa:o.doa||'',curso_entrenamiento:o.curso||'',metodo_entrega:o.metodo||'',course_id:o.courseId||'',frecuencia_anios:Number(o.frecuenciaAnios||0),frecuencia_dias:Number(o.frecuenciaDias||0)};if(s==='cumplimientos')return {usuario:o.usuarioId||'',cargo:o.cargo||'',estandar:o.estandar||'',doa:o.doa||'',curso_entrenamiento:o.curso||'',metodo_entrega:o.metodo||'',fecha_realizacion:o.fechaRealizacion||null,frecuencia_anios:Number(o.frecuenciaAnios||0),frecuencia_dias:Number(o.frecuenciaDias||0),fecha_fin:o.fechaFin||null,estado:o.estado||statusFor(o),documentos:Array.isArray(o.archivos)?o.archivos:[]}}
 async function put(s,o){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s),payload=dbPayload(s,o),isUpdate=!!(o.id&&/^\d+$/.test(String(o.id)));if(s==='cumplimientos'&&!isUpdate)payload.created_at=new Date().toISOString();let data;if(isUpdate)data=await api(table+'?id=eq.'+Number(o.id),{method:'PATCH',body:JSON.stringify(payload)});else data=await api(table,{method:'POST',body:JSON.stringify(payload)});const row=Array.isArray(data)?data[0]:data;if(row?.id!==undefined)o.id=String(row.id);return o}
@@ -166,87 +478,545 @@ function statusFor(c){if(!c.fechaRealizacion)return 'PENDIENTE';let end=new Date
 function badge(s){let cl=s==='COMPLETO / VIGENTE'?'b-green':s==='VENCIDO'||s==='NO AUTORIZADO'?'b-red':s==='PRÓXIMO A VENCER'?'b-amber':'b-gray';return `<span class="badge ${cl}">${esc(s)}</span>`}
 function calcEnd(date,years,days){if(!date)return '';let d=new Date(date+'T00:00:00');d.setFullYear(d.getFullYear()+Number(years||0));d.setDate(d.getDate()+Number(days||0));return d.toISOString().slice(0,10)}
 function doaList(value){return String(value||'').split(/[,;\n]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)}
-async function applicable(user){const ps=await all('perfiles'), ss=await all('estandares');let p=ps.find(x=>String(x.cargo||'').trim().toLowerCase()===String(user.cargo||'').trim().toLowerCase());let doas=doaList(p?.doa);if(!doas.length)return [];return ss.filter(x=>doas.includes(String(x.doa||'').trim().toLowerCase()))}
-async function authFor(user){const req=await applicable(user), cs=(await all('cumplimientos')).filter(c=>c.usuarioId===user.id);let states=req.map(r=>{let c=cs.find(x=>x.estandarId===r.id);return c?statusFor(c):'PENDIENTE'});let complete=req.length>0&&states.every(s=>s==='COMPLETO / VIGENTE');return {ok:complete,total:req.length,done:states.filter(s=>s==='COMPLETO / VIGENTE').length,states}}
+async function applicable(user){
+ const [ps,ss]=await Promise.all([all('perfiles'),all('estandares')]);
+ const cargo=String(user?.cargo||'').trim().toLowerCase();
+ const doas=[...new Set(ps.filter(p=>String(p.cargo||'').trim().toLowerCase()===cargo).flatMap(p=>doaList(p.doa)))];
+ if(!doas.length)return [];
+ return ss.filter(x=>doas.includes(String(x.doa||'').trim().toLowerCase()));
+}
+function normalizePersonName(value){
+ return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+}
+function samePerson(a,b){
+ return String(a?.id||'')===String(b?.id||'') ||
+   (!!a?.nombre && !!b?.nombre && normalizePersonName(a.nombre)===normalizePersonName(b.nombre));
+}
+function requirementKey(r){
+ return [r?.estandar,r?.doa,r?.curso].map(normalizePersonName).join('|');
+}
+async function authFor(user){
+ const [req,cs]=await Promise.all([applicable(user),all('cumplimientos')]);
+ const personCs=cs.filter(c=>samePerson({id:c.usuarioId,nombre:c.usuarioNombre||c.nombre},user) ||
+   (String(c.usuarioId||'')===String(user.id||'')));
+ const states=req.map(r=>{
+   const c=personCs.find(x=>String(x.estandarId||'')===String(r.id)) ||
+           personCs.find(x=>requirementKey(x)===requirementKey(r));
+   return c?statusFor(c):'PENDIENTE';
+ });
+ const total=req.length;
+ const done=states.filter(s=>s==='COMPLETO / VIGENTE').length;
+ const soon=states.filter(s=>s==='PRÓXIMO A VENCER').length;
+ const expired=states.filter(s=>s==='VENCIDO').length;
+ const pending=states.filter(s=>s==='PENDIENTE').length;
+ const pct=total?Math.round(done/total*100):0;
+ return {ok:total>0&&done===total,total,done,soon,expired,pending,pct,states};
+}
 async function refresh(){await renderDashboard();await renderUsers();await populateReqCargos();if($('reqCargo').value)await renderRequirements();await renderAdmin()}
 function openModal(title,body,foot){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML=foot||'';$('modal').classList.add('open')}
 function closeModal(){$('modal').classList.remove('open')}
 function requireAdmin(fn){if(adminUnlocked){fn();return}pendingAdminAction=fn;openModal('Acceso para realizar cambios',`<div class="notice">Para agregar, actualizar o eliminar información, ingrese su usuario y contraseña de Supabase.</div><div class="field"><label>Correo electrónico</label><input id="adminEmail" type="email" autocomplete="username" placeholder="Correo electrónico"></div><div class="field"><label>Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')adminSignIn()"></div><div id="adminLoginError" style="display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:#fff1f2;color:#a51f2b;font-size:14px"></div>`, `<button class="btn btn-light" onclick="closeModal();pendingAdminAction=null">Cancelar</button><button id="adminLoginBtn" class="btn btn-primary" onclick="adminSignIn()">Ingresar</button>`)}
-async function renderDashboard(){let us=await all('usuarios'),cs=await all('cumplimientos'),req=await all('estandares');let a=0,no=0,soon=0,exp=0;for(const u of us){let x=await authFor(u);x.ok?a++:no++}for(const c of cs){let s=statusFor(c);if(s==='PRÓXIMO A VENCER')soon++;if(s==='VENCIDO')exp++}$('kUsers').textContent=us.length;$('kAuth').textContent=a;$('kNoAuth').textContent=no;$('kSoon').textContent=soon;$('kExpired').textContent=exp;
-let rows='';for(const u of us.slice(0,20)){let x=await authFor(u),pct=x.total?Math.round(x.done/x.total*100):0;rows+=`<div class="kpi-row"><div><b>${esc(u.nombre)}</b><div class="small">${esc(u.cargo||'Sin cargo')}</div></div><div style="min-width:180px">${x.ok?badge('AUTORIZADO PARA OPERAR'):badge('NO AUTORIZADO')}<div class="progress" style="margin-top:7px"><span style="width:${pct}%"></span></div><div class="small" style="text-align:right">${pct}%</div></div></div>`}$('dashUsers').innerHTML=rows||'<div class="empty">No hay usuarios registrados.</div>';
-let counts={total:req.length,complete:cs.filter(c=>statusFor(c)==='COMPLETO / VIGENTE').length,pending:cs.filter(c=>statusFor(c)==='PENDIENTE').length,soon,expired:exp};$('dashReq').innerHTML=Object.entries({Total:counts.total,'Completos / vigentes':counts.complete,Pendientes:counts.pending,'Próximos a vencer':counts.soon,'Vencidos':counts.expired}).map(([k,v])=>`<div class="kpi-row"><span>${k}</span><b>${v}</b></div>`).join('')}
-async function renderUsers(){let us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';let body='';for(const u of us.filter(x=>(!q||`${x.nombre} ${x.cargo}`.toLowerCase().includes(q)))){let x=await authFor(u),state=x.ok?'AUTORIZADO PARA OPERAR':'NO AUTORIZADO';if(f&&f!==state)continue;let pct=x.total?Math.round(x.done/x.total*100):0;body+=`<tr><td><b>${esc(u.nombre)}</b><div class="small">${esc(u.email||'')}</div></td><td>${esc(u.cargo||'')}</td><td>${esc((await profileDoa(u.cargo))||'')}</td><td>${badge(state)}</td><td>${pct}%<div class="progress"><span style="width:${pct}%"></span></div></td><td><button class="btn btn-light" onclick="viewUser('${u.id}')">Ver detalle</button> <button class="btn btn-light" onclick="openUser('${u.id}')">Editar</button></td></tr>`}$('usersBody').innerHTML=body||'<tr><td colspan="6" class="empty">No hay usuarios.</td></tr>'}
-async function profileDoa(cargo){let p=await all('perfiles');return p.find(x=>x.cargo===cargo)?.doa||''}
+async function renderDashboard(){
+ const us=await all('usuarios');
+ const results=await Promise.all(us.map(u=>authFor(u)));
+ const a=results.filter(x=>x.ok).length;
+ const no=results.filter(x=>!x.ok).length;
+ const soon=results.reduce((n,x)=>n+x.soon,0);
+ const exp=results.reduce((n,x)=>n+x.expired,0);
+ const vig=results.reduce((n,x)=>n+x.done,0);
+ $('kUsers').textContent=us.length;
+ $('kAuth').textContent=a;
+ $('kNoAuth').textContent=no;
+ $('kSoon').textContent=soon;
+ $('kExpired').textContent=exp;
+
+ let rows='';
+ for(let i=0;i<us.length;i++){
+   const u=us[i],x=results[i];
+   rows+=`<div class="kpi-row">
+     <div>
+       <b>${esc(u.nombre)}</b>
+       <div class="small">${esc(u.cargo||'Sin cargo')}</div>
+       <div class="small" style="margin-top:4px">${x.done} de ${x.total} entrenamientos vigentes · ${x.expired} vencidos · ${x.pending} pendientes</div>
+     </div>
+     <div style="min-width:220px">
+       ${x.ok?badge('AUTORIZADO PARA OPERAR'):badge('NO AUTORIZADO')}
+       <div class="progress" style="margin-top:7px"><span style="width:${x.pct}%"></span></div>
+       <div style="display:flex;justify-content:space-between;gap:10px;margin-top:4px">
+         <b>${x.pct}%</b><span class="small">${x.done}/${x.total} vigentes</span>
+       </div>
+     </div>
+   </div>`;
+ }
+ $('dashUsers').innerHTML=rows||'<div class="empty">No hay usuarios registrados.</div>';
+}
+async function renderUsers(){
+  let us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';
+  let body='';
+  for(const u of us.filter(x=>(!q||`${x.nombre} ${x.cargo}`.toLowerCase().includes(q)))){
+    let x=await authFor(u),state=x.ok?"AUTORIZADO PARA OPERAR":"NO AUTORIZADO";
+    if(f&&f!==state)continue;
+    let pct=x.total?Math.round(x.done/x.total*100):0;
+    let doas=await profileDoas(u.cargo);
+    body+=`<tr>
+      <td><b>${esc(u.nombre)}</b><div class="small">${esc(u.email||'')}</div></td>
+      <td>${esc(u.cargo||'')}</td>
+      <td>${doaListHtml(doas)}</td>
+      <td>${badge(state)}</td>
+      <td><b>${pct}%</b><div class="progress"><span style="width:${pct}%"></span></div><div class="small">${x.done} de ${x.total} entrenamientos vigentes</div></td>
+      <td><button class="btn btn-light" onclick="viewUser('${u.id}')">Ver detalle</button> <button class="btn btn-light" onclick="openUser('${u.id}')">Editar</button></td>
+    </tr>`;
+  }
+  $('usersBody').innerHTML=body||'<tr><td colspan="6" class="empty">No hay usuarios.</td></tr>'
+}
+async function profileDoas(cargo){
+  let p=await all('perfiles');
+  return p.filter(x=>x.cargo===cargo).map(x=>String(x.doa||'').trim()).filter(Boolean)
+}
+async function profileDoa(cargo){
+  return (await profileDoas(cargo)).join(', ')
+}
+function uniqueDoas(list){
+  return [...new Set((list||[]).map(x=>String(x||'').trim()).filter(Boolean))]
+}
+function doaListHtml(doas, empty='Sin DOA aplicables'){
+  let arr=uniqueDoas(doas);
+  if(!arr.length)return `<div class="empty-inline">${empty}</div>`;
+  return `<div class="doa-list">${arr.map(d=>`<span class="doa-chip">${esc(d)}</span>`).join('')}</div>`;
+}
 async function openUser(id=''){if(!adminUnlocked){return requireAdmin(()=>openUser(id))}let u=id?(await all('usuarios')).find(x=>x.id===id):{};let ps=await all('perfiles');let cargos=[...new Set(ps.map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));openModal(id?'Editar usuario':'Nuevo usuario',`<div class="form-grid">
 <div class="field"><label>Nombre completo *</label><input id="fNombre" value="${esc(u.nombre)}"></div>
 <div class="field"><label>Correo</label><input id="fEmail" value="${esc(u.email)}"></div>
 <div class="field"><label>Cargo *</label><select id="fCargo"><option value="">Seleccione</option>${cargos.map(c=>`<option value="${esc(c)}" ${c===u.cargo?'selected':''}>${esc(c)}</option>`).join('')}</select></div>
 <div class="field"><label>Identificación</label><input id="fId" value="${esc(u.identificacion)}"></div>
 <div class="field full"><label>Observaciones</label><textarea id="fObs">${esc(u.observaciones)}</textarea></div></div>`, `<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveUser('${id}')">Guardar</button>`)}
-async function saveUser(id){let o={id:id||uid(),nombre:$('fNombre').value.trim(),email:$('fEmail').value.trim(),cargo:$('fCargo').value,identificacion:$('fId').value,observaciones:$('fObs').value};if(!o.nombre||!o.cargo)return alert('Nombre y Cargo son obligatorios.');await put('usuarios',o);await syncRequirements(o);closeModal();await refresh()}
+async function saveUser(id){
+  let o={id:id||uid(),nombre:$('fNombre').value.trim(),email:$('fEmail').value.trim(),cargo:$('fCargo').value,identificacion:$('fId').value,observaciones:$('fObs').value};
+  if(!o.nombre||!o.cargo)return alert('Nombre y Cargo son obligatorios.');
+  let users=await all('usuarios');
+  let currentId=String(id||'');
+  let duplicate=users.find(x=>String(x.id)!==currentId && (
+    normalizeDuplicateText(x.nombre)===normalizeDuplicateText(o.nombre) ||
+    (o.email && normalizeDuplicateText(x.email)===normalizeDuplicateText(o.email)) ||
+    (o.identificacion && normalizeDuplicateText(x.identificacion)===normalizeDuplicateText(o.identificacion))
+  ));
+  if(duplicate){
+    showMasterDuplicateAlert('users','Este usuario ya está ingresado','El usuario seleccionado ya se encuentra registrado. Para modificar sus datos, vaya a la sesión Actualizar.');
+    return;
+  }
+  await put('usuarios',o);await syncRequirements(o);closeModal();await refresh()
+}
 async function syncRequirements(user){let req=await applicable(user),cs=await all('cumplimientos');for(const r of req){if(!cs.some(c=>c.usuarioId===user.id&&c.estandarId===r.id))await put('cumplimientos',{id:uid(),usuarioId:user.id,estandarId:r.id,fechaRealizacion:'',fechaFin:'',archivoNombre:'',archivoData:''})}}
-async function viewUser(id){let u=(await all('usuarios')).find(x=>x.id===id);if(!u)return;let x=await authFor(u),req=await applicable(u),cs=await all('cumplimientos');let doa=await profileDoa(u.cargo);let states=req.map(r=>{let c=cs.find(z=>z.usuarioId===u.id&&z.estandarId===r.id);return c?statusFor(c):'PENDIENTE'});let pending=states.filter(s=>s==='PENDIENTE').length,soon=states.filter(s=>s==='PRÓXIMO A VENCER').length,expired=states.filter(s=>s==='VENCIDO').length;let rows=req.map(r=>{let c=cs.find(z=>z.usuarioId===u.id&&z.estandarId===r.id),s=c?statusFor(c):'PENDIENTE';return `<tr><td>${esc(r.estandar)}</td><td>${esc(r.doa)}</td><td>${esc(r.curso)}</td><td>${esc(r.metodo||'')}</td><td>${esc(r.courseId||'')}</td><td>${esc((r.frecuenciaAnios||0)+' años + '+(r.frecuenciaDias||0)+' días')}</td><td>${badge(s)}</td><td>${esc(c?.fechaRealizacion||'')}</td><td>${esc(c?.fechaFin||'')}</td><td>${c?.archivoData?`<button class="btn btn-light" onclick="openAttachment('${c.id}')">Abrir documento</button>`:'—'}</td></tr>`}).join('');openModal('Detalle del usuario',`<div class="detail-head"><div><h3 style="margin:0">${esc(u.nombre)}</h3><div class="subtitle">Información completa del usuario</div></div><div class="auth ${x.ok?'ok':'no'}">${x.ok?'AUTORIZADO PARA OPERAR':'NO AUTORIZADO'}</div></div><div class="form-grid" style="margin-bottom:18px"><div class="panel" style="box-shadow:none"><h3>Información del usuario</h3><div class="kpi-list"><div class="kpi-row"><span>Nombre</span><b>${esc(u.nombre||'—')}</b></div><div class="kpi-row"><span>Cargo</span><b>${esc(u.cargo||'—')}</b></div><div class="kpi-row"><span>DOA aplicables</span><b>${esc(doa||'—')}</b></div><div class="kpi-row"><span>Correo</span><b>${esc(u.email||'—')}</b></div><div class="kpi-row"><span>Identificación</span><b>${esc(u.identificacion||'—')}</b></div></div></div><div class="panel" style="box-shadow:none"><h3>Resumen de cumplimiento</h3><div class="kpi-list"><div class="kpi-row"><span>Cumplimiento</span><b>${x.total?Math.round(x.done/x.total*100):0}%</b></div><div class="kpi-row"><span>Vigentes</span><b>${x.done}</b></div><div class="kpi-row"><span>Pendientes</span><b>${pending}</b></div><div class="kpi-row"><span>Próximos a vencer</span><b>${soon}</b></div><div class="kpi-row"><span>Vencidos</span><b>${expired}</b></div></div></div></div><div class="notice">Los requisitos mostrados se determinan automáticamente según el Cargo y los estándares/DOA configurados.</div><div class="panel" style="box-shadow:none;padding:0"><h3 style="padding:18px 18px 0">Requisitos y cumplimiento</h3><div class="table-wrap"><table><thead><tr><th>Estándar</th><th>DOA</th><th>Curso / Entrenamiento</th><th>Método</th><th>Course ID</th><th>Frecuencia</th><th>Estado</th><th>Realización</th><th>Fecha FIN</th><th>Documento</th></tr></thead><tbody>${rows||'<tr><td colspan="10" class="empty">No hay requisitos aplicables.</td></tr>'}</tbody></table></div></div>${u.observaciones?`<div class="notice" style="margin-top:15px"><b>Observaciones:</b> ${esc(u.observaciones)}</div>`:''}`, `<button class="btn btn-light" onclick="closeModal()">Cerrar</button><button class="btn btn-primary" onclick="closeModal();editCompliance('${u.id}')">Gestionar cumplimiento</button>`)}
+async function viewUser(id){
+  let u=(await all('usuarios')).find(x=>String(x.id)===String(id));
+  if(!u)return;
+  let x=await authFor(u), req=await applicable(u), cs=await all('cumplimientos');
+  let doas=await profileDoas(u.cargo);
+  let pct=x.total?Math.round(x.done/x.total*100):0;
+  let vigente=x.states.filter(s=>s==='COMPLETO / VIGENTE').length;
+  let soon=x.states.filter(s=>s==='PRÓXIMO A VENCER').length;
+  let expired=x.states.filter(s=>s==='VENCIDO').length;
+  let pending=x.states.filter(s=>s==='PENDIENTE').length;
+
+  // Agrupar primero por DOA: todos los cursos de un mismo DOA quedan juntos.
+  let grouped={};
+  req.forEach(r=>{
+    let key=String(r.doa||'Sin DOA').trim();
+    if(!grouped[key])grouped[key]={doa:key,cursos:[]};
+    let c=cs.find(z=>String(z.usuarioId)===String(u.id)&&String(z.estandarId)===String(r.id));
+    grouped[key].cursos.push({r,c,status:c?statusFor(c):'PENDIENTE'});
+  });
+
+  let groups=Object.values(grouped);
+  let detail=groups.map((g,gi)=>{
+    let courses=g.cursos.map(({r,c,status},ci)=>{
+      let fecha=c?.fechaRealizacion?c.fechaRealizacion:'—';
+      let fin=c?.fechaFin?c.fechaFin:'—';
+      let metodo=c?.metodo||r.metodo||'—';
+      let cid=c?.courseId||r.courseId||'—';
+      let archivo=(c?.archivos&&c.archivos[0])?c.archivos[0]:null;
+      let attach=archivo&&archivo.data
+        ? `<button type="button" class="detail-file detail-file-btn" onclick="openComplianceAttachment('${esc(c.id)}',0)"><span class="detail-file-icon">↗</span><span><b>Ver adjunto</b><small>${esc(archivo.nombre||archivo.name||'Documento adjunto')}</small></span></button>`
+        : '<div class="detail-file muted"><span class="detail-file-icon">—</span><span>Sin documento adjunto</span></div>';
+      return `<div class="detail-course">
+        <div class="detail-course-head">
+          <div class="detail-course-title-wrap"><span class="detail-course-index">${ci+1}</span><div><div class="detail-course-name">${esc(r.curso||'Entrenamiento')}</div><div class="detail-meta"><span>Estándar</span> ${esc(r.estandar||'—')} · <span>Course ID</span> ${esc(cid)}</div></div></div>
+          ${badge(status)}
+        </div>
+        <div class="detail-course-grid">
+          <div><span>Fecha de realización</span><b>${esc(fecha)}</b></div>
+          <div><span>Fecha FIN</span><b>${esc(fin)}</b></div>
+          <div><span>Frecuencia</span><b>${Number(r.frecuenciaAnios||0)?esc(r.frecuenciaAnios+' año(s)'):''}${Number(r.frecuenciaDias||0)?esc((Number(r.frecuenciaAnios||0)?' + ':'')+r.frecuenciaDias+' día(s)'):'—'}</b></div>
+          <div><span>Método de entrega</span><b>${esc(metodo)}</b></div>
+        </div>
+        ${attach}
+      </div>`;
+    }).join('');
+    return `<div class="detail-group doa-detail-group">
+      <div class="detail-group-head">
+        <div><h4>${esc(g.doa||'Sin DOA')}</h4><div class="detail-group-count">${g.cursos.length} ${g.cursos.length===1?'entrenamiento':'entrenamientos'}</div></div>
+      </div>
+      <div class="detail-courses">${courses}</div>
+    </div>`;
+  }).join('');
+
+  openModal(
+    'Detalle del usuario',
+    `<div class="user-detail">
+      <div class="user-detail-hero">
+        <div class="detail-identity"><div class="detail-avatar">${esc((u.nombre||'U').trim().charAt(0).toUpperCase())}</div><div><div class="detail-kicker">USUARIO</div><h2>${esc(u.nombre||'Sin nombre')}</h2><div class="detail-role">${esc(u.cargo||'Sin cargo')}</div></div></div>
+        <div class="detail-auth">${badge(x.ok?'AUTORIZADO PARA OPERAR':'NO AUTORIZADO')}<div class="detail-percent">${pct}%</div><div class="small">cumplimiento vigente</div></div>
+      </div>
+      <div class="detail-summary">
+        <div class="detail-stat stat-total"><span>Entrenamientos</span><b>${x.total}</b></div>
+        <div class="detail-stat stat-ok"><span>Vigentes</span><b>${vigente}</b></div>
+        <div class="detail-stat stat-soon"><span>Próximos a vencer</span><b>${soon}</b></div>
+        <div class="detail-stat stat-expired"><span>Vencidos</span><b>${expired}</b></div>
+        <div class="detail-stat stat-pending"><span>Pendientes</span><b>${pending}</b></div>
+      </div>
+      <div class="detail-section detail-training-section">
+        <div class="detail-section-title"><div><h3>Entrenamientos por DOA</h3><small>Cada DOA reúne todos sus cursos, fechas, frecuencia y documentos</small></div><span>${x.done} de ${x.total} vigentes</span></div>
+        ${detail||'<div class="empty">No hay entrenamientos configurados para este Cargo.</div>'}
+      </div>
+    </div>`,
+    `<button class="btn btn-light" onclick="closeModal()">Cerrar</button>`
+  )
+}
+
 async function populateReqCargos(){let ps=await all('perfiles'),sel=$('reqCargo');if(!sel)return;let old=sel.value;let cargos=[...new Set(ps.map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));sel.innerHTML='<option value="">Seleccione un Cargo</option>'+cargos.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');if(cargos.includes(old))sel.value=old}
 function clearRequirementSearch(){let sel=$('reqCargo');if(sel)sel.value='';$('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>'}
 async function renderRequirements(){
-let cargo=$('reqCargo')?.value||'';
-if(!cargo){$('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';return}
-let ps=await all('perfiles'),p=ps.find(x=>String(x.cargo||'').trim().toLowerCase()===cargo.trim().toLowerCase());
-if(!p){$('reqDetail').innerHTML='<div class="empty">No se encontró el Cargo seleccionado.</div>';return}
-let ss=await all('estandares'),doas=doaList(p.doa),req=ss.filter(r=>doas.includes(String(r.doa||'').trim().toLowerCase()));
-let uniqueDoas=[...new Set(doas.map(d=>String(r= d).trim()))];
-let standards=[...new Set(req.map(r=>r.estandar).filter(Boolean))];
-let courses=[...new Set(req.map(r=>r.curso).filter(Boolean))];
-let rows=req.map(r=>`<tr><td><b>${esc(r.estandar||'')}</b></td><td>${esc(r.doa||'')}</td><td>${esc(r.curso||'')}</td><td>${esc(r.metodo||'')}</td><td>${esc(r.courseId||'')}</td><td>${esc((r.frecuenciaAnios||0)+' años + '+(r.frecuenciaDias||0)+' días')}</td></tr>`).join('');
-$('reqDetail').innerHTML=`<div class="detail-head"><div><h3 style="margin:0">Cargo: ${esc(cargo)}</h3><div class="subtitle">Requisitos configurados para este Cargo</div></div><div class="auth ${req.length?'ok':'no'}">${req.length?req.length+' REQUISITO(S)':'SIN REQUISITOS CONFIGURADOS'}</div></div>
-<div class="grid2" style="margin:16px 0"><div class="panel" style="box-shadow:none"><h3>DOA aplicables</h3><div class="kpi-list">${doas.length?doas.map(d=>`<div class="kpi-row"><span>${esc(d)}</span></div>`).join(''):'<div class="empty">No hay DOA configurados para este Cargo.</div>'}</div></div><div class="panel" style="box-shadow:none"><h3>Resumen</h3><div class="kpi-list"><div class="kpi-row"><span>Estándares requeridos</span><b>${standards.length}</b></div><div class="kpi-row"><span>Cursos / Entrenamientos</span><b>${courses.length}</b></div><div class="kpi-row"><span>Requisitos</span><b>${req.length}</b></div></div></div></div>
-<div class="panel" style="box-shadow:none;padding:0"><h3 style="padding:18px 18px 0">Estándares, DOA y Cursos requeridos</h3><div class="table-wrap"><table><thead><tr><th>Estándar</th><th>DOA</th><th>Curso / Entrenamiento</th><th>Método de entrega</th><th>Course ID</th><th>Frecuencia</th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="empty">No existen requisitos configurados para este Cargo.</td></tr>'}</tbody></table></div></div>`
+  const cargo=$('reqCargo')?.value||'';
+  if(!cargo){
+    $('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';
+    return;
+  }
+
+  const [profiles, standards] = await Promise.all([all('perfiles'), all('estandares')]);
+  const cargoKey=String(cargo).trim().toLowerCase();
+
+  const applicableDoas=[...new Set(
+    profiles
+      .filter(p=>String(p.cargo||'').trim().toLowerCase()===cargoKey)
+      .flatMap(p=>doaList(p.doa))
+      .map(d=>String(d||'').trim())
+      .filter(Boolean)
+  )];
+
+  if(!applicableDoas.length){
+    $('reqDetail').innerHTML=`<div class="detail-head"><div><h3 style="margin:0">Cargo: ${esc(cargo)}</h3><div class="subtitle">No hay DOA configurados para este Cargo.</div></div><div class="auth no">SIN DOA CONFIGURADOS</div></div>`;
+    return;
+  }
+
+  const doaKeys=new Set(applicableDoas.map(d=>d.toLowerCase()));
+  const req=standards.filter(r=>doaKeys.has(String(r.doa||'').trim().toLowerCase()));
+
+  const standardsCount=new Set(req.map(r=>String(r.estandar||'').trim()).filter(Boolean)).size;
+  const coursesCount=new Set(req.map(r=>`${String(r.estandar||'').trim()}|${String(r.doa||'').trim()}|${String(r.curso||'').trim()}`).filter(Boolean)).size;
+
+  const grouped=applicableDoas.map(doa=>{
+    const rows=req.filter(r=>String(r.doa||'').trim().toLowerCase()===doa.toLowerCase());
+    return `<div class="panel" style="box-shadow:none;margin-top:14px;border-left:5px solid #1d4f91">
+      <div style="padding:16px 18px 10px">
+        <h3 style="margin:0;color:#1d4f91">${esc(doa)}</h3>
+        <div class="small">${rows.length} requisito(s) configurado(s)</div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Estándar</th><th>Curso / Entrenamiento</th><th>Método de entrega</th><th>Course ID</th><th>Frecuencia</th></tr></thead>
+        <tbody>${rows.map(r=>`<tr>
+          <td><b>${esc(r.estandar||'')}</b></td>
+          <td>${esc(r.curso||'')}</td>
+          <td>${esc(r.metodo||'')}</td>
+          <td>${esc(r.courseId||'')}</td>
+          <td>${esc((r.frecuenciaAnios||0)+' años + '+(r.frecuenciaDias||0)+' días')}</td>
+        </tr>`).join('')||'<tr><td colspan="5" class="empty">No existen requisitos configurados para este DOA.</td></tr>'}</tbody>
+      </table></div>
+    </div>`;
+  }).join('');
+
+  $('reqDetail').innerHTML=`<div class="detail-head">
+    <div><h3 style="margin:0">Cargo: ${esc(cargo)}</h3><div class="subtitle">Información completa según Cargo → DOA → Estándar → Cursos / Entrenamientos</div></div>
+    <div class="auth ${req.length?'ok':'no'}">${req.length?req.length+' REQUISITO(S)':'SIN REQUISITOS CONFIGURADOS'}</div>
+  </div>
+  <div class="grid2" style="margin:16px 0">
+    <div class="panel" style="box-shadow:none"><h3>DOA aplicables</h3><div class="kpi-list">
+      ${applicableDoas.map(d=>`<div class="kpi-row"><span>${esc(d)}</span></div>`).join('')}
+    </div></div>
+    <div class="panel" style="box-shadow:none"><h3>Resumen</h3><div class="kpi-list">
+      <div class="kpi-row"><span>DOA aplicables</span><b>${applicableDoas.length}</b></div>
+      <div class="kpi-row"><span>Estándares requeridos</span><b>${standardsCount}</b></div>
+      <div class="kpi-row"><span>Cursos / Entrenamientos</span><b>${coursesCount}</b></div>
+      <div class="kpi-row"><span>Requisitos</span><b>${req.length}</b></div>
+    </div></div>
+  </div>
+  <div>${grouped||'<div class="empty">No existen requisitos configurados para este Cargo.</div>'}</div>`;
 }
 async function complianceRows(){const cs=await all('cumplimientos'),us=await all('usuarios'),ss=await all('estandares');return cs.map(c=>({c,u:us.find(x=>x.id===c.usuarioId),r:ss.find(x=>x.id===c.cursoId||x.id===c.estandarId)||ss.find(x=>x.id===c.estandarId)}))}
+let complianceEntrySeq=0;
+function complianceEntryTemplate(i=0, c={}){
+  const hasExisting=!!c.id;
+  return `<div class="compliance-entry" data-entry-index="${i}" data-existing-id="${esc(c.id||'')}" data-remove-attachment="false">
+    <div class="compliance-entry-head">
+      <div><span class="compliance-entry-number">${i+1}</span><strong>Entrenamiento ${i+1}</strong></div>
+      ${i>0?`<button type="button" class="btn btn-light compliance-remove-entry" onclick="removeComplianceEntry(${i})">Quitar</button>`:''}
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>Estándar *</label><select id="cEstandar_${i}" onchange="entryStandardChanged(${i})"><option value="">Seleccione un estándar</option></select></div>
+      <div class="field"><label>DOA *</label><select id="cDoa_${i}" onchange="entryDoaChanged(${i})" disabled><option value="">Seleccione un DOA</option></select></div>
+      <div class="field"><label>Cursos / Entrenamientos *</label><select id="cCurso_${i}" onchange="entryCourseChanged(${i})" disabled><option value="">Seleccione un curso</option></select></div>
+      <div class="field"><label>Método de entrega</label><input id="cMetodo_${i}" readonly value="${esc(c.metodo||'')}" placeholder="Se mostrará según el curso"></div>
+      <div class="field"><label>Frecuencia</label><input id="cFrecuencia_${i}" readonly value="" placeholder="Se mostrará según el curso"></div>
+      <div class="field"><label>Fecha realización *</label><input id="cFecha_${i}" type="date" value="${esc(c.fechaRealizacion||'')}" onchange="entryDateChanged(${i})"></div>
+      <div class="field"><label>Fecha FIN</label><input id="cFechaFin_${i}" type="date" value="${esc(c.fechaFin||'')}" readonly></div>
+      <div class="field"><label>Estado</label><div id="cEstado_${i}" style="padding-top:8px">${badge(c.id?statusFor(c):'PENDIENTE')}</div></div>
+      <div class="field full"><label>Documento soporte *</label><input id="cArchivos_${i}" type="file" accept="image/*,application/pdf" onchange="previewComplianceReplacement(${i})">
+        <div class="muted" id="cArchivoInfo_${i}">Máximo 1 documento. Obligatorio para guardar.</div>
+        <div id="cArchivosExistentes_${i}" class="small"></div>
+      </div>
+    </div>
+  </div>`;
+}
 async function openCompliance(id=''){
   if(!adminUnlocked)return requireAdmin(()=>openCompliance(id));
   const cs=await all('cumplimientos'), us=await all('usuarios'), ss=await all('estandares');
   const c=id?(cs.find(x=>x.id===id)||{}):{};
-  const selectedRow=c.cursoId?ss.find(x=>x.id===c.cursoId):ss.find(x=>x.id===c.estandarId&&x.doa===c.doa&&x.curso===c.curso);
+  const selectedRow=c.cursoId?ss.find(x=>String(x.id)===String(c.cursoId)):ss.find(x=>normalizeRel(x.estandar)===normalizeRel(c.estandar)&&normalizeRel(x.doa)===normalizeRel(c.doa)&&normalizeRel(x.curso)===normalizeRel(c.curso));
   const cargos=[...new Set((await all('perfiles')).map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
   const userOptions=us.slice().sort((a,b)=>String(a.nombre||'').localeCompare(String(b.nombre||''),'es')).map(u=>`<option value="${esc(u.id)}" ${u.id===c.usuarioId?'selected':''}>${esc(u.nombre)}${u.cargo?' — '+esc(u.cargo):''}</option>`).join('');
   const cargoOptions=cargos.map(x=>`<option value="${esc(x)}" ${x===c.cargo?'selected':''}>${esc(x)}</option>`).join('');
   const standards=[...new Set(ss.map(x=>String(x.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
   const standardOptions=standards.map(x=>`<option value="${esc(x)}" ${x===(selectedRow?.estandar||c.estandar)?'selected':''}>${esc(x)}</option>`).join('');
-  openModal(id?'Actualizar cumplimiento':'Agregar cumplimiento',`<div class="form-grid">
-<div class="field"><label>Usuario *</label><select id="cUsuario" onchange="complianceUserChanged()"><option value="">Seleccione un usuario inscrito</option>${userOptions}</select></div>
-<div class="field"><label>Cargo *</label><select id="cCargo"><option value="">Seleccione un cargo inscrito</option>${cargoOptions}</select></div>
-<div class="field"><label>Estándar *</label><select id="cEstandar" onchange="complianceStandardChanged()"><option value="">Seleccione un estándar</option>${standardOptions}</select></div>
-<div class="field"><label>DOA *</label><select id="cDoa" onchange="complianceDoaChanged()"><option value="">Seleccione un DOA</option></select></div>
-<div class="field"><label>Cursos / Entrenamientos *</label><select id="cCurso" onchange="complianceCourseChanged()" disabled><option value="">Seleccione un curso</option></select></div>
-<div class="field"><label>Método de entrega</label><input id="cMetodo" readonly value="${esc(selectedRow?.metodo||c.metodo||'')}" placeholder="Se mostrará según el curso"></div>
-<div class="field"><label>Frecuencia</label><input id="cFrecuencia" readonly value="" placeholder="Se mostrará según el curso"></div>
-<div class="field"><label>Fecha realización *</label><input id="cFecha" type="date" value="${esc(c.fechaRealizacion||'')}" onchange="complianceDateChanged()"></div>
-<div class="field"><label>Fecha FIN</label><input id="cFechaFin" type="date" value="${esc(c.fechaFin||'')}" readonly></div>
-<div class="field"><label>Estado</label><div id="cEstado" style="padding-top:8px">${badge(c.id?statusFor(c):'PENDIENTE')}</div></div>
-<div class="field full"><label>Documento soporte</label><input id="cArchivos" type="file" accept="image/*,application/pdf" onchange="validateComplianceFiles()"><div class="muted" id="cArchivoInfo">Máximo 1 documento por cumplimiento.</div><div id="cArchivosExistentes" class="small"></div></div>
-</div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveComplianceForm('${id}')">Guardar cumplimiento</button>`);
-  if(c.id){$('cEstandar').dataset.selectedDoa=c.doa||selectedRow?.doa||'';$('cEstandar').dataset.selectedCurso=c.cursoId||selectedRow?.id||'';}
-  complianceStandardChanged().then(()=>complianceDoaChanged()).then(()=>complianceCourseChanged());
-  if(c.id) renderExistingComplianceFiles(c);
-  complianceUserChanged(); complianceDateChanged();
+  const entryHtml=complianceEntryTemplate(0,c);
+  openModal(id?'Actualizar cumplimiento':'Agregar cumplimiento',`
+    <div id="complianceDuplicateAlert" class="compliance-duplicate-alert">
+      <div class="alert-icon">⚠️</div>
+      <div><strong>Este entrenamiento ya tiene un cumplimiento registrado</strong>
+      <div class="alert-text">El dato seleccionado ya se encuentra ingresado para este usuario. Para modificarlo, vaya a <b>Actualizar</b> en la sesión Cumplimientos.</div>
+      <div class="alert-actions"><button type="button" class="btn btn-primary" onclick="goToComplianceUpdate()">Ir a Actualizar</button><button type="button" class="btn btn-light" onclick="hideComplianceDuplicateAlert()">Continuar</button></div></div>
+    </div>
+    <div class="compliance-shared-fields form-grid">
+      <div class="field"><label>Usuario *</label><select id="cUsuario" onchange="complianceUserChanged()"><option value="">Seleccione un usuario inscrito</option>${userOptions}</select></div>
+      <div class="field"><label>Cargo *</label><select id="cCargo"><option value="">Seleccione un cargo inscrito</option>${cargoOptions}</select></div>
+    </div>
+    <div class="compliance-entries-title"><div><h4>Entrenamientos a registrar</h4><span>Puede diligenciar varios cursos en esta misma ventana.</span></div></div>
+    <div id="complianceEntries">${entryHtml}</div>
+    <div class="compliance-add-entry-wrap"><button type="button" class="btn btn-light compliance-add-entry" onclick="addComplianceEntry()">＋ Registrar otro cumplimiento</button></div>
+  `,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveComplianceForm('${id}')">Guardar cumplimiento</button>`);
+  const box=document.querySelector('#modal .modal-box'); if(box)box.classList.add('compliance-modal-box');
+  complianceEntrySeq=0;
+  await loadComplianceCatalog();
+  // cargar estándares en la primera fila y conservar selección si es edición
+  $('cEstandar_0').innerHTML='<option value="">Seleccione un estándar</option>'+standardOptions;
+  $('cEstandar_0').dataset.selectedDoa=c.doa||selectedRow?.doa||'';
+  $('cEstandar_0').dataset.selectedCurso=c.cursoId||selectedRow?.id||'';
+  $('cEstandar_0').dataset.editingComplianceId=c.id||'';
+  complianceUserChanged();
+  await entryStandardChanged(0);
+  if(c.id) renderExistingComplianceFilesForEntry(c,0);
+  await entryDoaChanged(0);
+  await entryCourseChanged(0,true);
+  entryDateChanged(0);
+}
+async function addComplianceEntry(){const box=$('complianceEntries');if(!box)return;const i=box.querySelectorAll('.compliance-entry').length;box.insertAdjacentHTML('beforeend',complianceEntryTemplate(i,{}));const ss=await loadComplianceCatalog();const standards=window.__complianceStandards;$('cEstandar_'+i).innerHTML='<option value="">Seleccione un estándar</option>'+standards.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');complianceEntrySeq=i;const modalBody=document.querySelector('#modal .modal-body');if(modalBody)modalBody.scrollTop=modalBody.scrollHeight}
+function removeComplianceEntry(i){
+  const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+  if(!row)return;
+  if(row.dataset.existingId){return alert('El cumplimiento existente debe actualizarse o eliminarse desde la sesión Cumplimientos.');}
+  row.remove();
+  [...document.querySelectorAll('.compliance-entry')].forEach((r,n)=>{
+    r.dataset.entryIndex=n;
+    const title=r.querySelector('.compliance-entry-head strong'); if(title)title.textContent='Entrenamiento '+(n+1);
+    const num=r.querySelector('.compliance-entry-number'); if(num)num.textContent=n+1;
+  });
+}
+async function loadComplianceCatalog(){
+  const ss=await all('estandares');
+  window.__complianceRows=Array.isArray(ss)?ss:[];
+  window.__complianceStandards=[...new Set(window.__complianceRows.map(x=>String(x.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  return window.__complianceRows;
+}
+async function entryStandardChanged(i){
+  const stdEl=$('cEstandar_'+i),doa=$('cDoa_'+i),curso=$('cCurso_'+i);if(!stdEl||!doa||!curso)return;
+  const std=String(stdEl.value||'').trim();
+  const ss=await loadComplianceCatalog();
+  const doas=[...new Map(ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&String(x.doa||'').trim()).map(x=>[normalizeRel(x.doa),String(x.doa).trim()])).values()].sort((a,b)=>a.localeCompare(b,'es'));
+  const selected=String(doa.dataset.selectedDoa||'').trim();
+  doa.innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
+  doa.disabled=!doas.length;
+  curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>';
+  curso.disabled=true;
+  curso.dataset.selectedCurso='';
+  $('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';
+  const selectedDoa=doas.find(d=>normalizeRel(d)===normalizeRel(selected));
+  if(selectedDoa){doa.value=selectedDoa;await entryDoaChanged(i)}
+}
+async function entryDoaChanged(i){
+  const std=$('cEstandar_'+i)?.value||'',doa=$('cDoa_'+i)?.value||'',curso=$('cCurso_'+i);if(!curso)return;
+  const ss=window.__complianceRows?.length?window.__complianceRows:await loadComplianceCatalog();
+  const rows=ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&normalizeRel(x.doa)===normalizeRel(doa));
+  const selected=String(curso.dataset.selectedCurso||'').trim();
+  curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>'+rows.map(r=>`<option value="${esc(r.id)}">${esc(r.curso||'Sin nombre')}</option>`).join('');
+  curso.disabled=!rows.length;
+  const selectedRow=rows.find(r=>String(r.id)===selected);
+  if(selectedRow){curso.value=String(selectedRow.id);await entryCourseChanged(i,true)}
+}
+async function entryCourseChanged(i,initial=false){
+  const id=$('cCurso_'+i)?.value;if(!$('cMetodo_'+i))return;
+  const ss=await all('estandares'),r=ss.find(x=>String(x.id)===String(id));
+  if(!r){$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return}
+  $('cMetodo_'+i).value=r.metodo||'';$('cFrecuencia_'+i).value=`${Number(r.frecuenciaAnios||0)} años + ${Number(r.frecuenciaDias||0)} días`;entryDateChanged(i);
+  const userId=$('cUsuario')?.value||'',currentId=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`)?.dataset.existingId||'';
+  if(userId&&id&&!currentId){
+    const cs=await all('cumplimientos'),existing=cs.find(c=>String(c.usuarioId)===String(userId)&&String(c.cursoId||c.estandarId)===String(id)&&(
+      String(c.fechaRealizacion||'').trim()||String(c.fechaFin||'').trim()||(Array.isArray(c.archivos)&&c.archivos.length)||c.archivoData));
+    const duplicateInModal=[...document.querySelectorAll('.compliance-entry')].some(row=>row.dataset.entryIndex!==String(i)&&String(row.querySelector('select[id^="cCurso_"]')?.value||'')===String(id));
+    if(existing||duplicateInModal){showComplianceDuplicateAlert();$('cCurso_'+i).value='';$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return}
+  }
+}
+function entryDateChanged(i){
+  const date=$('cFecha_'+i)?.value,rid=$('cCurso_'+i)?.value;
+  if(!rid){if($('cFechaFin_'+i))$('cFechaFin_'+i).value='';if($('cEstado_'+i))$('cEstado_'+i).innerHTML=badge('PENDIENTE');return}
+  const r=rid?(all('estandares').then(ss=>ss.find(x=>x.id===rid))):Promise.resolve(null);
+  r.then(x=>{const end=x?calcEnd(date,x.frecuenciaAnios,x.frecuenciaDias):'';if($('cFechaFin_'+i))$('cFechaFin_'+i).value=end||'';if($('cEstado_'+i))$('cEstado_'+i).innerHTML=badge(date&&end?statusFor({fechaRealizacion:date,fechaFin:end}):'PENDIENTE')});
+}
+function validateComplianceEntryFile(i){
+  const files=[...($('cArchivos_'+i)?.files||[])];
+  if(files.length>1){alert('Puede adjuntar máximo 1 documento por cumplimiento.');$('cArchivos_'+i).value='';return false}
+  if(files.some(f=>!(String(f.type||'').startsWith('image/')||String(f.type||'')==='application/pdf'))){alert('Solo se permiten imágenes o PDF como documento soporte.');$('cArchivos_'+i).value='';return false}
+  return true;
+}
+function previewComplianceReplacement(i){
+  const input=$('cArchivos_'+i), row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+  if(!input||!row)return;
+  if(!validateComplianceEntryFile(i))return;
+  const file=input.files?.[0];
+  if(!file)return;
+  row.dataset.removeAttachment='false';
+  const box=$('cArchivosExistentes_'+i);
+  if(box)box.innerHTML=`<div class="notice" style="margin-top:8px"><b>Nuevo adjunto seleccionado:</b> ${esc(file.name)}<br><span class="small">Este documento reemplazará automáticamente el adjunto anterior al guardar.</span></div>`;
+  const info=$('cArchivoInfo_'+i);
+  if(info)info.textContent='El nuevo documento reemplazará automáticamente el adjunto anterior.';
+}
+function renderExistingComplianceFilesForEntry(c,i){
+  const box=$('cArchivosExistentes_'+i);if(!box)return;
+  const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);
+  box.innerHTML=arr.length?`<div class="existing-attachment"><button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',0)">Ver adjunto: ${esc(arr[0].nombre||'Documento')}</button><button type="button" class="btn btn-light btn-remove-attachment" onclick="removeComplianceAttachment(${i})">Eliminar adjunto</button></div>`:'Sin documentos adjuntos.';
+}
+function removeComplianceAttachment(i){
+  const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);if(!row)return;
+  row.dataset.removeAttachment='true';
+  const box=$('cArchivosExistentes_'+i);if(box)box.innerHTML='<span class="attachment-removed">Adjunto eliminado. Debe anexar uno nuevo para guardar.</span>';
+  const input=$('cArchivos_'+i);if(input)input.value='';
+}
+async function saveComplianceForm(id=''){
+  if(!adminUnlocked)return requireAdmin(()=>saveComplianceForm(id));
+  const saveBtn=[...document.querySelectorAll('#modalFoot button')].find(b=>b.textContent.includes('Guardar cumplimiento'));
+  try{
+    if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='Guardando…'}
+    const userId=$('cUsuario')?.value||'', cargo=$('cCargo')?.value||'';
+    const rows=[...document.querySelectorAll('.compliance-entry')];
+    if(!userId||!cargo)return alert('Usuario y Cargo son obligatorios.');
+    if(!rows.length)return alert('Agregue al menos un cumplimiento.');
+    const ss=await all('estandares'),cs=await all('cumplimientos');
+    const payloads=[];
+    for(const row of rows){
+      const i=row.dataset.entryIndex, rid=$('cCurso_'+i)?.value||'', date=$('cFecha_'+i)?.value||'';
+      if(!rid||!$('cEstandar_'+i)?.value||!$('cDoa_'+i)?.value)return alert(`Complete Estándar, DOA y Curso / Entrenamiento en Entrenamiento ${Number(i)+1}.`);
+      if(!date)return alert(`La Fecha realización es obligatoria en Entrenamiento ${Number(i)+1}.`);
+      if(!validateComplianceEntryFile(i))return;
+      const r=ss.find(x=>String(x.id)===String(rid));if(!r)return alert('El curso seleccionado ya no existe.');
+      const currentId=row.dataset.existingId||'';
+      const existing=currentId?cs.find(x=>x.id===currentId):null;
+      const files=[...($('cArchivos_'+i)?.files||[])];
+      const oldDocs=Array.isArray(existing?.archivos)?existing.archivos:(existing?.archivoData?[{nombre:existing.archivoNombre||'Documento',tipo:existing.archivoTipo||'',data:existing.archivoData}]:[]);
+      if(!files.length&&!oldDocs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}.`);
+      const remove=row.dataset.removeAttachment==='true';
+      const docs=files.length?[]:(remove?[]:oldDocs.slice(0,1));
+      for(const f of files)docs.push({nombre:f.name,tipo:f.type,data:await fileToDataUrl(f)});
+      if(!docs.length)return alert(`Debe anexar un documento en Entrenamiento ${Number(i)+1}.`);
+      payloads.push({id:currentId||'',usuarioId:userId,cargo,estandarId:r.id,cursoId:r.id,estandar:$('cEstandar_'+i).value,doa:$('cDoa_'+i).value,curso:r.curso||'',metodo:r.metodo||'',frecuenciaAnios:Number(r.frecuenciaAnios||0),frecuenciaDias:Number(r.frecuenciaDias||0),fechaRealizacion:date,fechaFin:calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias),estado:statusFor({fechaRealizacion:date,fechaFin:calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias)}),archivos:docs});
+    }
+    // doble validación antes de escribir
+    const seen=new Set();
+    for(const p of payloads){
+      const key=userId+'|'+p.cursoId;
+      if(seen.has(key))return alert('No puede registrar dos veces el mismo entrenamiento en una misma ventana.');
+      seen.add(key);
+      const duplicate=cs.find(c=>String(c.usuarioId)===String(userId)&&String(c.cursoId||c.estandarId)===String(p.cursoId)&&String(c.id)!==String(p.id)&&(
+        String(c.fechaRealizacion||'').trim()||String(c.fechaFin||'').trim()||(Array.isArray(c.archivos)&&c.archivos.length)||c.archivoData
+      ));
+      if(duplicate)return alert(`El entrenamiento "${p.curso}" ya tiene un cumplimiento registrado. Vaya a Actualizar para modificarlo.`);
+    }
+    for(const p of payloads)await put('cumplimientos',p);
+    closeModal();await refresh();showAdmin('compliance');
+  }catch(e){console.error(e);alert('No fue posible guardar el cumplimiento.\n\n'+(e?.message||e||'Error desconocido.'))}
+  finally{if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Guardar cumplimiento'}}
 }
 async function complianceUserChanged(){const id=$('cUsuario')?.value;if(!id)return;const u=(await all('usuarios')).find(x=>x.id===id);if(u&&$('cCargo'))$('cCargo').value=u.cargo||''}
 async function complianceStandardChanged(){const std=$('cEstandar')?.value;if(!$('cDoa'))return;const ss=await all('estandares');const doas=[...new Set(ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()).map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));const selected=$('cEstandar').dataset.selectedDoa||'';$('cDoa').innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}" ${d===selected?'selected':''}>${esc(d)}</option>`).join('');$('cCurso').innerHTML='<option value="">Seleccione un curso</option>';$('cCurso').disabled=true;$('cMetodo').value='';$('cFrecuencia').value='';}
 async function complianceDoaChanged(){const std=$('cEstandar')?.value,doa=$('cDoa')?.value;if(!$('cCurso'))return;const ss=await all('estandares');const rows=ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()&&String(x.doa||'').trim()===String(doa||'').trim());const selected=$('cEstandar').dataset.selectedCurso||'';$('cCurso').innerHTML='<option value="">Seleccione un curso / entrenamiento</option>'+rows.map(r=>`<option value="${esc(r.id)}" ${r.id===selected?'selected':''}>${esc(r.curso||'Sin nombre')}</option>`).join('');$('cCurso').disabled=!rows.length;if(rows.length&&selected&&rows.some(r=>r.id===selected))complianceCourseChanged();}
-async function complianceCourseChanged(){const id=$('cCurso')?.value;if(!$('cMetodo'))return;const r=(await all('estandares')).find(x=>x.id===id);if(!r){$('cMetodo').value='';$('cFrecuencia').value='';complianceDateChanged();return}$('cMetodo').value=r.metodo||'';$('cFrecuencia').value=`${Number(r.frecuenciaAnios||0)} años + ${Number(r.frecuenciaDias||0)} días`;$('cEstandar').dataset.selectedCurso=r.id;complianceDateChanged()}
+function normalizeDuplicateText(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
+function showMasterDuplicateAlert(type,title,message){
+  let a=$('masterDuplicateAlert');
+  if(!a){
+    const body=$('modalBody'); if(!body)return;
+    a=document.createElement('div'); a.id='masterDuplicateAlert'; a.className='master-duplicate-alert';
+    body.prepend(a);
+  }
+  a.innerHTML=`<div class="alert-icon">⚠️</div><div><strong>${esc(title)}</strong><div class="alert-text">${esc(message)}</div><div class="alert-actions"><button type="button" class="btn btn-primary" onclick="goToMasterUpdate('${type}')">Ir a Actualizar</button><button type="button" class="btn btn-light" onclick="hideMasterDuplicateAlert()">Continuar</button></div></div>`;
+  a.classList.add('show');
+  const body=document.querySelector('#modal .modal-body'); if(body)body.scrollTop=0;
+}
+function hideMasterDuplicateAlert(){const a=$('masterDuplicateAlert');if(a)a.classList.remove('show')}
+function goToMasterUpdate(type){closeModal();setTimeout(()=>adminQuickAction(type,'update'),80)}
+
+function showComplianceDuplicateAlert(){const a=$('complianceDuplicateAlert');if(a)a.classList.add('show');}
+function hideComplianceDuplicateAlert(){const a=$('complianceDuplicateAlert');if(a)a.classList.remove('show');}
+function goToComplianceUpdate(){closeModal();setTimeout(()=>adminQuickAction('compliance','update'),80);}
+async function complianceCourseChanged(){
+  const id=$('cCurso')?.value;
+  if(!$('cMetodo'))return;
+  const r=(await all('estandares')).find(x=>x.id===id);
+  if(!r){$('cMetodo').value='';$('cFrecuencia').value='';complianceDateChanged();return}
+  $('cMetodo').value=r.metodo||'';
+  $('cFrecuencia').value=`${Number(r.frecuenciaAnios||0)} años + ${Number(r.frecuenciaDias||0)} días`;
+  $('cEstandar').dataset.selectedCurso=r.id;
+  complianceDateChanged();
+
+  // Si ya existe un cumplimiento con información real para este usuario + curso,
+  // no se crea otro registro: se orienta al usuario a la opción Actualizar.
+  const userId=$('cUsuario')?.value||'';
+  const currentId=$('cEstandar')?.dataset.editingComplianceId||'';
+  if(userId && id && !currentId){
+    const cs=await all('cumplimientos');
+    const existing=cs.find(c=>String(c.usuarioId)===String(userId)&&String(c.cursoId||c.estandarId)===String(id)&&(
+      String(c.fechaRealizacion||'').trim() ||
+      String(c.fechaFin||'').trim() ||
+      (Array.isArray(c.archivos)&&c.archivos.length) ||
+      c.archivoData
+    ));
+    if(existing){
+      showComplianceDuplicateAlert();
+      $('cCurso').value='';
+      $('cMetodo').value='';
+      $('cFrecuencia').value='';
+      $('cEstandar').dataset.selectedCurso='';
+      complianceDateChanged();
+      return;
+    }
+  }
+}
 async function complianceDateChanged(){const date=$('cFecha')?.value,rid=$('cCurso')?.value,r=rid?(await all('estandares')).find(x=>x.id===rid):null;const end=r?calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias):'';if($('cFechaFin'))$('cFechaFin').value=end||'';if($('cEstado'))$('cEstado').innerHTML=badge(date&&end?statusFor({fechaRealizacion:date,fechaFin:end}):'PENDIENTE')}
 function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=()=>reject(r.error||new Error('No fue posible leer el documento seleccionado.'));r.readAsDataURL(file)})}
 function validateComplianceFiles(){const files=[...($('cArchivos')?.files||[])];if(files.length>1){alert('Puede adjuntar máximo 1 documento por cumplimiento.');$('cArchivos').value='';return false}if(files.some(f=>!(String(f.type||'').startsWith('image/')||String(f.type||'')==='application/pdf'))){alert('Solo se permiten imágenes o PDF como documento soporte.');$('cArchivos').value='';return false}return true}
 function renderExistingComplianceFiles(c){const box=$('cArchivosExistentes');if(!box)return;const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);box.innerHTML=arr.length?`Documentos actuales: ${arr.slice(0,1).map((a,i)=>`<button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',${i})">${esc(a.nombre||'Documento')}</button>`).join(' ')}`:'Sin documentos adjuntos.'}
-async function saveComplianceForm(id=''){if(!adminUnlocked)return requireAdmin(()=>saveComplianceForm(id));const saveBtn=[...document.querySelectorAll('#modalFoot button')].find(b=>b.textContent.includes('Guardar cumplimiento'));try{if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='Guardando…'}if(!validateComplianceFiles())return;const userId=$('cUsuario').value,cargo=$('cCargo').value,std=$('cEstandar').value,doa=$('cDoa').value,cursoId=$('cCurso').value,date=$('cFecha').value;if(!userId||!cargo||!std||!doa||!cursoId)return alert('Usuario, Cargo, Estándar, DOA y Curso / Entrenamiento son obligatorios.');if(!date)return alert('La Fecha realización es obligatoria.');const r=(await all('estandares')).find(x=>x.id===cursoId);if(!r)return alert('El curso seleccionado ya no existe.');const cs=await all('cumplimientos');let c=id?(cs.find(x=>x.id===id)||{id}):{};c.usuarioId=userId;c.cargo=cargo;c.estandarId=r.id;c.cursoId=r.id;c.estandar=std;c.doa=doa;c.curso=r.curso||'';c.metodo=r.metodo||'';c.frecuenciaAnios=Number(r.frecuenciaAnios||0);c.frecuenciaDias=Number(r.frecuenciaDias||0);c.fechaRealizacion=date;c.fechaFin=calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias);c.estado=statusFor(c);const files=[...($('cArchivos')?.files||[])];const existing=Array.isArray(c.archivos)?c.archivos:[];if(existing.length+files.length>1)return alert('Máximo 1 documento por cumplimiento.');if(files.length){c.archivos=[];for(const f of files)c.archivos.push({nombre:f.name,tipo:f.type,data:await fileToDataUrl(f)});c.archivoNombre=files[0].name;c.archivoTipo=files[0].type;c.archivoData=c.archivos[0].data}await put('cumplimientos',c);closeModal();await refresh();showAdmin('compliance')}catch(e){console.error(e);alert('No fue posible guardar el cumplimiento.\n\n'+(e?.message||e||'Error desconocido.'))}finally{if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Guardar cumplimiento'}}}
 async function deleteCompliance(id){if(!adminUnlocked)return requireAdmin(()=>deleteCompliance(id));if(!confirm('¿Desea eliminar este cumplimiento?'))return;await del('cumplimientos',id);await refresh()}
 async function openComplianceAttachment(cid,index=0){const c=(await all('cumplimientos')).find(x=>x.id===cid);const arr=Array.isArray(c?.archivos)?c.archivos:(c?.archivoData?[{nombre:c.archivoNombre||'Documento',data:c.archivoData}]:[]);const a=arr[index];if(!a?.data)return;const link=document.createElement('a');link.href=a.data;link.target='_blank';link.download=a.nombre||'documento';link.click()}
 async function editCompliance(uid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===uid);return c?openCompliance(c.id):openCompliance()}
 async function saveComplianceWithFile(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
 async function saveCompliance(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
 async function openAttachment(cid){return openComplianceAttachment(cid,0)}
-async function showAdmin(type){if(type==='history'&&!adminUnlocked)return requireAdmin(()=>showAdmin(type));currentAdmin=type;await renderAdmin()}
+async function showAdmin(type){if(type==='history'&&!adminUnlocked)return requireAdmin(()=>showAdmin(type));currentAdmin=type;document.querySelectorAll('.admin-tab').forEach(b=>{const active=b.dataset.adminTab===type;b.classList.toggle('active',active);b.classList.toggle('btn-primary',active);b.classList.toggle('btn-light',!active)});await renderAdmin()}
 function historyTypeLabel(t){return t==='INSERT'?'AGREGAR':t==='UPDATE'?'ACTUALIZAR':t==='DELETE'?'ELIMINAR':t}
 function historyEntityLabel(t){return t==='usuarios'?'Usuarios':t==='perfiles'?'Perfiles':t==='estandares_doa'?'Estándares y DOA':t==='cumplimiento'?'Cumplimiento':t}
 function formatHistoryDate(v){try{return new Date(v).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'medium'})}catch{return v||''}}
@@ -254,7 +1024,7 @@ async function openHistoryDetail(id){if(!adminUnlocked)return requireAdmin(()=>o
 async function renderAdmin(){let c=$('adminContent');if(currentAdmin==='history'){if(!adminUnlocked)return requireAdmin(()=>renderAdmin());try{let hs=await all('historial');c.innerHTML=`<div class="panel"><div class="page-title"><div><h3>Historial de cambios</h3><div class="subtitle">Registro automático de altas, actualizaciones y eliminaciones</div></div><button class="btn btn-light" onclick="showAdmin('history')">Actualizar</button></div><div class="notice">El historial se genera automáticamente desde Supabase. Solo los administradores pueden consultarlo.</div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Tipo</th><th>Entidad</th><th>Registro</th><th></th></tr></thead><tbody>${hs.map(h=>`<tr><td>${esc(formatHistoryDate(h.fecha))}</td><td>${esc(h.usuario||'Sin correo')}</td><td>${badge(historyTypeLabel(h.tipo))}</td><td>${esc(historyEntityLabel(h.entidad))}</td><td>${esc(h.registroId||'—')}</td><td><button class="btn btn-light" onclick="openHistoryDetail('${h.id}')">Ver detalle</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No hay cambios registrados todavía.</td></tr>'}</tbody></table></div></div>`}catch(e){c.innerHTML=`<div class="panel"><div class="empty">No fue posible cargar el historial.<br><span class="small">${esc(e.message||e)}</span></div></div>`}return}if(currentAdmin==='users'){let us=await all('usuarios');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Usuarios</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openUser()">+ Agregar usuario</button><button class="btn btn-light" onclick="adminQuickAction('users','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('users','delete')">Eliminar</button></div></div><div class="table-wrap"><table><thead><tr><th>Nombre Completo</th><th>Cargo</th><th></th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(u.nombre)}</td><td>${esc(u.cargo)}</td><td><button class="btn btn-light" onclick="openUser('${u.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteUser('${u.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="3" class="empty">No hay usuarios.</td></tr>'}</tbody></table></div></div>`}
 if(currentAdmin==='profiles'){let ps=await all('perfiles');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Perfiles / Cargos</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openProfile()">+ Agregar</button><button class="btn btn-light" onclick="adminQuickAction('profiles','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('profiles','delete')">Eliminar</button></div></div><div class="table-wrap"><table><thead><tr><th>Cargo</th><th>DOA</th><th></th></tr></thead><tbody>${ps.map(p=>`<tr><td>${esc(p.cargo)}</td><td>${esc(p.doa)}</td><td><button class="btn btn-light" onclick="openProfile('${p.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteProtected('perfiles','${p.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="3" class="empty">No hay perfiles.</td></tr>'}</tbody></table></div></div>`}
 if(currentAdmin==='standards'){let ss=await all('estandares');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Estándares y DOA</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openStandard()">+ Agregar requisito</button><button class="btn btn-light" onclick="adminQuickAction('standards','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('standards','delete')">Eliminar</button></div></div><div class="table-wrap"><table><thead><tr><th>Estándar</th><th>DOA</th><th>Curso / Entrenamiento</th><th>Método</th><th>Course ID</th><th>Frecuencia</th><th></th></tr></thead><tbody>${ss.map(s=>`<tr><td>${esc(s.estandar)}</td><td>${esc(s.doa)}</td><td>${esc(s.curso)}</td><td>${esc(s.metodo)}</td><td>${esc(s.courseId)}</td><td>${s.frecuenciaAnios||0} años + ${s.frecuenciaDias||0} días</td><td><button class="btn btn-light" onclick="openStandard('${s.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteProtected('estandares','${s.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No hay estándares.</td></tr>'}</tbody></table></div></div>`}
-if(currentAdmin==='compliance'){let cs=await all('cumplimientos'),us=await all('usuarios');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Cumplimientos</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openCompliance()">+ Agregar</button><button class="btn btn-light" onclick="adminQuickAction('compliance','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('compliance','delete')">Eliminar</button></div></div><div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Cargo</th><th>Estándar</th><th>DOA</th><th>Cursos / Entrenamientos</th><th>Método de entrega</th><th>Fecha realización</th><th>Frecuencia</th><th>Fecha FIN</th><th>Estado</th><th>Documento</th><th></th></tr></thead><tbody>${cs.map(x=>`<tr><td>${esc(us.find(u=>u.id===x.usuarioId)?.nombre||x.usuarioId||'')}</td><td>${esc(x.cargo||us.find(u=>u.id===x.usuarioId)?.cargo||'')}</td><td>${esc(x.estandar||'')}</td><td>${esc(x.doa||'')}</td><td>${esc(x.curso||'')}</td><td>${esc(x.metodo||'')}</td><td>${esc(x.fechaRealizacion||'')}</td><td>${esc(Number(x.frecuenciaAnios||0)+' años + '+Number(x.frecuenciaDias||0)+' días')}</td><td>${esc(x.fechaFin||'')}</td><td>${badge(statusFor(x))}</td><td>${Array.isArray(x.archivos)&&x.archivos.length?x.archivos.map((a,i)=>`<button class="btn btn-light" onclick="openComplianceAttachment('${x.id}',${i})">Ver ${i+1}</button>`).join(' '):(x.archivoData?`<button class="btn btn-light" onclick="openComplianceAttachment('${x.id}',0)">Ver</button>`:'—')}</td><td><button class="btn btn-light" onclick="openCompliance('${x.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteCompliance('${x.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="12" class="empty">No hay cumplimientos.</td></tr>'}</tbody></table></div></div>`}}
+if(currentAdmin==='compliance'){let cs=await all('cumplimientos'),us=await all('usuarios');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Cumplimientos</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openCompliance()">+ Agregar</button><button class="btn btn-light" onclick="adminQuickAction('compliance','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('compliance','delete')">Eliminar</button></div></div><div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Cargo</th><th>Estándar</th><th>DOA</th><th>Cursos / Entrenamientos</th><th>Método de entrega</th><th>Fecha realización</th><th>Frecuencia</th><th>Fecha FIN</th><th>Estado</th><th>Documento</th><th></th></tr></thead><tbody>${cs.map(x=>`<tr><td>${esc(us.find(u=>u.id===x.usuarioId)?.nombre||x.usuarioId||'')}</td><td>${esc(x.cargo||us.find(u=>u.id===x.usuarioId)?.cargo||'')}</td><td>${esc(x.estandar||'')}</td><td>${esc(x.doa||'')}</td><td>${esc(x.curso||'')}</td><td>${esc(x.metodo||'')}</td><td>${esc(x.fechaRealizacion||'')}</td><td>${esc(Number(x.frecuenciaAnios||0)+' años + '+Number(x.frecuenciaDias||0)+' días')}</td><td>${esc(x.fechaFin||'')}</td><td>${badge(statusFor(x))}</td><td>${Array.isArray(x.archivos)&&x.archivos.length?x.archivos.map((a,i)=>`<button class="btn btn-light" onclick="openComplianceAttachment('${x.id}',${i})">Ver ${i+1}</button>`).join(' '):(x.archivoData?`<button class="btn btn-light" onclick="openComplianceAttachment('${x.id}',0)">Ver</button>`:'—')}</td><td><button class="btn btn-light" onclick="openCompliance('${x.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteCompliance('${x.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="12" class="empty">No hay cumplimientos.</td></tr>'}</tbody></table></div><div class="compliance-action-bar"><button class="btn btn-primary" type="button" onclick="registerAnotherCompliance()">＋ Registrar otro cumplimiento</button></div></div>`}}
 
 async function adminQuickAction(type,action){
   if(!adminUnlocked)return requireAdmin(()=>adminQuickAction(type,action));
@@ -280,10 +1050,57 @@ async function confirmAdminQuickAction(type,action){
   if(type==='profiles')return action==='update'?openProfile(id):deleteProtected('perfiles',id);
   if(type==='standards')return action==='update'?openStandard(id):deleteProtected('estandares',id);   if(type==='compliance')return action==='update'?openCompliance(id):deleteCompliance(id);
 }
-async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let p=id?(await all('perfiles')).find(x=>x.id===id):{};let ss=await all('estandares');let doas=[...new Set(ss.map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));let options='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}"${String(p.doa||'').trim()===d?' selected':''}>${esc(d)}</option>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}"></div><div class="field"><label>DOA *</label><select id="pDoa" required>${options}</select></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
-async function saveProfile(id){await put('perfiles',{id:id||uid(),cargo:$('pCargo').value.trim(),doa:$('pDoa').value.trim()});closeModal();await refresh()}
-async function openStandard(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let s=id?(await all('estandares')).find(x=>x.id===id):{};openModal(id?'Editar requisito':'Nuevo requisito',`<div class="form-grid"><div class="field"><label>Estándar *</label><input id="sEst" value="${esc(s.estandar)}"></div><div class="field"><label>DOA *</label><input id="sDoa" value="${esc(s.doa)}"></div><div class="field"><label>Curso / Entrenamiento</label><input id="sCurso" value="${esc(s.curso)}"></div><div class="field"><label>Método de entrega</label><input id="sMetodo" value="${esc(s.metodo)}"></div><div class="field"><label>Course ID</label><input id="sCid" value="${esc(s.courseId)}"></div><div class="field"><label>Frecuencia (años)</label><input id="sYears" type="number" min="0" value="${s.frecuenciaAnios||0}"></div><div class="field"><label>Frecuencia (días)</label><input id="sDays" type="number" min="0" value="${s.frecuenciaDias||0}"></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveStandard('${id}')">Guardar</button>`)}
-async function saveStandard(id){let s={id:id||uid(),estandar:$('sEst').value.trim(),doa:$('sDoa').value.trim(),curso:$('sCurso').value.trim(),metodo:$('sMetodo').value.trim(),courseId:$('sCid').value.trim(),frecuenciaAnios:Number($('sYears').value||0),frecuenciaDias:Number($('sDays').value||0)};if(!s.estandar||!s.doa)return alert('Estándar y DOA son obligatorios.');await put('estandares',s);closeModal();await refresh()}
+async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?ps.filter(x=>String(x.cargo||'').trim()===String(p.cargo||'').trim()):[];let ss=await all('estandares');let doas=[...new Set(ss.map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(d)}</option>`).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Operador"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
+function profileDoaOptions(selected=''){let opts=[...document.querySelectorAll('#profileDoaFields select')].length;return ''}
+function addProfileDoaField(){let box=$('profileDoaFields');if(!box)return;let i=box.querySelectorAll('.profile-doa-row').length;let first=box.querySelector('select');let options=first?first.innerHTML:'<option value="">Seleccione un DOA</option>';let row=document.createElement('div');row.className='field full profile-doa-row';row.id='profileDoaRow'+i;row.innerHTML=`<label>DOA ${i+1}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${options}</select><button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button></div>`;box.appendChild(row)}
+function removeProfileDoa(i){let row=$('profileDoaRow'+i);if(row)row.remove();[...document.querySelectorAll('#profileDoaFields .profile-doa-row')].forEach((r,n)=>{r.id='profileDoaRow'+n;let l=r.querySelector('label');if(l)l.textContent='DOA '+(n+1)+(n===0?' *':'');let sel=r.querySelector('select');if(sel)sel.id='pDoa'+n;let b=r.querySelector('button');if(b)b.setAttribute('onclick',`removeProfileDoa(${n})`)})}
+async function saveProfile(id){
+  let cargo=$('pCargo').value.trim();
+  let doa=[...document.querySelectorAll('#profileDoaFields select')].map(s=>s.value.trim()).filter(Boolean);
+  if(!cargo)return alert('El Cargo es obligatorio.');
+  if(!doa.length)return alert('Seleccione al menos un DOA.');
+  if(new Set(doa).size!==doa.length)return alert('No puede repetir el mismo DOA dentro del mismo Cargo.');
+  let allProfiles=await all('perfiles');
+  let current= id ? allProfiles.find(x=>String(x.id)===String(id)) : null;
+  let oldRows=id?allProfiles.filter(x=>String(x.cargo||'').trim()===String((current||{}).cargo||'').trim()):[];
+  let oldIds=new Set(oldRows.map(x=>String(x.id)));
+  let duplicate=allProfiles.find(x=>!oldIds.has(String(x.id)) && normalizeDuplicateText(x.cargo)===normalizeDuplicateText(cargo) && doa.includes(String(x.doa||'').trim()));
+  if(duplicate){
+    showMasterDuplicateAlert('profiles','Este Perfil ya está ingresado','El Cargo y el DOA seleccionados ya se encuentran registrados. Para modificar ese dato, vaya a la sesión Actualizar.');
+    return;
+  }
+  let otherRows=allProfiles.filter(x=>!oldRows.some(o=>String(o.id)===String(x.id))&&String(x.cargo||'').trim()===cargo);
+  for(const r of oldRows){await del('perfiles',r.id)}
+  for(const r of otherRows){if(doa.includes(String(r.doa||'').trim()))doa=doa.filter(d=>d!==String(r.doa||'').trim())}
+  for(const d of doa){await put('perfiles',{id:uid(),cargo,doa:d})}
+  closeModal();await refresh()
+}
+function standardCourseRow(c={},index=0){return `<div class="course-config-row" data-course-id="${esc(c.id||'')}" style="border:1px solid #d9e2ec;border-radius:12px;padding:14px;margin-top:12px;background:#f8fafc"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><b>Curso / Entrenamiento ${index+1}</b>${index>0?`<button type="button" class="btn btn-light" onclick="removeStandardCourse(this)">Quitar</button>`:''}</div><div class="form-grid"><div class="field"><label>Curso / Entrenamiento *</label><input class="sCurso" value="${esc(c.curso||'')}" placeholder="Nombre del curso o entrenamiento"></div><div class="field"><label>Método de entrega</label><input class="sMetodo" value="${esc(c.metodo||'')}" placeholder="Método de entrega"></div><div class="field"><label>Course ID</label><input class="sCid" value="${esc(c.courseId||'')}" placeholder="Course ID"></div><div class="field"><label>Frecuencia (años)</label><input class="sYears" type="number" min="0" value="${Number(c.frecuenciaAnios||0)}"></div><div class="field"><label>Frecuencia (días)</label><input class="sDays" type="number" min="0" value="${Number(c.frecuenciaDias||0)}"></div></div></div>`}
+async function openStandard(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let allStandards=await all('estandares');let s=id?allStandards.find(x=>String(x.id)===String(id)):{};let group=id?allStandards.filter(x=>x.estandar===s.estandar&&x.doa===s.doa):[{}];if(!group.length)group=[s];openModal(id?'Editar requisito':'Nuevo requisito',`<div class="form-grid"><div class="field"><label>Estándar *</label><input id="sEst" value="${esc(s.estandar||'')}" placeholder="Nombre del estándar"></div><div class="field"><label>DOA *</label><input id="sDoa" value="${esc(s.doa||'')}" placeholder="DOA"></div></div><div style="margin-top:18px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h4 style="margin:0">Cursos / Entrenamientos</h4><div class="small">Cada curso mantiene su propio método, Course ID y frecuencia.</div></div></div><div id="standardCourses">${group.map((c,i)=>standardCourseRow(c,i)).join('')}</div><button type="button" class="btn btn-light" style="margin-top:12px" onclick="addStandardCourse()">+ Agregar otro curso</button></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveStandard('${id}')">Guardar</button>`)}
+function addStandardCourse(){let box=$('standardCourses');if(!box)return;let n=box.querySelectorAll('.course-config-row').length;box.insertAdjacentHTML('beforeend',standardCourseRow({},n));}
+function removeStandardCourse(btn){let rows=document.querySelectorAll('#standardCourses .course-config-row');if(rows.length<=1)return alert('Debe existir al menos un curso / entrenamiento.');btn.closest('.course-config-row').remove();[...document.querySelectorAll('#standardCourses .course-config-row')].forEach((r,i)=>{let b=r.querySelector('b');if(b)b.textContent='Curso / Entrenamiento '+(i+1);});}
+async function saveStandard(id){
+  let estandar=$('sEst').value.trim(),doa=$('sDoa').value.trim();
+  if(!estandar||!doa)return alert('Estándar y DOA son obligatorios.');
+  let rows=[...document.querySelectorAll('#standardCourses .course-config-row')];
+  let courses=rows.map(r=>({id:r.dataset.courseId||'',curso:r.querySelector('.sCurso').value.trim(),metodo:r.querySelector('.sMetodo').value.trim(),courseId:r.querySelector('.sCid').value.trim(),frecuenciaAnios:Number(r.querySelector('.sYears').value||0),frecuenciaDias:Number(r.querySelector('.sDays').value||0)}));
+  if(courses.some(c=>!c.curso))return alert('Cada curso / entrenamiento debe tener un nombre.');
+  let existing=await all('estandares');
+  let base=id?existing.find(x=>String(x.id)===String(id)):null;
+  let original=id?existing.filter(x=>x.estandar===base?.estandar&&x.doa===base?.doa):[];
+  let originalIds=new Set(original.map(x=>String(x.id)));
+  let duplicateGroup=existing.some(x=>!originalIds.has(String(x.id)) && normalizeDuplicateText(x.estandar)===normalizeDuplicateText(estandar) && normalizeDuplicateText(x.doa)===normalizeDuplicateText(doa));
+  if(duplicateGroup){
+    showMasterDuplicateAlert('standards','Este Estándar y DOA ya están creados','El Estándar y DOA seleccionados ya se encuentran registrados. Para agregar o modificar sus cursos, vaya a la sesión Actualizar.');
+    return;
+  }
+  for(const c of courses){
+    await put('estandares',{id:c.id||uid(),estandar,doa,curso:c.curso,metodo:c.metodo,courseId:c.courseId,frecuenciaAnios:c.frecuenciaAnios,frecuenciaDias:c.frecuenciaDias});
+  }
+  let kept=new Set(courses.filter(c=>c.id).map(c=>String(c.id)));
+  for(const old of original)if(!kept.has(String(old.id)))await del('estandares',old.id);
+  closeModal();await refresh()
+}
 async function deleteProtected(s,id){if(!adminUnlocked)return requireAdmin(()=>{});if(confirm('¿Eliminar este registro?')){await del(s,id);await refresh()}}
 async function deleteUser(id){if(!adminUnlocked)return requireAdmin(()=>deleteUser(id));if(!confirm('¿Eliminar usuario y sus cumplimientos?'))return;await del('usuarios',id);for(const c of await all('cumplimientos'))if(c.usuarioId===id)await del('cumplimientos',c.id);await refresh()}
 function exportData(){
