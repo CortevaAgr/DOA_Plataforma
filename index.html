@@ -19,7 +19,65 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px;color:#425b70}.field input,.field select,.field textarea{width:100%;border:1px solid #c7d6e2;border-radius:10px;padding:10px;background:#fff;box-shadow:inset 0 1px 2px rgba(20,48,76,.03);transition:all .2s ease}.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#2180bd;box-shadow:0 0 0 4px rgba(33,128,189,.12)}.field textarea{min-height:90px}.full{grid-column:1/-1}
 .modal{position:fixed;inset:0;background:rgba(4,23,43,.68);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.modal.open{display:flex}.modal-box{background:linear-gradient(145deg,#fff 0%,#f5f9fc 100%);border:1px solid rgba(255,255,255,.75);border-radius:18px;width:min(850px,96vw);max-height:92vh;overflow:auto;box-shadow:0 30px 90px rgba(3,24,45,.35)}.modal-head{padding:20px 24px;border-bottom:1px solid #dbe5ed;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(100deg,#edf5fb,#f9fbfd)}.modal-head h3{margin:0;color:#143b5b;font-size:18px}.modal-body{padding:24px}.modal-foot{padding:16px 24px;border-top:1px solid #dbe5ed;display:flex;justify-content:flex-end;gap:10px;background:#f4f8fb}
 .kpi-list{display:grid;gap:11px}.kpi-row{display:flex;justify-content:space-between;align-items:center;padding:13px;border:1px solid #dce5ed;border-radius:10px;background:linear-gradient(100deg,#fff,#f6f9fb);box-shadow:0 3px 9px rgba(20,48,76,.04)}.detail-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}.auth{font-size:14px;font-weight:850;padding:10px 14px;border-radius:10px}.auth.ok{background:#e7f6ee;color:#126d4c;border:1px solid #c9e8d9}.auth.no{background:#fcedef;color:#a32f3a;border:1px solid #f1d2d6}.notice{background:linear-gradient(100deg,#e9f5fc,#f4f9fc);border:1px solid #cfe2ef;border-left:4px solid #1478bd;padding:13px 15px;border-radius:9px;font-size:13px;margin-bottom:16px}.empty{text-align:center;padding:48px;color:#718599}.small{font-size:12px;color:#718599}.admin-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.admin-actions .btn{min-width:105px}
-@media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}}@media(max-width:760px){aside{width:64px}.nav span{display:none}.brand{min-width:auto}.brand .massy{display:none}.cards{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}main{padding:16px}}
+@media(max-width:1100px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .grid2{grid-template-columns:1fr}
+  main{padding:24px}
+}
+@media(max-width:900px){
+  header{padding:12px 18px;gap:14px;flex-wrap:wrap;height:auto;min-height:70px}
+  .brand{min-width:auto;flex:0 0 auto}
+  .brand .massy{display:none}
+  header h1{font-size:16px;flex:1;min-width:180px}
+  .top-actions{margin-left:auto}
+  .layout{display:block;min-height:calc(100vh - 70px)}
+  aside{width:100%;height:auto;padding:8px 10px;display:flex;gap:6px;overflow-x:auto;box-shadow:0 4px 16px rgba(7,31,58,.16)}
+  aside:before,aside:after{display:none}
+  .nav{width:auto;flex:0 0 auto;white-space:nowrap;margin:0;padding:11px 13px}
+  .nav:hover{transform:none}
+  .nav span{display:inline}
+  main{padding:20px 18px}
+  .table-wrap{max-width:100%;-webkit-overflow-scrolling:touch}
+  table{min-width:760px}
+  .modal-box{width:min(850px,calc(100vw - 24px));max-height:94vh}
+}
+@media(max-width:640px){
+  header{padding:10px 12px;gap:8px}
+  .brand .logo{font-size:17px}
+  header h1{font-size:14px;min-width:0;flex:1}
+  .top-actions{width:100%;margin-left:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .top-actions .btn{width:100%;padding:9px 10px}
+  .layout{min-height:calc(100vh - 112px)}
+  aside{padding:7px 8px}
+  .nav{font-size:12px;padding:10px 11px}
+  main{padding:14px 10px}
+  .page-title{align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .page-title h2{font-size:22px}
+  .subtitle{font-size:13px}
+  .cards{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .card{padding:14px;border-radius:13px}
+  .card .n{font-size:25px}
+  .card .l{font-size:12px}
+  .panel{padding:14px;border-radius:13px}
+  .toolbar{display:grid;grid-template-columns:1fr;gap:8px}
+  .input,.select{width:100%;min-width:0}
+  .admin-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  .admin-actions .btn{min-width:0;width:100%}
+  .form-grid{grid-template-columns:1fr;gap:12px}
+  .detail-head{flex-direction:column;gap:10px}
+  .modal{padding:8px}
+  .modal-box{width:100%;border-radius:14px;max-height:96vh}
+  .modal-head{padding:15px 16px}
+  .modal-body{padding:16px}
+  .modal-foot{padding:12px 16px;display:grid;grid-template-columns:1fr 1fr}
+  .modal-foot .btn{width:100%}
+}
+@media(max-width:420px){
+  .cards{grid-template-columns:1fr}
+  .top-actions{grid-template-columns:1fr}
+  .nav{font-size:11px;padding:9px 10px}
+  .nav span{display:none}
+}
 
 #authScreen{display:none !important;position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 70% 10%,rgba(35,126,194,.18),transparent 30%),linear-gradient(135deg,#061d38,#0b3158 55%,#0d4f86);padding:24px}.auth-box{width:min(430px,100%);background:#fff;border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.28);padding:34px}.auth-brand{display:flex;gap:10px;margin-bottom:22px}.auth-title{font-size:27px;font-weight:800;color:#071f3d;margin:0 0 7px}.auth-sub{color:#64788d;margin:0 0 24px}.auth-error{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;background:#fff1f2;color:#a51f2b;font-size:14px}.auth-error.show{display:block}.auth-success{display:none;margin-top:14px;padding:11px 13px;border-radius:10px;background:#edf9f3;color:#116b49;font-size:14px}.auth-success.show{display:block}.auth-box .btn{width:100%;margin-top:8px;justify-content:center}.auth-loading{opacity:.65;pointer-events:none}
 </style>
