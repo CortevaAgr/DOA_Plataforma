@@ -800,7 +800,7 @@ async function openCompliance(id=''){
       <div class="field"><label>Usuario *</label><select id="cUsuario" onchange="complianceUserChanged()"><option value="">Seleccione un usuario inscrito</option>${userOptions}</select></div>
       <div class="field"><label>Cargo *</label><select id="cCargo"><option value="">Seleccione un cargo inscrito</option>${cargoOptions}</select></div>
     </div>
-    <div class="compliance-entries-title"><div><h4>Entrenamientos a registrar</h4><span>Puede diligenciar varios cursos en esta misma ventana.</span></div></div>
+    <div class="compliance-entries-title"><div><h4>Entrenamientos a registrar</h4><span>Puede diligenciar varios cursos en esta misma ventana.</span><div class="small" style="margin-top:5px;color:#7a1f3d">Si el mismo curso aplica a otros DOA para este usuario, la fecha, vigencia y documento podrán aplicarse automáticamente.</div></div></div>
     <div id="complianceEntries">${entryHtml}</div>
     <div class="compliance-add-entry-wrap"><button type="button" class="btn btn-light compliance-add-entry" onclick="addComplianceEntry()">＋ Registrar otro cumplimiento</button></div>
   `,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveComplianceForm('${id}')">Guardar cumplimiento</button>`);
@@ -869,9 +869,14 @@ async function entryCourseChanged(i,initial=false){
   $('cMetodo_'+i).value=r.metodo||'';$('cFrecuencia_'+i).value=`${Number(r.frecuenciaAnios||0)} años + ${Number(r.frecuenciaDias||0)} días`;entryDateChanged(i);
   const userId=$('cUsuario')?.value||'',currentId=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`)?.dataset.existingId||'';
   if(userId&&id&&!currentId){
-    const cs=await all('cumplimientos'),existing=cs.find(c=>String(c.usuarioId)===String(userId)&&String(c.cursoId||c.estandarId)===String(id)&&(
+    const cs=await all('cumplimientos'),selectedKey=courseIdentity(r);
+    const existing=cs.find(c=>String(c.usuarioId)===String(userId)&&complianceCourseIdentity(c,ss)===selectedKey&&(
       String(c.fechaRealizacion||'').trim()||String(c.fechaFin||'').trim()||(Array.isArray(c.archivos)&&c.archivos.length)||c.archivoData));
-    const duplicateInModal=[...document.querySelectorAll('.compliance-entry')].some(row=>row.dataset.entryIndex!==String(i)&&String(row.querySelector('select[id^="cCurso_"]')?.value||'')===String(id));
+    const duplicateInModal=[...document.querySelectorAll('.compliance-entry')].some(row=>{
+      if(row.dataset.entryIndex===String(i))return false;
+      const otherId=row.querySelector('select[id^="cCurso_"]')?.value||'';
+      return otherId && courseIdentity(ss.find(x=>String(x.id)===String(otherId)))===selectedKey;
+    });
     if(existing||duplicateInModal){showComplianceDuplicateAlert();$('cCurso_'+i).value='';$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return}
   }
 }
@@ -910,6 +915,30 @@ function removeComplianceAttachment(i){
   const box=$('cArchivosExistentes_'+i);if(box)box.innerHTML='<span class="attachment-removed">Adjunto eliminado. Debe anexar uno nuevo para guardar.</span>';
   const input=$('cArchivos_'+i);if(input)input.value='';
 }
+
+function courseIdentity(row){
+  const cid=String(row?.courseId||'').trim();
+  if(cid)return 'ID:'+normalizeDuplicateText(cid);
+  return 'NAME:'+normalizeDuplicateText(row?.curso||'');
+}
+function complianceCourseIdentity(c, standards){
+  const linked=standards.find(r=>String(r.id)===String(c?.cursoId||c?.estandarId||''));
+  return courseIdentity(linked||{courseId:c?.courseExternalId||'',curso:c?.curso||''});
+}
+async function applicableCourseRowsForUser(userId, sourceRow, standards){
+  const users=await all('usuarios');
+  const user=users.find(u=>String(u.id)===String(userId));
+  if(!user)return [];
+  const reqs=await applicable(user);
+  const key=courseIdentity(sourceRow);
+  return reqs.filter(r=>courseIdentity(r)===key);
+}
+function docsForCompliance(existing, files){
+  const oldDocs=Array.isArray(existing?.archivos)?existing.archivos:
+    (existing?.archivoData?[{nombre:existing.archivoNombre||'Documento',tipo:existing.archivoTipo||'',data:existing.archivoData}]:[]);
+  return files?.length ? [] : oldDocs.slice(0,1);
+}
+
 async function saveComplianceForm(id=''){
   if(!adminUnlocked)return requireAdmin(()=>saveComplianceForm(id));
   const saveBtn=[...document.querySelectorAll('#modalFoot button')].find(b=>b.textContent.includes('Guardar cumplimiento'));
@@ -919,40 +948,153 @@ async function saveComplianceForm(id=''){
     const rows=[...document.querySelectorAll('.compliance-entry')];
     if(!userId||!cargo)return alert('Usuario y Cargo son obligatorios.');
     if(!rows.length)return alert('Agregue al menos un cumplimiento.');
+
     const ss=await all('estandares'),cs=await all('cumplimientos');
     const payloads=[];
+    const propagationPlans=[];
+
     for(const row of rows){
       const i=row.dataset.entryIndex, rid=$('cCurso_'+i)?.value||'', date=$('cFecha_'+i)?.value||'';
       if(!rid||!$('cEstandar_'+i)?.value||!$('cDoa_'+i)?.value)return alert(`Complete Estándar, DOA y Curso / Entrenamiento en Entrenamiento ${Number(i)+1}.`);
       if(!date)return alert(`La Fecha realización es obligatoria en Entrenamiento ${Number(i)+1}.`);
       if(!validateComplianceEntryFile(i))return;
-      const r=ss.find(x=>String(x.id)===String(rid));if(!r)return alert('El curso seleccionado ya no existe.');
+
+      const r=ss.find(x=>String(x.id)===String(rid));
+      if(!r)return alert('El curso seleccionado ya no existe.');
+
       const currentId=row.dataset.existingId||'';
-      const existing=currentId?cs.find(x=>x.id===currentId):null;
+      const existing=currentId?cs.find(x=>String(x.id)===String(currentId)):null;
       const files=[...($('cArchivos_'+i)?.files||[])];
-      const oldDocs=Array.isArray(existing?.archivos)?existing.archivos:(existing?.archivoData?[{nombre:existing.archivoNombre||'Documento',tipo:existing.archivoTipo||'',data:existing.archivoData}]:[]);
-      if(!files.length&&!oldDocs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}.`);
+      const oldDocs=docsForCompliance(existing,files);
       const remove=row.dataset.removeAttachment==='true';
-      const docs=files.length?[]:(remove?[]:oldDocs.slice(0,1));
+      const docs=files.length?[]:(remove?[]:oldDocs);
       for(const f of files)docs.push({nombre:f.name,tipo:f.type,data:await fileToDataUrl(f)});
-      if(!docs.length)return alert(`Debe anexar un documento en Entrenamiento ${Number(i)+1}.`);
-      payloads.push({id:currentId||'',usuarioId:userId,cargo,estandarId:r.id,cursoId:r.id,estandar:$('cEstandar_'+i).value,doa:$('cDoa_'+i).value,curso:r.curso||'',metodo:r.metodo||'',frecuenciaAnios:Number(r.frecuenciaAnios||0),frecuenciaDias:Number(r.frecuenciaDias||0),fechaRealizacion:date,fechaFin:calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias),estado:statusFor({fechaRealizacion:date,fechaFin:calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias)}),archivos:docs});
+      if(!docs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}.`);
+
+      const fechaFin=calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias);
+      payloads.push({
+        id:currentId||'',
+        usuarioId:userId,cargo,
+        estandarId:r.id,cursoId:r.id,
+        estandar:$('cEstandar_'+i).value,doa:$('cDoa_'+i).value,curso:r.curso||'',
+        metodo:r.metodo||'',
+        frecuenciaAnios:Number(r.frecuenciaAnios||0),
+        frecuenciaDias:Number(r.frecuenciaDias||0),
+        fechaRealizacion:date,fechaFin,
+        estado:statusFor({fechaRealizacion:date,fechaFin}),
+        archivos:docs
+      });
+
+      // Buscar todos los requisitos aplicables al mismo usuario que representan
+      // el mismo curso (Course ID; si no existe, nombre normalizado).
+      const relatedRows=(await applicableCourseRowsForUser(userId,r,ss))
+        .filter(target=>String(target.id)!==String(r.id));
+
+      const relatedExisting=relatedRows.map(target=>({
+        target,
+        existing:cs.find(c=>
+          String(c.usuarioId)===String(userId) &&
+          requirementKey(c)===requirementKey(target)
+        )
+      }));
+
+      if(relatedExisting.length){
+        propagationPlans.push({
+          source:r,
+          date,
+          fechaFin,
+          docs,
+          related:relatedExisting,
+          currentId
+        });
+      }
     }
-    // doble validación antes de escribir
+
+    // Validación dentro de la ventana: el mismo curso no se registra dos veces.
     const seen=new Set();
     for(const p of payloads){
-      const key=userId+'|'+p.cursoId;
-      if(seen.has(key))return alert('No puede registrar dos veces el mismo entrenamiento en una misma ventana.');
+      const key=userId+'|'+courseIdentity(ss.find(r=>String(r.id)===String(p.cursoId))||p);
+      if(seen.has(key))return alert('No puede registrar dos veces el mismo curso en una misma ventana.');
       seen.add(key);
-      const duplicate=cs.find(c=>String(c.usuarioId)===String(userId)&&String(c.cursoId||c.estandarId)===String(p.cursoId)&&String(c.id)!==String(p.id)&&(
-        String(c.fechaRealizacion||'').trim()||String(c.fechaFin||'').trim()||(Array.isArray(c.archivos)&&c.archivos.length)||c.archivoData
-      ));
-      if(duplicate)return alert(`El entrenamiento "${p.curso}" ya tiene un cumplimiento registrado. Vaya a Actualizar para modificarlo.`);
+
+      // Si ya existe el mismo curso en otro DOA/estándar, no crear un registro
+      // independiente: se actualizarán/propagarán sus datos.
+      const duplicate=cs.find(c=>{
+        if(String(c.usuarioId)!==String(userId))return false;
+        if(String(c.id)===String(p.id))return false;
+        const linked=ss.find(r=>String(r.id)===String(c.cursoId||c.estandarId));
+        const ckey=complianceCourseIdentity(c,ss);
+        const pkey=courseIdentity(linked||{courseId:p.cursoId,curso:p.curso});
+        return ckey===pkey && (
+          String(c.fechaRealizacion||'').trim() ||
+          String(c.fechaFin||'').trim() ||
+          (Array.isArray(c.archivos)&&c.archivos.length) ||
+          c.archivoData
+        );
+      });
+      if(duplicate){
+        const sourceRow=ss.find(r=>String(r.id)===String(p.cursoId));
+        const sameRequirement=requirementKey(duplicate)===requirementKey(p);
+        if(sameRequirement)return alert(`El entrenamiento "${p.curso}" ya tiene un cumplimiento registrado. Vaya a Actualizar para modificarlo.`);
+      }
     }
+
+    const extraTargets=[];
+    for(const plan of propagationPlans){
+      for(const item of plan.related){
+        extraTargets.push({
+          target:item.target,
+          existing:item.existing,
+          source:plan.source
+        });
+      }
+    }
+
+    if(extraTargets.length){
+      const names=[...new Set(extraTargets.map(x=>`${x.target.estandar} → ${x.target.doa}`))];
+      const question=`El curso "${extraTargets[0].source.curso||'seleccionado'}" también aplica a ${extraTargets.length} requisito(s) adicional(es) para este usuario.\n\nSe copiarán automáticamente la fecha de realización, vigencia, estado y el mismo documento a:\n\n${names.join('\n')}\n\n¿Desea aplicar la misma información automáticamente?`;
+      if(!confirm(question))return;
+    }
+
+    // Guardar el registro seleccionado.
     for(const p of payloads)await put('cumplimientos',p);
+
+    // Propagar a todos los demás DOA/Estándares aplicables del mismo curso.
+    // Si ya existe el requisito, se actualiza; si no existe, se crea.
+    for(const plan of propagationPlans){
+      for(const item of plan.related){
+        const t=item.target, old=item.existing;
+        const generated={
+          id:old?.id||uid(),
+          usuarioId:userId,
+          cargo,
+          estandarId:t.id,
+          cursoId:t.id,
+          estandar:t.estandar||'',
+          doa:t.doa||'',
+          curso:t.curso||plan.source.curso||'',
+          metodo:t.metodo||plan.source.metodo||'',
+          frecuenciaAnios:Number(t.frecuenciaAnios||0),
+          frecuenciaDias:Number(t.frecuenciaDias||0),
+          fechaRealizacion:plan.date,
+          fechaFin:calcEnd(plan.date,t.frecuenciaAnios,t.frecuenciaDias),
+          estado:statusFor({fechaRealizacion:plan.date,fechaFin:calcEnd(plan.date,t.frecuenciaAnios,t.frecuenciaDias)}),
+          archivos:plan.docs.map(d=>({...d}))
+        };
+        await put('cumplimientos',generated);
+      }
+    }
+
     closeModal();await refresh();showAdmin('compliance');
-  }catch(e){console.error(e);alert('No fue posible guardar el cumplimiento.\n\n'+(e?.message||e||'Error desconocido.'))}
-  finally{if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Guardar cumplimiento'}}
+    if(extraTargets.length){
+      setTimeout(()=>alert(`Cumplimiento guardado correctamente.\n\nTambién se actualizaron automáticamente ${extraTargets.length} requisito(s) del mismo curso para este usuario.`),80);
+    }
+  }catch(e){
+    console.error(e);
+    alert('No fue posible guardar el cumplimiento.\n\n'+(e?.message||e||'Error desconocido.'));
+  }finally{
+    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Guardar cumplimiento'}
+  }
 }
 async function complianceUserChanged(){const id=$('cUsuario')?.value;if(!id)return;const u=(await all('usuarios')).find(x=>x.id===id);if(u&&$('cCargo'))$('cCargo').value=u.cargo||''}
 async function complianceStandardChanged(){const std=$('cEstandar')?.value;if(!$('cDoa'))return;const ss=await all('estandares');const doas=[...new Set(ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()).map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));const selected=$('cEstandar').dataset.selectedDoa||'';$('cDoa').innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}" ${d===selected?'selected':''}>${esc(d)}</option>`).join('');$('cCurso').innerHTML='<option value="">Seleccione un curso</option>';$('cCurso').disabled=true;$('cMetodo').value='';$('cFrecuencia').value='';}
