@@ -1188,4 +1188,72 @@ async function importData(file){if(!file)return;if(!adminUnlocked)return require
 document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');if(b.dataset.view==='dashboard')await renderDashboard();if(b.dataset.view==='usuarios')await renderUsers();if(b.dataset.view==='requisitos')await populateReqCargos();if(b.dataset.view==='admin')await renderAdmin();}));
 (async()=>{try{showApp();await bootData();await refresh()}catch(e){console.error('DOA: no fue posible cargar los datos públicos desde Supabase.',e);alert('No fue posible cargar los datos de la plataforma. Supabase respondió: '+(e.message||'error desconocido')+'\n\nSi las políticas públicas aún no fueron ejecutadas, use SUPABASE_PUBLIC_VIEW_POLICIES.sql del ZIP. No se modifica ni se borra ningún dato.')}})()
 </script>
+
+<style>
+.visual-translation{display:block;margin-top:3px;font-size:10px;line-height:1.25;color:#7b1e3a;font-weight:600;font-style:normal}
+.visual-translation-inline{display:inline-block;margin-left:5px;font-size:10px;line-height:1.2;color:#7b1e3a;font-weight:600}
+</style>
+<script>
+/* Traducción visual únicamente: nunca modifica ni guarda el texto original en Supabase. */
+(function(){
+  const VT_CACHE='doa_visual_translation_cache_v1';
+  const common={
+    'working at height':'trabajo en alturas','work at height':'trabajo en alturas','confined space':'espacio confinado',
+    'confined spaces':'espacios confinados','electrical safety':'seguridad eléctrica','electrical safety training':'entrenamiento de seguridad eléctrica',
+    'lockout tagout':'bloqueo y etiquetado','lockout/tagout':'bloqueo y etiquetado','permit to work':'permiso de trabajo',
+    'hot work':'trabajo en caliente','fall protection':'protección contra caídas','lifting and rigging':'izaje y aparejos',
+    'hazard communication':'comunicación de peligros','first aid':'primeros auxilios','fire safety':'seguridad contra incendios',
+    'emergency response':'respuesta a emergencias','personal protective equipment':'equipos de protección personal',
+    'process safety management':'gestión de seguridad de procesos','contractor safety':'seguridad de contratistas',
+    'training required':'entrenamiento requerido','required training':'entrenamiento requerido','course id':'id del curso',
+    'delivery method':'método de entrega','frequency':'frecuencia','years':'años','days':'días',
+    'completed':'completado','pending':'pendiente','expired':'vencido','valid':'vigente','active':'activo','inactive':'inactivo',
+    'yes':'sí','no':'no','online':'en línea','classroom':'presencial','in person':'presencial','virtual':'virtual'
+  };
+  let cache={}; try{cache=JSON.parse(localStorage.getItem(VT_CACHE)||'{}')}catch(e){}
+  const save=()=>{try{localStorage.setItem(VT_CACHE,JSON.stringify(cache))}catch(e){}};
+  const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
+  const key=v=>clean(v).toLowerCase();
+  const looksEnglish=v=>{
+    const t=key(v); if(!t||t.length<3)return false;
+    if(common[t])return true;
+    const words=t.split(/\s+/); const english=['the','and','of','for','with','to','from','required','training','course','work','safety','height','space','method','delivery','frequency','days','years','completed','pending','expired','valid','online','classroom','permit','fire','electrical','confined','lifting','protection','management','contractor'];
+    return words.some(w=>english.includes(w)) && /[a-z]/i.test(t);
+  };
+  const isSafeTextNode=n=>{
+    if(!n||n.nodeType!==3)return false;
+    const p=n.parentElement; if(!p)return false;
+    if(p.closest('.visual-translation,[data-vt-ignore],script,style,textarea,input,select,option,button'))return false;
+    const t=clean(n.nodeValue); if(!looksEnglish(t))return false;
+    if(t.length>180)return false;
+    return true;
+  };
+  async function translate(t){
+    const k=key(t); if(common[k])return common[k]; if(cache[k])return cache[k];
+    try{
+      const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(t)+'&langpair=en|es';
+      const r=await fetch(url,{headers:{Accept:'application/json'}}); if(!r.ok)return '';
+      const d=await r.json(); const out=clean(d?.responseData?.translatedText||'');
+      if(out && key(out)!==k){cache[k]=out;save();return out}
+    }catch(e){}
+    return '';
+  }
+  async function processNode(n){
+    if(!isSafeTextNode(n))return;
+    const original=clean(n.nodeValue); const tr=await translate(original); if(!tr)return;
+    if(!n.parentElement || n.parentElement.querySelector(':scope > .visual-translation'))return;
+    const s=document.createElement('span'); s.className='visual-translation'; s.textContent=tr;
+    n.parentElement.appendChild(s);
+  }
+  function scan(root=document.body){
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); const nodes=[]; let n;
+    while((n=walker.nextNode()))nodes.push(n);
+    nodes.forEach(processNode);
+  }
+  let timer; const schedule=()=>{clearTimeout(timer);timer=setTimeout(()=>scan(document.body),250)};
+  const observer=new MutationObserver(muts=>{for(const m of muts){if(m.addedNodes.length){schedule();break}}});
+  window.addEventListener('load',()=>{scan();observer.observe(document.body,{childList:true,subtree:true})});
+  window.addEventListener('beforeunload',save);
+})();
+</script>
 </body></html>
