@@ -450,6 +450,29 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><h3 id="modalTitle"></h3><button class="btn btn-light" onclick="closeModal()">✕</button></div><div class="modal-body" id="modalBody"></div><div class="modal-foot" id="modalFoot"></div></div></div>
 
 <script>
+/* Notificaciones de la plataforma: reemplaza el alert nativo del navegador
+   para evitar el encabezado "cortevaagr.github.io says". */
+(function(){
+  const css=`
+    #doaPlatformNotice{position:fixed;inset:0;background:rgba(4,23,43,.52);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100000;padding:20px}
+    #doaPlatformNotice.open{display:flex}
+    #doaPlatformNotice .notice-box{width:min(460px,94vw);background:#fff;border:1px solid #d8e3ec;border-radius:16px;box-shadow:0 24px 70px rgba(3,24,45,.30);overflow:hidden}
+    #doaPlatformNotice .notice-head{padding:15px 18px;background:linear-gradient(100deg,#0b3158,#0d5ea8);color:#fff;font-weight:800;font-size:15px}
+    #doaPlatformNotice .notice-body{padding:20px 18px;color:#29465e;font-size:14px;line-height:1.5;white-space:pre-wrap;max-height:55vh;overflow:auto}
+    #doaPlatformNotice .notice-foot{padding:12px 18px;border-top:1px solid #e2e9ef;background:#f7fafc;display:flex;justify-content:flex-end}
+    #doaPlatformNotice .notice-ok{border:0;border-radius:9px;padding:9px 18px;background:linear-gradient(135deg,#1478bd,#0a4f8d);color:#fff;font-weight:800;cursor:pointer}
+  `;
+  const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
+  const box=document.createElement('div');box.id='doaPlatformNotice';box.innerHTML='<div class="notice-box" role="dialog" aria-modal="true" aria-labelledby="doaPlatformNoticeTitle"><div class="notice-head" id="doaPlatformNoticeTitle">Notificación de la plataforma</div><div class="notice-body" id="doaPlatformNoticeBody"></div><div class="notice-foot"><button type="button" class="notice-ok" id="doaPlatformNoticeOk">Aceptar</button></div></div>';
+  document.body.appendChild(box);
+  const body=box.querySelector('#doaPlatformNoticeBody'),ok=box.querySelector('#doaPlatformNoticeOk');
+  function close(){box.classList.remove('open');document.removeEventListener('keydown',onKey)}
+  function onKey(e){if(e.key==='Escape'||e.key==='Enter')close()}
+  ok.addEventListener('click',close);
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  window.alert=function(message){body.textContent=String(message??'');box.classList.add('open');ok.focus();document.addEventListener('keydown',onKey)};
+})();
+
 const SUPABASE_URL='https://fxyhjxajzcqxaahevqfs.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Co7QU8QIzQXgAnVKZuL0EQ_Lmtmhoql';
 // Supabase browser key (Publishable). Keep this key public; never place the Secret key here.
