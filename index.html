@@ -413,6 +413,7 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 <button class="nav active" data-view="dashboard"><span>▦ &nbsp;</span>Dashboard</button>
 <button class="nav" data-view="usuarios"><span>👤 &nbsp;</span>Usuarios</button>
 <button class="nav" data-view="requisitos"><span>✓ &nbsp;</span>Consultar Requisitos</button>
+<button class="nav" data-view="pendientes"><span>⏳ &nbsp;</span>Pendiente por registrar</button>
 <button class="nav" data-view="admin"><span>⚙ &nbsp;</span>Administración</button>
 </aside>
 <main>
@@ -442,6 +443,25 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
   <button class="btn btn-light" onclick="clearRequirementSearch()">Limpiar</button>
 </div>
 <div id="reqDetail"><div class="empty">Seleccione un Cargo para consultar los requisitos.</div></div>
+</div>
+</section>
+
+<section id="pendientes" class="view">
+<div class="page-title"><div><h2>Pendiente por registrar</h2><div class="subtitle">Consulta de usuarios que aún tienen entrenamientos o cursos aplicables sin datos de cumplimiento registrados.</div></div><button class="btn btn-light" type="button" onclick="renderPendingRegistrations()">Actualizar</button></div>
+<div class="panel">
+  <div class="toolbar" style="align-items:end">
+    <div class="field" style="min-width:280px;flex:1"><label>Buscar usuario</label><input class="input" id="pendingSearch" type="search" placeholder="Nombre o cargo" oninput="filterPendingRegistrations()"></div>
+    <div class="field" style="min-width:220px"><label>DOA</label><select class="select" id="pendingDoaFilter" onchange="filterPendingRegistrations()"><option value="">Todos los DOA</option></select></div>
+    <div class="field" style="min-width:240px"><label>Estándar</label><select class="select" id="pendingStandardFilter" onchange="filterPendingRegistrations()"><option value="">Todos los Estándares</option></select></div>
+    <button class="btn btn-light" type="button" onclick="clearPendingFilters()">Limpiar</button>
+  </div>
+  <div id="pendingSummary" class="notice" style="margin-bottom:14px">Cargando pendientes por registrar…</div>
+  <div class="table-wrap">
+    <table id="pendingRegistrationsTable">
+      <thead><tr><th>Usuario</th><th>Cargo</th><th>Estándar</th><th>DOA</th><th>Curso / Entrenamiento</th><th>Estado</th></tr></thead>
+      <tbody id="pendingRegistrationsBody"><tr><td colspan="6"><div class="empty">Cargando información…</div></td></tr></tbody>
+    </table>
+  </div>
 </div>
 </section>
 
@@ -1188,6 +1208,63 @@ async function editCompliance(uid){const cs=await all('cumplimientos');const c=c
 async function saveComplianceWithFile(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
 async function saveCompliance(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
 async function openAttachment(cid){return openComplianceAttachment(cid,0)}
+let pendingRegistrationRows=[];
+async function buildPendingRegistrationRows(){
+  const [users,profiles,standards,compliances]=await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos')]);
+  const rows=[];
+  users.forEach(user=>{
+    const cargo=String(user.cargo||'').trim();
+    if(!cargo)return;
+    const profileRows=profiles.filter(p=>normalizeRel(p.cargo)===normalizeRel(cargo));
+    const doas=[...new Set(profileRows.flatMap(p=>doaList(p.doa)))];
+    if(!doas.length)return;
+    const applicableRows=standards.filter(r=>doas.some(d=>normalizeRel(d)===normalizeRel(r.doa)));
+    applicableRows.forEach(r=>{
+      const hasRealData=compliances.some(c=>{
+        if(String(c.usuarioId)!==String(user.id) || !String(c.fechaRealizacion||'').trim())return false;
+        // Un cumplimiento real debe sacar el requisito de esta consulta.
+        // Primero identificamos por Course ID cuando exista; si no, usamos
+        // Estándar + DOA + Curso normalizados como respaldo.
+        const complianceStandard=standards.find(x=>String(x.id)===String(c.cursoId||c.estandarId));
+        if(complianceStandard && courseIdentity(complianceStandard)===courseIdentity(r))return true;
+        return normalizeRel(c.estandar)===normalizeRel(r.estandar)
+          &&normalizeRel(c.doa)===normalizeRel(r.doa)
+          &&normalizeRel(c.curso)===normalizeRel(r.curso);
+      });
+      if(!hasRealData){
+        rows.push({usuarioId:String(user.id),usuario:user.nombre||'',cargo,estandar:r.estandar||'',doa:r.doa||'',curso:r.curso||''});
+      }
+    });
+  });
+  return rows;
+}
+function pendingOptionValues(){
+  const doa=[...new Set(pendingRegistrationRows.map(r=>String(r.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  const std=[...new Set(pendingRegistrationRows.map(r=>String(r.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  const d=$('pendingDoaFilter'),s=$('pendingStandardFilter');
+  if(d){const current=d.value;d.innerHTML='<option value="">Todos los DOA</option>'+doa.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(doa.includes(current))d.value=current}
+  if(s){const current=s.value;s.innerHTML='<option value="">Todos los Estándares</option>'+std.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(std.includes(current))s.value=current}
+}
+function renderPendingRows(){
+  const body=$('pendingRegistrationsBody');if(!body)return;
+  const search=normalizePersonName($('pendingSearch')?.value||'');
+  const doa=normalizeRel($('pendingDoaFilter')?.value||'');
+  const std=normalizeRel($('pendingStandardFilter')?.value||'');
+  const rows=pendingRegistrationRows.filter(r=>(!search||normalizePersonName(r.usuario).includes(search)||normalizePersonName(r.cargo).includes(search))&&(!doa||normalizeRel(r.doa)===doa)&&(!std||normalizeRel(r.estandar)===std));
+  body.innerHTML=rows.length?rows.map(r=>`<tr><td><strong>${esc(r.usuario)}</strong></td><td>${esc(r.cargo)}</td><td>${esc(r.estandar)}<span class="visual-translation">${esc(r.estandar)}</span></td><td>${esc(r.doa)}</td><td>${esc(r.curso)}</td><td>${badge('PENDIENTE')}</td></tr>`).join(''):`<tr><td colspan="6"><div class="empty">No hay pendientes por registrar con los filtros seleccionados.</div></td></tr>`;
+  const uniqueUsers=new Set(rows.map(r=>r.usuarioId)).size;
+  const summary=$('pendingSummary');
+  if(summary)summary.innerHTML=rows.length?`Se encontraron <strong>${uniqueUsers}</strong> usuario(s) con <strong>${rows.length}</strong> requisito(s) pendiente(s) por registrar. Esta sesión es únicamente de consulta; no crea ni modifica datos.`:'No hay requisitos pendientes por registrar con los filtros seleccionados.';
+}
+async function renderPendingRegistrations(){
+  const body=$('pendingRegistrationsBody');if(!body)return;
+  body.innerHTML='<tr><td colspan="6"><div class="empty">Consultando información…</div></td></tr>';
+  try{pendingRegistrationRows=await buildPendingRegistrationRows();pendingOptionValues();renderPendingRows()}
+  catch(e){console.error(e);body.innerHTML=`<tr><td colspan="6"><div class="empty">No fue posible consultar los pendientes: ${esc(e.message||'Error desconocido')}</div></td></tr>`;$('pendingSummary').textContent='No fue posible cargar la consulta.'}
+}
+function filterPendingRegistrations(){renderPendingRows()}
+function clearPendingFilters(){if($('pendingSearch'))$('pendingSearch').value='';if($('pendingDoaFilter'))$('pendingDoaFilter').value='';if($('pendingStandardFilter'))$('pendingStandardFilter').value='';renderPendingRows()}
+
 async function showAdmin(type){if(type==='history'&&!adminUnlocked)return requireAdmin(()=>showAdmin(type));currentAdmin=type;document.querySelectorAll('.admin-tab').forEach(b=>{const active=b.dataset.adminTab===type;b.classList.toggle('active',active);b.classList.toggle('btn-primary',active);b.classList.toggle('btn-light',!active)});await renderAdmin()}
 function historyTypeLabel(t){return t==='INSERT'?'AGREGAR':t==='UPDATE'?'ACTUALIZAR':t==='DELETE'?'ELIMINAR':t}
 function historyEntityLabel(t){return t==='usuarios'?'Usuarios':t==='perfiles'?'Perfiles':t==='estandares_doa'?'Estándares y DOA':t==='cumplimiento'?'Cumplimiento':t}
@@ -1246,7 +1323,7 @@ async function confirmAdminQuickAction(type,action){
   if(type==='profiles')return action==='update'?openProfile(id):deleteProtected('perfiles',id);
   if(type==='standards')return action==='update'?openStandard(id):deleteProtected('estandares',id);   if(type==='compliance')return action==='update'?openCompliance(id):deleteCompliance(id);
 }
-async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?ps.filter(x=>String(x.cargo||'').trim()===String(p.cargo||'').trim()):[];let ss=await all('estandares');let doas=[...new Set(ss.map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(d)}</option>`).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Operador"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
+async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?ps.filter(x=>String(x.cargo||'').trim()===String(p.cargo||'').trim()):[];let ss=await all('estandares');let doaMap=new Map();ss.forEach(x=>{const d=String(x.doa||'').trim();const e=String(x.estandar||'').trim();if(!d)return;if(!doaMap.has(d))doaMap.set(d,new Set());if(e)doaMap.get(d).add(e)});let doas=[...doaMap.keys()].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>{const standards=[...doaMap.get(d)].sort((a,b)=>a.localeCompare(b,'es'));const label=standards.length?`${d} — Estándar: ${standards.join(' · ')}`:d;return `<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(label)}</option>`}).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Operador"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
 function profileDoaOptions(selected=''){let opts=[...document.querySelectorAll('#profileDoaFields select')].length;return ''}
 function addProfileDoaField(){let box=$('profileDoaFields');if(!box)return;let i=box.querySelectorAll('.profile-doa-row').length;let first=box.querySelector('select');let options=first?first.innerHTML:'<option value="">Seleccione un DOA</option>';let row=document.createElement('div');row.className='field full profile-doa-row';row.id='profileDoaRow'+i;row.innerHTML=`<label>DOA ${i+1}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${options}</select><button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button></div>`;box.appendChild(row)}
 function removeProfileDoa(i){let row=$('profileDoaRow'+i);if(row)row.remove();[...document.querySelectorAll('#profileDoaFields .profile-doa-row')].forEach((r,n)=>{r.id='profileDoaRow'+n;let l=r.querySelector('label');if(l)l.textContent='DOA '+(n+1)+(n===0?' *':'');let sel=r.querySelector('select');if(sel)sel.id='pDoa'+n;let b=r.querySelector('button');if(b)b.setAttribute('onclick',`removeProfileDoa(${n})`)})}
@@ -1374,7 +1451,7 @@ function exportData(){
 }
 async function importData(file){if(!file)return;if(!adminUnlocked)return requireAdmin(()=>importData(file));try{let d=JSON.parse(await file.text());for(const s of stores)for(const o of (d[s]||[]))await put(s,o);await refresh();alert('Datos importados correctamente.')}catch(e){alert('No se pudo importar el archivo: '+(e.message||'Error desconocido'))}}
 
-document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');if(b.dataset.view==='dashboard')await renderDashboard();if(b.dataset.view==='usuarios')await renderUsers();if(b.dataset.view==='requisitos')await populateReqCargos();if(b.dataset.view==='admin')await renderAdmin();}));
+document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');if(b.dataset.view==='dashboard')await renderDashboard();if(b.dataset.view==='usuarios')await renderUsers();if(b.dataset.view==='requisitos')await populateReqCargos();if(b.dataset.view==='pendientes')await renderPendingRegistrations();if(b.dataset.view==='admin')await renderAdmin();}));
 (async()=>{try{showApp();await bootData();await refresh()}catch(e){console.error('DOA: no fue posible cargar los datos públicos desde Supabase.',e);alert('No fue posible cargar los datos de la plataforma. Supabase respondió: '+(e.message||'error desconocido')+'\n\nSi las políticas públicas aún no fueron ejecutadas, use SUPABASE_PUBLIC_VIEW_POLICIES.sql del ZIP. No se modifica ni se borra ningún dato.')}})()
 </script>
 
