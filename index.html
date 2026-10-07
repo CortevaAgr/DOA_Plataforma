@@ -597,7 +597,7 @@ function userQrHtml(u){
   const url=userQrUrl(u.id);
   return `<div class="user-qr-card">
     <img class="user-qr-image" src="${esc(qrImageUrl(url))}" alt="Código QR de ${esc(u.nombre||'usuario')}" loading="eager">
-    <div class="user-qr-info"><h4>Código QR del usuario</h4><p>Al escanear este código se abrirá directamente la sección <b>Ver detalle</b> de este usuario.</p><div class="user-qr-url">${esc(url)}</div></div>
+    <div class="user-qr-info"><h4>Código QR de ${esc(u.nombre||"usuario")}</h4><p>Al escanear este código se abrirá directamente la sección <b>Ver detalle</b> de este usuario.</p><div class="user-qr-url">${esc(url)}</div></div>
   </div>`;
 }
 async function showUserQr(id){
@@ -759,7 +759,6 @@ async function viewUser(id){
         <div class="detail-identity"><div class="detail-avatar">${esc((u.nombre||'U').trim().charAt(0).toUpperCase())}</div><div><div class="detail-kicker">USUARIO</div><h2>${esc(u.nombre||'Sin nombre')}</h2><div class="detail-role">${esc(u.cargo||'Sin cargo')}</div></div></div>
         <div class="detail-auth">${badge(x.ok?'AUTORIZADO PARA OPERAR':'NO AUTORIZADO')}<div class="detail-percent">${pct}%</div><div class="small">cumplimiento vigente</div></div>
       </div>
-      ${userQrHtml(u)}
       <div class="detail-summary">
         <div class="detail-stat stat-total"><span>Entrenamientos</span><b>${x.total}</b></div>
         <div class="detail-stat stat-ok"><span>Vigentes</span><b>${vigente}</b></div>
