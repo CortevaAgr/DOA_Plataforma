@@ -411,6 +411,15 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .btn-remove-attachment{color:#7b1e3a!important;border-color:#d8a9b8!important}
 .attachment-removed{display:inline-block;margin-top:7px;padding:7px 10px;border-radius:8px;background:#fff0f3;color:#7b1e3a;font-weight:700}
 @media(max-width:640px){.compliance-entry{padding:11px}.compliance-add-entry{width:100%;min-width:0}.compliance-entry-head{align-items:flex-start}}
+/* Cumplimiento dinámico: una tarjeta por cada curso del DOA seleccionado */
+.compliance-entry[data-auto-course-row="true"]:not([data-auto-master="true"]) .form-grid>.field:nth-child(1),
+.compliance-entry[data-auto-course-row="true"]:not([data-auto-master="true"]) .form-grid>.field:nth-child(2){display:none}
+.compliance-entry[data-auto-course-row="true"] .compliance-entry-head strong{font-size:14px}
+.compliance-entry[data-auto-course-row="true"] .form-grid>.field:nth-child(3){background:#f2f7fb;border:1px solid #dce8f1;border-radius:9px;padding:10px!important}
+.compliance-entry[data-auto-course-row="true"] .form-grid>.field:nth-child(3) label{color:#0d5ea8;font-weight:800}
+.compliance-entry[data-auto-course-row="true"] .form-grid>.field:nth-child(3) select:disabled{opacity:1;color:#18344f;background:#f2f7fb;font-weight:700}
+.compliance-course-note{font-size:12px;color:#5d7183;margin:0 0 10px;padding:10px 12px;background:#edf6fc;border:1px solid #d4e7f4;border-radius:9px}
+
 
 .history-detail-hero{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid #d9e5ef;border-radius:14px;background:linear-gradient(135deg,#f4f8fc,#ffffff);margin-bottom:14px}.history-detail-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#0d5f9f;color:#fff;font-size:24px;font-weight:800;box-shadow:0 5px 14px rgba(13,95,159,.18)}.history-detail-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#60758a;font-weight:800}.history-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}.history-meta>div{padding:11px 13px;background:#f7fafc;border:1px solid #e0e8ef;border-radius:10px}.history-meta span,.history-info-item span,.history-change-label{display:block;font-size:11px;color:#718397;font-weight:700;margin-bottom:4px}.history-section-title{font-size:14px;font-weight:800;color:#123b5d;margin:18px 0 9px}.history-change-list{border:1px solid #dfe7ee;border-radius:12px;overflow:hidden}.history-change-row{padding:13px;border-bottom:1px solid #e7edf2}.history-change-row:last-child{border-bottom:0}.history-change-values{display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:stretch}.history-old,.history-new{padding:10px 12px;border-radius:9px;border:1px solid #dfe5ea;background:#fff}.history-old{background:#fafafa}.history-new{background:#f2f8fc;border-color:#cfe0ed}.history-old span,.history-new span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:#788898;margin-bottom:4px}.history-new span{color:#0d5f9f}.history-arrow{display:flex;align-items:center;justify-content:center;color:#0d5f9f;font-size:18px;font-weight:800}.history-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.history-info-item{padding:11px 13px;border:1px solid #dfe7ee;border-radius:10px;background:#fff}.history-note{margin-top:15px;padding:11px 13px;border-left:4px solid #0d5f9f;background:#f5f9fc;color:#60758a;border-radius:7px;font-size:12px}@media(max-width:640px){.history-meta,.history-info-grid{grid-template-columns:1fr}.history-change-values{grid-template-columns:1fr}.history-arrow{transform:rotate(90deg);height:22px}}
   .compliance-entry .field .btn[id^="cDoaExceptionBtn_"]{flex:0 0 auto;border-color:#d9c4ca;color:#7b1e3a;background:#fff8fa}
@@ -910,11 +919,11 @@ async function openCompliance(id=''){
     </div>
     <div class="compliance-shared-fields form-grid">
       <div class="field"><label>Usuario *</label><select id="cUsuario" onchange="complianceUserChanged()"><option value="">Seleccione un usuario inscrito</option>${userOptions}</select></div>
-      <div class="field"><label>Cargo *</label><select id="cCargo"><option value="">Seleccione un cargo inscrito</option>${cargoOptions}</select></div>
+      <div class="field"><label>Cargo (automático)</label><input id="cCargo" readonly value="${esc(c.cargo||us.find(u=>String(u.id)===String(c.usuarioId))?.cargo||'')}" placeholder="Se completa al seleccionar usuario" title="El cargo se obtiene automáticamente del usuario seleccionado"></div>
     </div>
-    <div class="compliance-entries-title"><div><h4>Entrenamientos a registrar</h4><span>Puede diligenciar varios cursos en esta misma ventana.</span><div class="small" style="margin-top:5px;color:#7a1f3d">Si el mismo curso aplica a otros DOA para este usuario, la fecha, vigencia y documento podrán aplicarse automáticamente.</div></div></div>
+    <div class="compliance-entries-title"><div><h4>Registro de entrenamientos</h4><span>Seleccione Usuario, Estándar y DOA. La plataforma cargará automáticamente una tarjeta por cada curso que aplique a ese DOA.</span><div class="small" style="margin-top:6px;color:#7a1f3d">Para cada entrenamiento debe registrar la fecha de realización y adjuntar un documento soporte. La fecha FIN y el estado se calculan automáticamente.</div></div></div>
+    <div class="compliance-course-note" id="complianceCourseSummary">Primero seleccione un usuario, un estándar y un DOA para cargar los cursos correspondientes.</div>
     <div id="complianceEntries">${entryHtml}</div>
-    <div class="compliance-add-entry-wrap"><button type="button" class="btn btn-light compliance-add-entry" onclick="addComplianceEntry()">＋ Registrar otro cumplimiento</button></div>
   `,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveComplianceForm('${id}')">Guardar cumplimiento</button>`);
   const box=document.querySelector('#modal .modal-box'); if(box)box.classList.add('compliance-modal-box');
   complianceEntrySeq=0;
@@ -924,6 +933,7 @@ async function openCompliance(id=''){
   $('cEstandar_0').dataset.selectedDoa=c.doa||selectedRow?.doa||'';
   $('cEstandar_0').dataset.selectedCurso=c.cursoId||selectedRow?.id||'';
   $('cEstandar_0').dataset.editingComplianceId=c.id||'';
+  window.__complianceLastUserId=String($('cUsuario')?.value||'');
   await complianceUserChanged();
   await entryStandardChanged(0);
   if(c.id) renderExistingComplianceFilesForEntry(c,0);
@@ -937,8 +947,22 @@ async function standardsForComplianceUser(userId){
   const user=users.find(u=>String(u.id)===String(userId));
   if(!user?.cargo)return [];
   const cargoKey=normalizeRel(user.cargo);
-  const cargoDoas=[...new Set(profiles.filter(p=>normalizeRel(p.cargo)===cargoKey).flatMap(p=>doaList(p.doa).map(normalizeRel)))];
-  return [...new Set(standards.filter(r=>cargoDoas.includes(normalizeRel(r.doa))).map(r=>String(r.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  const cargoDoas=new Set(profiles.filter(p=>normalizeRel(p.cargo)===cargoKey).flatMap(p=>doaList(p.doa).map(normalizeRel)));
+  return [...new Set(standards.filter(r=>cargoDoas.has(normalizeRel(r.doa))).map(r=>String(r.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+}
+// DOA permitidos para el estándar seleccionado: deben estar asignados al Cargo
+// del usuario en Perfiles y existir relacionados con ese estándar en Estándares/DOA.
+// Las excepciones individuales se muestran identificadas para poder restablecerlas,
+// pero sus campos no permiten registrar un cumplimiento mientras sigan como NO APLICA.
+async function doasForComplianceUser(userId, standard){
+  if(!userId||!standard)return [];
+  const [users,profiles,standards,exceptions]=await Promise.all([all('usuarios'),all('perfiles'),loadComplianceCatalog(),all('excepciones_doa')]);
+  const user=users.find(u=>String(u.id)===String(userId));
+  if(!user?.cargo)return [];
+  const cargoKey=normalizeRel(user.cargo);
+  const cargoDoas=new Set(profiles.filter(p=>normalizeRel(p.cargo)===cargoKey).flatMap(p=>doaList(p.doa).map(normalizeRel)));
+  const userExceptions=new Set(exceptions.filter(e=>String(e.usuarioId)===String(userId)).map(e=>normalizeRel(e.doa)));
+  return [...new Map(standards.filter(r=>normalizeRel(r.estandar)===normalizeRel(standard)&&cargoDoas.has(normalizeRel(r.doa))&&String(r.doa||'').trim()).map(r=>[normalizeRel(r.doa),{doa:String(r.doa).trim(),excluded:userExceptions.has(normalizeRel(r.doa))}])).values()].sort((a,b)=>a.doa.localeCompare(b.doa,'es'));
 }
 function setComplianceStandardOptions(select, standards, preferred=''){
   if(!select)return;
@@ -966,17 +990,72 @@ async function loadComplianceCatalog(){
   window.__complianceStandards=[...new Set(window.__complianceRows.map(x=>String(x.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
   return window.__complianceRows;
 }
+function renumberComplianceEntries(){
+  const entries=[...document.querySelectorAll('#complianceEntries .compliance-entry')];
+  entries.forEach((row,n)=>{
+    const old=Number(row.dataset.entryIndex);
+    row.dataset.entryIndex=String(n);
+    const number=row.querySelector('.compliance-entry-number');if(number)number.textContent=String(n+1);
+    const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent='Entrenamiento '+(n+1);
+    // Mantener los identificadores internos alineados con el índice visual.
+    ['cEstandar','cDoa','cCurso','cMetodo','cFrecuencia','cFecha','cFechaFin','cEstado','cArchivos','cArchivoInfo','cArchivosExistentes','cDoaExceptionBtn','cDoaExceptionInfo'].forEach(prefix=>{
+      const el=row.querySelector('[id="'+prefix+'_'+old+'"]');if(el)el.id=prefix+'_'+n;
+      if(el){const h=el.getAttribute('onchange');if(h)el.setAttribute('onchange',h.replaceAll('('+old+')','('+n+')'));const click=el.getAttribute('onclick');if(click)el.setAttribute('onclick',click.replaceAll('('+old+')','('+n+')'));}
+    });
+    const remove=row.querySelector('.compliance-remove-entry');if(remove)remove.style.display='none';
+  });
+  complianceEntrySeq=entries.length-1;
+}
+function clearGeneratedComplianceRows(masterIndex){
+  const master=document.querySelector(`.compliance-entry[data-entry-index="${masterIndex}"]`);
+  document.querySelectorAll('#complianceEntries .compliance-entry').forEach(row=>{if(row!==master)row.remove()});
+  if(master){delete master.dataset.autoCourseRow;delete master.dataset.autoMaster;master.dataset.entryIndex=String(masterIndex);}
+  renumberComplianceEntries();
+}
+async function buildComplianceCourseEntries(std,doa,courseRows){
+  const container=$('complianceEntries');if(!container)return;
+  const existing=[...container.querySelectorAll('.compliance-entry')].find(r=>r.dataset.existingId);
+  if(existing)return; // En modo edición se modifica un cumplimiento existente, no se crean filas nuevas.
+  const userId=$('cUsuario')?.value||'';
+  const standards=await standardsForComplianceUser(userId);
+  const uniqueRows=[...new Map(courseRows.map(r=>[courseIdentity(r),r])).values()];
+  container.innerHTML=uniqueRows.map((c,n)=>complianceEntryTemplate(n,{})).join('');
+  const allStandards=await loadComplianceCatalog();
+  const allowedDoasForSelected=await doasForComplianceUser(userId,std);
+  const doas=allowedDoasForSelected.map(x=>x.doa);
+  uniqueRows.forEach((course,n)=>{
+    const row=container.querySelector(`.compliance-entry[data-entry-index="${n}"]`);if(!row)return;
+    row.dataset.autoCourseRow='true';row.dataset.autoMaster=n===0?'true':'false';
+    const standard=$('cEstandar_'+n),doaSelect=$('cDoa_'+n),courseSelect=$('cCurso_'+n);
+    setComplianceStandardOptions(standard,standards,std);if(standard)standard.value=std;
+    if(standard)standard.dataset.previousStandard=std;
+    if(doaSelect){doaSelect.innerHTML='<option value="">Seleccione un DOA</option>'+allowedDoasForSelected.map(x=>`<option value="${esc(x.doa)}">${esc(x.doa)}${x.excluded?' — NO APLICA PARA ESTA PERSONA':''}</option>`).join('');doaSelect.value=allowedDoasForSelected.some(x=>normalizeRel(x.doa)===normalizeRel(doa))?doa:'';doaSelect.dataset.selectedDoa=doa;doaSelect.disabled=n>0;}
+    if(courseSelect){courseSelect.innerHTML=`<option value="${esc(course.id)}">${esc(course.curso||'Sin nombre')}</option>`;courseSelect.value=String(course.id);courseSelect.dataset.selectedCurso=String(course.id);courseSelect.disabled=true;}
+    const exceptionBtn=$('cDoaExceptionBtn_'+n);if(exceptionBtn&&n>0)exceptionBtn.style.display='none';
+    if(n>0){const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent=course.curso||('Entrenamiento '+(n+1));}
+  });
+  const summary=$('complianceCourseSummary');if(summary)summary.textContent=`Se cargaron ${uniqueRows.length} curso(s) para el DOA “${doa}”. Complete la fecha de realización y el documento soporte de cada tarjeta.`;
+  if(!uniqueRows.length){container.innerHTML='<div class="empty">No hay cursos configurados para este DOA.</div>';if(summary)summary.textContent='No se encontraron cursos para el DOA seleccionado.';return}
+  for(let n=0;n<uniqueRows.length;n++){
+    await entryCourseChanged(n,true);
+    const courseSelect=$('cCurso_'+n);if(courseSelect)courseSelect.disabled=true;
+    const row=container.querySelector(`.compliance-entry[data-entry-index="${n}"]`);if(row){const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent=uniqueRows[n].curso||('Entrenamiento '+(n+1));}
+  }
+}
 async function entryStandardChanged(i){
+  const currentRow=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+  const wasGeneratedMaster=currentRow?.dataset.autoMaster==='true'&&!currentRow.dataset.existingId;
+  if(wasGeneratedMaster){clearGeneratedComplianceRows(i);const oldDoa=$('cDoa_'+i),oldCourse=$('cCurso_'+i);if(oldDoa)oldDoa.dataset.selectedDoa='';if(oldCourse)oldCourse.dataset.selectedCurso='';}
   const stdEl=$('cEstandar_'+i),doa=$('cDoa_'+i),curso=$('cCurso_'+i);if(!stdEl||!doa||!curso)return;
   const std=String(stdEl.value||'').trim(),userId=$('cUsuario')?.value||'';
   stdEl.dataset.previousStandard=std;
-  const ss=await loadComplianceCatalog(),exceptions=await all('excepciones_doa');
-  const doas=[...new Map(ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&String(x.doa||'').trim()).map(x=>[normalizeRel(x.doa),String(x.doa).trim()])).values()].sort((a,b)=>a.localeCompare(b,'es'));
-  const selected=String(doa.dataset.selectedDoa||'').trim();
-  doa.innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>{const excluded=exceptions.some(e=>String(e.usuarioId)===String(userId)&&normalizeRel(e.doa)===normalizeRel(d));return `<option value="${esc(d)}">${esc(d)}${excluded?' — NO APLICA':''}</option>`}).join('');
-  doa.disabled=!doas.length;curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>';curso.disabled=true;curso.dataset.selectedCurso='';
+  const ss=await loadComplianceCatalog();
+  const allowedDoas=await doasForComplianceUser(userId,std);
+  const selected=String(doa.dataset.selectedDoa||doa.value||'').trim();
+  doa.innerHTML='<option value="">Seleccione un DOA</option>'+allowedDoas.map(x=>`<option value="${esc(x.doa)}">${esc(x.doa)}${x.excluded?' — NO APLICA PARA ESTA PERSONA':''}</option>`).join('');
+  doa.disabled=!allowedDoas.length;curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>';curso.disabled=true;curso.dataset.selectedCurso='';
   $('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';
-  const selectedDoa=doas.find(d=>normalizeRel(d)===normalizeRel(selected));if(selectedDoa){doa.value=selectedDoa;await entryDoaChanged(i)}else await updateDoaExceptionButton(i);
+  const selectedDoa=allowedDoas.find(d=>normalizeRel(d.doa)===normalizeRel(selected));if(selectedDoa){doa.value=selectedDoa.doa;await entryDoaChanged(i)}else{doa.value='';await updateDoaExceptionButton(i)}
 }
 async function entryDoaChanged(i){
   const std=$('cEstandar_'+i)?.value||'',doa=$('cDoa_'+i)?.value||'',curso=$('cCurso_'+i);if(!curso)return;
@@ -984,6 +1063,11 @@ async function entryDoaChanged(i){
   const excluded=await isDoaNotApplicable($('cUsuario')?.value||'',doa);
   const info=$('cDoaExceptionInfo_'+i);if(info)info.textContent=excluded?'Este DOA está marcado como NO APLICA para esta persona. Restablézcalo si debe volver a ser obligatorio.':'';
   const rows=ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&normalizeRel(x.doa)===normalizeRel(doa));
+  const currentRow=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+  if(excluded&&currentRow&&!currentRow.dataset.existingId&&currentRow.dataset.autoCourseRow==='true'&&currentRow.dataset.autoMaster==='true')clearGeneratedComplianceRows(i);
+  else if(doa&&!excluded&&rows.length&&currentRow&&!currentRow.dataset.existingId&&currentRow.dataset.autoMaster!=='false'){
+    await buildComplianceCourseEntries(std,doa,rows);return;
+  }
   const selected=String(curso.dataset.selectedCurso||'').trim();
   curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>'+rows.map(r=>`<option value="${esc(r.id)}">${esc(r.curso||'Sin nombre')}</option>`).join('');
   curso.disabled=!rows.length||excluded;
@@ -998,7 +1082,7 @@ async function entryCourseChanged(i,initial=false){
   if(!r){$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return}
   $('cMetodo_'+i).value=r.metodo||'';$('cFrecuencia_'+i).value=`${Number(r.frecuenciaAnios||0)} años + ${Number(r.frecuenciaDias||0)} días`;entryDateChanged(i);
   const userId=$('cUsuario')?.value||'',currentId=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`)?.dataset.existingId||'';
-  if(userId&&id&&!currentId){
+  if(userId&&id&&!currentId&&!initial){
     const cs=await all('cumplimientos'),selectedKey=courseIdentity(r);
     const existing=cs.find(c=>String(c.usuarioId)===String(userId)&&complianceCourseIdentity(c,ss)===selectedKey&&(
       String(c.fechaRealizacion||'').trim()||String(c.fechaFin||'').trim()||(Array.isArray(c.archivos)&&c.archivos.length)||c.archivoData));
@@ -1079,20 +1163,31 @@ async function saveComplianceForm(id=''){
     if(!userId||!cargo)return alert('Usuario y Cargo son obligatorios.');
     if(!rows.length)return alert('Agregue al menos un cumplimiento.');
 
-    const ss=await all('estandares'),cs=await all('cumplimientos');
+    const [ss,cs,users,profiles]=await Promise.all([all('estandares'),all('cumplimientos'),all('usuarios'),all('perfiles')]);
+    const selectedUser=users.find(u=>String(u.id)===String(userId));
+    if(!selectedUser)return alert('El usuario seleccionado ya no existe. Seleccione nuevamente el usuario.');
+    const cargoReal=String(selectedUser.cargo||'').trim();
+    if(normalizeRel(cargo)!==normalizeRel(cargoReal))return alert('El cargo no coincide con el usuario seleccionado. Vuelva a seleccionar el usuario.');
+    const profileDoas=new Set(profiles.filter(p=>normalizeRel(p.cargo)===normalizeRel(cargoReal)).flatMap(p=>doaList(p.doa).map(normalizeRel)));
     const payloads=[];
     const propagationPlans=[];
 
     for(const row of rows){
       const i=row.dataset.entryIndex, rid=$('cCurso_'+i)?.value||'', date=$('cFecha_'+i)?.value||'';
       const selectedDoa=$('cDoa_'+i)?.value||'';
-      if(row.dataset.notApplicable==='true'||(selectedDoa&&await isDoaNotApplicable(userId,selectedDoa)))continue;
-      if(!rid||!$('cEstandar_'+i)?.value||!selectedDoa)return alert(`Complete Estándar, DOA y Curso / Entrenamiento en Entrenamiento ${Number(i)+1}.`);
+      const selectedStandard=$('cEstandar_'+i)?.value||'';
+      if(!selectedStandard||!selectedDoa)return alert(`Complete Estándar y DOA en Entrenamiento ${Number(i)+1}.`);
+      if(!profileDoas.has(normalizeRel(selectedDoa)))return alert(`El DOA "${selectedDoa}" no está asignado al cargo "${cargoReal}" en Perfiles. No se guardó ningún dato.`);
+      const validStandardDoa=ss.some(x=>normalizeRel(x.estandar)===normalizeRel(selectedStandard)&&normalizeRel(x.doa)===normalizeRel(selectedDoa));
+      if(!validStandardDoa)return alert(`El DOA "${selectedDoa}" no corresponde al estándar "${selectedStandard}". No se guardó ningún dato.`);
+      if(row.dataset.notApplicable==='true'||await isDoaNotApplicable(userId,selectedDoa))continue;
+      if(!rid)return alert(`Seleccione el curso / entrenamiento en Entrenamiento ${Number(i)+1}.`);
       if(!date)return alert(`La Fecha realización es obligatoria en Entrenamiento ${Number(i)+1}.`);
       if(!validateComplianceEntryFile(i))return;
 
       const r=ss.find(x=>String(x.id)===String(rid));
       if(!r)return alert('El curso seleccionado ya no existe.');
+      if(normalizeRel(r.estandar)!==normalizeRel(selectedStandard)||normalizeRel(r.doa)!==normalizeRel(selectedDoa))return alert(`El curso seleccionado no corresponde al estándar y DOA del Entrenamiento ${Number(i)+1}. No se guardó ningún dato.`);
 
       const currentId=row.dataset.existingId||'';
       const existing=currentId?cs.find(x=>String(x.id)===String(currentId)):null;
@@ -1231,14 +1326,21 @@ async function saveComplianceForm(id=''){
   }
 }
 async function complianceUserChanged(){
+  const summary=$('complianceCourseSummary');if(summary)summary.textContent='Seleccione un estándar y un DOA para cargar automáticamente todos los cursos que correspondan.';
   const id=$('cUsuario')?.value||'';
+  const previousUser=window.__complianceLastUserId;
+  const userChanged=previousUser!==undefined&&String(previousUser)!==String(id);
+  window.__complianceLastUserId=String(id);
   const u=id?(await all('usuarios')).find(x=>String(x.id)===String(id)):null;
   if($('cCargo'))$('cCargo').value=u?.cargo||'';
   const standards=await standardsForComplianceUser(id);
+  const entriesBox=$('complianceEntries');
+  if(entriesBox&&!([...entriesBox.querySelectorAll('.compliance-entry')].some(r=>r.dataset.existingId))){const first=entriesBox.querySelector('.compliance-entry');if(first)clearGeneratedComplianceRows(Number(first.dataset.entryIndex||0));}
   for(const row of document.querySelectorAll('.compliance-entry')){
     const i=row.dataset.entryIndex,el=$('cEstandar_'+i);
     if(!el)continue;
-    const previous=el.value||el.dataset.previousStandard||'';
+    const previous=userChanged?'':String(el.value||el.dataset.previousStandard||'').trim();
+    if(userChanged){el.dataset.selectedDoa='';el.dataset.selectedCurso='';}
     setComplianceStandardOptions(el,standards,previous);
     el.dataset.previousStandard=el.value||'';
     await entryStandardChanged(i);
