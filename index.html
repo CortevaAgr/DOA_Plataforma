@@ -589,9 +589,8 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 <div class="page-title"><div><h2>Consultar Requisitos</h2><div class="subtitle">Consulte los Estándares, DOA y Cursos/Entrenamientos requeridos según el Cargo.</div></div></div>
 <div class="panel">
 <div class="req-filter-panel">
-  <div class="field"><label for="reqCargo">Cargo / Perfil</label><select class="select" id="reqCargo" onchange="populateReqCargos().then(()=>renderRequirements())"><option value="">Seleccione un Cargo</option></select></div>
-  <div class="field"><label for="reqUsuario">Usuario (opcional)</label><select class="select" id="reqUsuario" onchange="renderRequirements()" disabled><option value="">Todos los usuarios del cargo</option></select></div>
-  <div class="req-filter-actions"><button class="btn btn-primary" onclick="renderRequirements()">Consultar requisitos</button><button class="btn btn-light" onclick="clearRequirementSearch()">Limpiar</button></div>
+  <div class="field"><label for="reqCargo">Cargo / Perfil</label><select class="select" id="reqCargo" onchange="renderRequirements()"><option value="">Seleccione un Cargo</option></select></div>
+  <div class="req-filter-actions"><button class="btn btn-primary" onclick="renderRequirements()">Consultar requisitos</button><button class="btn btn-light" onclick="clearRequirementSearch()">Limpiar búsqueda</button></div>
 </div>
 <div id="reqDetail"><div class="empty">Seleccione un Cargo para consultar los requisitos.</div></div>
 </div>
@@ -924,29 +923,19 @@ async function viewUser(id){
 }
 
 async function populateReqCargos(){
-  const [profiles,users]=await Promise.all([all('perfiles'),all('usuarios')]);
-  const sel=$('reqCargo'),userSel=$('reqUsuario');
+  const profiles=await all('perfiles');
+  const sel=$('reqCargo');
   if(!sel)return;
-  const old=sel.value,oldUser=userSel?.value||'';
+  const old=sel.value;
   const cargos=[...new Set(profiles.map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
   sel.innerHTML='<option value="">Seleccione un Cargo</option>'+cargos.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
   if(cargos.includes(old))sel.value=old;
-  if(userSel){
-    const applicableUsers=users.filter(u=>cargos.some(c=>normalizeRel(c)===normalizeRel(u.cargo))).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
-    userSel.innerHTML='<option value="">Todos los usuarios del cargo</option>'+applicableUsers.map(u=>`<option value="${esc(u.id)}" data-cargo="${esc(u.cargo)}">${esc(u.nombre)} · ${esc(u.cargo)}</option>`).join('');
-    if(applicableUsers.some(u=>String(u.id)===oldUser))userSel.value=oldUser;
-    userSel.disabled=!sel.value;
-    if(sel.value&&userSel.value){
-      const chosen=applicableUsers.find(u=>String(u.id)===userSel.value);
-      if(chosen&&normalizeRel(chosen.cargo)!==normalizeRel(sel.value))userSel.value='';
-    }
-  }
 }
 function clearRequirementSearch(){
-  const sel=$('reqCargo'),userSel=$('reqUsuario');
+  const sel=$('reqCargo');
   if(sel)sel.value='';
-  if(userSel){userSel.value='';userSel.disabled=true;}
-  $('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';
+  const detail=$('reqDetail');
+  if(detail)detail.innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';
 }
 async function renderRequirements(){
   const cargo=$('reqCargo')?.value||'', userId=$('reqUsuario')?.value||'';
@@ -1637,18 +1626,32 @@ async function openHistoryDetail(id){if(!adminUnlocked)return requireAdmin(()=>o
 function setupAdminColumnFilters(){
   document.querySelectorAll('#adminContent table.admin-filterable').forEach(table=>{
     const inputs=[...table.querySelectorAll('.admin-col-filter')];
-    inputs.forEach(input=>input.addEventListener('input',()=>{
+    const apply=()=>{
       const terms=inputs.map(i=>String(i.value||'').trim().toLocaleLowerCase('es'));
       [...table.querySelectorAll('tbody tr')].forEach(tr=>{
         const cells=[...tr.children];
         const visible=terms.every((term,i)=>!term||String(cells[i]?.textContent||'').toLocaleLowerCase('es').includes(term));
         tr.style.display=visible?'':'none';
       });
-    }));
+    };
+    inputs.forEach(input=>input.addEventListener('input',apply));
   });
 }
+function clearAdminFilters(button){
+  const table=button.closest('table');
+  if(!table)return;
+  table.querySelectorAll('.admin-col-filter').forEach(input=>input.value='');
+  table.querySelectorAll('tbody tr').forEach(row=>row.style.display='');
+}
 function adminFilterInputs(labels){
-  return `<tr class="admin-filter-row">${labels.map(label=>`<th><input class="admin-col-filter" type="search" placeholder="Filtrar…" aria-label="Filtrar ${esc(label)}"></th>`).join('')}<th></th></tr>`;
+  const placeholders={
+    'Nombre Completo':'Buscar nombre…','Cargo':'Buscar cargo…','DOA':'Buscar DOA…',
+    'Estándar':'Buscar estándar…','Curso / Entrenamiento':'Buscar curso…','Método':'Buscar método…',
+    'Course ID':'Buscar ID…','Frecuencia':'Buscar frecuencia…','Usuario':'Buscar usuario…',
+    'Cursos / Entrenamientos':'Buscar curso…','Método de entrega':'Buscar método…',
+    'Fecha realización':'AAAA-MM-DD','Fecha FIN':'AAAA-MM-DD','Estado':'Buscar estado…','Documento':'Con / sin documento'
+  };
+  return `<tr class="admin-filter-row">${labels.map(label=>`<th><input class="admin-col-filter" type="search" placeholder="${esc(placeholders[label]||('Buscar '+label.toLowerCase()+'…'))}" aria-label="Filtrar ${esc(label)}" title="Filtrar por ${esc(label)}"></th>`).join('')}<th><button type="button" class="btn btn-light admin-clear-filters" onclick="clearAdminFilters(this)" title="Borrar todos los filtros de esta tabla">Limpiar</button></th></tr>`;
 }
 async function renderAdmin(){let c=$('adminContent');if(currentAdmin==='history'){if(!adminUnlocked)return requireAdmin(()=>renderAdmin());try{let hs=await all('historial');c.innerHTML=`<div class="panel"><div class="page-title"><div><h3>Historial de cambios</h3><div class="subtitle">Registro automático de altas, actualizaciones y eliminaciones</div></div><button class="btn btn-light" onclick="showAdmin('history')">Actualizar</button></div><div class="notice">El historial se genera automáticamente desde Supabase. Solo los administradores pueden consultarlo.</div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Tipo</th><th>Entidad</th><th>Qué se hizo</th><th></th></tr></thead><tbody>${hs.map(h=>`<tr><td>${esc(formatHistoryDate(h.fecha))}</td><td>${esc(h.usuario||'Sesión administrativa')}</td><td>${badge(historyTypeLabel(h.tipo))}</td><td>${esc(historyEntityLabel(h.entidad))}</td><td>${esc(historySummary(h))}</td><td><button class="btn btn-light" onclick="openHistoryDetail('${h.id}')">Ver detalle</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No hay cambios registrados todavía.</td></tr>'}</tbody></table></div></div>`}catch(e){c.innerHTML=`<div class="panel"><div class="empty">No fue posible cargar el historial.<br><span class="small">${esc(e.message||e)}</span></div></div>`}return}if(currentAdmin==='users'){let us=await all('usuarios');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Usuarios</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openUser()">+ Agregar usuario</button><button class="btn btn-light" onclick="adminQuickAction('users','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('users','delete')">Eliminar</button></div></div><div class="table-wrap"><table class="admin-filterable"><thead><tr><th>Nombre Completo</th><th>Cargo</th><th></th></tr>${adminFilterInputs(["Nombre Completo","Cargo"])}</thead><tbody>${us.map(u=>`<tr><td>${esc(u.nombre)}</td><td>${esc(u.cargo)}</td><td><button class="btn btn-light" onclick="openUser('${u.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteUser('${u.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="3" class="empty">No hay usuarios.</td></tr>'}</tbody></table></div></div>`}
 if(currentAdmin==='profiles'){let ps=await all('perfiles');c.innerHTML=`<div class="panel"><div class="page-title"><h3>Perfiles / Cargos</h3><div class="admin-actions"><button class="btn btn-primary" onclick="openProfile()">+ Agregar</button><button class="btn btn-light" onclick="adminQuickAction('profiles','update')">Actualizar</button><button class="btn btn-danger" onclick="adminQuickAction('profiles','delete')">Eliminar</button></div></div><div class="table-wrap"><table class="admin-filterable"><thead><tr><th>Cargo</th><th>DOA</th><th></th></tr>${adminFilterInputs(["Cargo","DOA"])}</thead><tbody>${ps.map(p=>`<tr><td>${esc(p.cargo)}</td><td>${esc(p.doa)}</td><td><button class="btn btn-light" onclick="openProfile('${p.id}')">Editar</button> <button class="btn btn-danger" onclick="deleteProtected('perfiles','${p.id}')">Eliminar</button></td></tr>`).join('')||'<tr><td colspan="3" class="empty">No hay perfiles.</td></tr>'}</tbody></table></div></div>`}
@@ -1681,7 +1684,7 @@ async function confirmAdminQuickAction(type,action){
   if(type==='profiles')return action==='update'?openProfile(id):deleteProtected('perfiles',id);
   if(type==='standards')return action==='update'?openStandard(id):deleteProtected('estandares',id);   if(type==='compliance')return action==='update'?openCompliance(id):deleteCompliance(id);
 }
-async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?ps.filter(x=>String(x.cargo||'').trim()===String(p.cargo||'').trim()):[];let ss=await all('estandares');let doaMap=new Map();ss.forEach(x=>{const d=String(x.doa||'').trim();const e=String(x.estandar||'').trim();if(!d)return;if(!doaMap.has(d))doaMap.set(d,new Set());if(e)doaMap.get(d).add(e)});let doas=[...doaMap.keys()].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>{const standards=[...doaMap.get(d)].sort((a,b)=>a.localeCompare(b,'es'));const label=standards.length?`${d} — Estándar: ${standards.join(' · ')}`:d;return `<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(label)}</option>`}).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Operador"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
+async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?ps.filter(x=>String(x.cargo||'').trim()===String(p.cargo||'').trim()):[];let ss=await all('estandares');let doaMap=new Map();ss.forEach(x=>{const d=String(x.doa||'').trim();const e=String(x.estandar||'').trim();if(!d)return;if(!doaMap.has(d))doaMap.set(d,new Set());if(e)doaMap.get(d).add(e)});let doas=[...doaMap.keys()].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>{const standards=[...doaMap.get(d)].sort((a,b)=>a.localeCompare(b,'es'));const label=standards.length?`${d} — Estándar: ${standards.join(' · ')}`:d;return `<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(label)}</option>`}).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Técnico"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
 function profileDoaOptions(selected=''){let opts=[...document.querySelectorAll('#profileDoaFields select')].length;return ''}
 function addProfileDoaField(){let box=$('profileDoaFields');if(!box)return;let i=box.querySelectorAll('.profile-doa-row').length;let first=box.querySelector('select');let options=first?first.innerHTML:'<option value="">Seleccione un DOA</option>';let row=document.createElement('div');row.className='field full profile-doa-row';row.id='profileDoaRow'+i;row.innerHTML=`<label>DOA ${i+1}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${options}</select><button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button></div>`;box.appendChild(row)}
 function removeProfileDoa(i){let row=$('profileDoaRow'+i);if(row)row.remove();[...document.querySelectorAll('#profileDoaFields .profile-doa-row')].forEach((r,n)=>{r.id='profileDoaRow'+n;let l=r.querySelector('label');if(l)l.textContent='DOA '+(n+1)+(n===0?' *':'');let sel=r.querySelector('select');if(sel)sel.id='pDoa'+n;let b=r.querySelector('button');if(b)b.setAttribute('onclick',`removeProfileDoa(${n})`)})}
@@ -2650,4 +2653,18 @@ document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=
 }
 /* El enlace codificado sigue dentro del QR, pero no se muestra como texto. */
 #modal .user-qr-url { display: none !important; }
+</style>
+
+<style id="targeted-filter-usability-update">
+/* Actualización puntual: búsqueda por Cargo y filtros administrativos más prácticos */
+#requisitos .req-filter-panel{grid-template-columns:minmax(260px,560px) auto;align-items:end}
+#requisitos .req-filter-actions{justify-content:flex-start;align-items:center}
+#requisitos .req-filter-help{grid-column:1/-1}
+.admin-filter-row th{padding:7px 8px;background:#f2f6fa;vertical-align:top}
+.admin-col-filter{min-width:95px;height:36px;padding:7px 10px;font-size:12px;border-color:#c4d4e1;background:#fff}
+.admin-col-filter::placeholder{color:#8192a1}
+.admin-clear-filters{padding:7px 10px;font-size:11px;white-space:nowrap;min-width:0}
+.admin-filterable .admin-filter-row th:last-child{min-width:86px}
+@media(max-width:900px){#requisitos .req-filter-panel{grid-template-columns:1fr auto}}
+@media(max-width:600px){#requisitos .req-filter-panel{grid-template-columns:1fr}#requisitos .req-filter-actions{display:grid;grid-template-columns:1fr 1fr}}
 </style>
