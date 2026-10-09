@@ -924,14 +924,31 @@ async function openCompliance(id=''){
   $('cEstandar_0').dataset.selectedDoa=c.doa||selectedRow?.doa||'';
   $('cEstandar_0').dataset.selectedCurso=c.cursoId||selectedRow?.id||'';
   $('cEstandar_0').dataset.editingComplianceId=c.id||'';
-  complianceUserChanged();
+  await complianceUserChanged();
   await entryStandardChanged(0);
   if(c.id) renderExistingComplianceFilesForEntry(c,0);
   await entryDoaChanged(0);
   await entryCourseChanged(0,true);
   entryDateChanged(0);
 }
-async function addComplianceEntry(){const box=$('complianceEntries');if(!box)return;const i=box.querySelectorAll('.compliance-entry').length;box.insertAdjacentHTML('beforeend',complianceEntryTemplate(i,{}));const ss=await loadComplianceCatalog();const standards=window.__complianceStandards;$('cEstandar_'+i).innerHTML='<option value="">Seleccione un estándar</option>'+standards.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');complianceEntrySeq=i;const modalBody=document.querySelector('#modal .modal-body');if(modalBody)modalBody.scrollTop=modalBody.scrollHeight}
+async function standardsForComplianceUser(userId){
+  if(!userId)return [];
+  const [users,profiles,standards]=await Promise.all([all('usuarios'),all('perfiles'),loadComplianceCatalog()]);
+  const user=users.find(u=>String(u.id)===String(userId));
+  if(!user?.cargo)return [];
+  const cargoKey=normalizeRel(user.cargo);
+  const cargoDoas=[...new Set(profiles.filter(p=>normalizeRel(p.cargo)===cargoKey).flatMap(p=>doaList(p.doa).map(normalizeRel)))];
+  return [...new Set(standards.filter(r=>cargoDoas.includes(normalizeRel(r.doa))).map(r=>String(r.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+}
+function setComplianceStandardOptions(select, standards, preferred=''){
+  if(!select)return;
+  const old=String(preferred||select.value||'').trim();
+  select.innerHTML='<option value="">Seleccione un estándar</option>'+standards.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  const match=standards.find(x=>normalizeRel(x)===normalizeRel(old));
+  select.value=match||'';
+  if(!match){select.dataset.selectedDoa='';select.dataset.selectedCurso='';}
+}
+async function addComplianceEntry(){const box=$('complianceEntries');if(!box)return;const i=box.querySelectorAll('.compliance-entry').length;box.insertAdjacentHTML('beforeend',complianceEntryTemplate(i,{}));await loadComplianceCatalog();const standards=await standardsForComplianceUser($('cUsuario')?.value||'');setComplianceStandardOptions($('cEstandar_'+i),standards);complianceEntrySeq=i;const modalBody=document.querySelector('#modal .modal-body');if(modalBody)modalBody.scrollTop=modalBody.scrollHeight}
 function removeComplianceEntry(i){
   const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
   if(!row)return;
@@ -952,6 +969,7 @@ async function loadComplianceCatalog(){
 async function entryStandardChanged(i){
   const stdEl=$('cEstandar_'+i),doa=$('cDoa_'+i),curso=$('cCurso_'+i);if(!stdEl||!doa||!curso)return;
   const std=String(stdEl.value||'').trim(),userId=$('cUsuario')?.value||'';
+  stdEl.dataset.previousStandard=std;
   const ss=await loadComplianceCatalog(),exceptions=await all('excepciones_doa');
   const doas=[...new Map(ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&String(x.doa||'').trim()).map(x=>[normalizeRel(x.doa),String(x.doa).trim()])).values()].sort((a,b)=>a.localeCompare(b,'es'));
   const selected=String(doa.dataset.selectedDoa||'').trim();
@@ -1212,7 +1230,20 @@ async function saveComplianceForm(id=''){
     if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Guardar cumplimiento'}
   }
 }
-async function complianceUserChanged(){const id=$('cUsuario')?.value;if(!id)return;const u=(await all('usuarios')).find(x=>String(x.id)===String(id));if(u&&$('cCargo'))$('cCargo').value=u.cargo||'';for(const row of document.querySelectorAll('.compliance-entry')){const i=row.dataset.entryIndex,el=$('cEstandar_'+i);if(el)await entryStandardChanged(i)}}
+async function complianceUserChanged(){
+  const id=$('cUsuario')?.value||'';
+  const u=id?(await all('usuarios')).find(x=>String(x.id)===String(id)):null;
+  if($('cCargo'))$('cCargo').value=u?.cargo||'';
+  const standards=await standardsForComplianceUser(id);
+  for(const row of document.querySelectorAll('.compliance-entry')){
+    const i=row.dataset.entryIndex,el=$('cEstandar_'+i);
+    if(!el)continue;
+    const previous=el.value||el.dataset.previousStandard||'';
+    setComplianceStandardOptions(el,standards,previous);
+    el.dataset.previousStandard=el.value||'';
+    await entryStandardChanged(i);
+  }
+}
 async function complianceStandardChanged(){const std=$('cEstandar')?.value;if(!$('cDoa'))return;const ss=await all('estandares');const doas=[...new Set(ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()).map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));const selected=$('cEstandar').dataset.selectedDoa||'';$('cDoa').innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}" ${d===selected?'selected':''}>${esc(d)}</option>`).join('');$('cCurso').innerHTML='<option value="">Seleccione un curso</option>';$('cCurso').disabled=true;$('cMetodo').value='';$('cFrecuencia').value='';}
 async function complianceDoaChanged(){const std=$('cEstandar')?.value,doa=$('cDoa')?.value;if(!$('cCurso'))return;const ss=await all('estandares');const rows=ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()&&String(x.doa||'').trim()===String(doa||'').trim());const selected=$('cEstandar').dataset.selectedCurso||'';$('cCurso').innerHTML='<option value="">Seleccione un curso / entrenamiento</option>'+rows.map(r=>`<option value="${esc(r.id)}" ${r.id===selected?'selected':''}>${esc(r.curso||'Sin nombre')}</option>`).join('');$('cCurso').disabled=!rows.length;if(rows.length&&selected&&rows.some(r=>r.id===selected))complianceCourseChanged();}
 function normalizeDuplicateText(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
