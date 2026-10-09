@@ -413,6 +413,8 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 @media(max-width:640px){.compliance-entry{padding:11px}.compliance-add-entry{width:100%;min-width:0}.compliance-entry-head{align-items:flex-start}}
 
 .history-detail-hero{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid #d9e5ef;border-radius:14px;background:linear-gradient(135deg,#f4f8fc,#ffffff);margin-bottom:14px}.history-detail-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#0d5f9f;color:#fff;font-size:24px;font-weight:800;box-shadow:0 5px 14px rgba(13,95,159,.18)}.history-detail-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#60758a;font-weight:800}.history-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}.history-meta>div{padding:11px 13px;background:#f7fafc;border:1px solid #e0e8ef;border-radius:10px}.history-meta span,.history-info-item span,.history-change-label{display:block;font-size:11px;color:#718397;font-weight:700;margin-bottom:4px}.history-section-title{font-size:14px;font-weight:800;color:#123b5d;margin:18px 0 9px}.history-change-list{border:1px solid #dfe7ee;border-radius:12px;overflow:hidden}.history-change-row{padding:13px;border-bottom:1px solid #e7edf2}.history-change-row:last-child{border-bottom:0}.history-change-values{display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:stretch}.history-old,.history-new{padding:10px 12px;border-radius:9px;border:1px solid #dfe5ea;background:#fff}.history-old{background:#fafafa}.history-new{background:#f2f8fc;border-color:#cfe0ed}.history-old span,.history-new span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:#788898;margin-bottom:4px}.history-new span{color:#0d5f9f}.history-arrow{display:flex;align-items:center;justify-content:center;color:#0d5f9f;font-size:18px;font-weight:800}.history-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.history-info-item{padding:11px 13px;border:1px solid #dfe7ee;border-radius:10px;background:#fff}.history-note{margin-top:15px;padding:11px 13px;border-left:4px solid #0d5f9f;background:#f5f9fc;color:#60758a;border-radius:7px;font-size:12px}@media(max-width:640px){.history-meta,.history-info-grid{grid-template-columns:1fr}.history-change-values{grid-template-columns:1fr}.history-arrow{transform:rotate(90deg);height:22px}}
+  .compliance-entry .field .btn[id^="cDoaExceptionBtn_"]{flex:0 0 auto;border-color:#d9c4ca;color:#7b1e3a;background:#fff8fa}
+  .compliance-entry .field .btn[id^="cDoaExceptionBtn_"]:hover{background:#f8eaf0}
 </style>
 </head>
 <body>
@@ -542,7 +544,7 @@ async function bootData(){await all('perfiles');await all('estandares');await al
 function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.fecha_cambio||x.created_at||'',usuario:x.usuario_email||x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.datos_anteriores??x.informacion_anterior??null,nueva:x.datos_nuevos??x.informacion_nueva??null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeRel(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
 function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
 function normalizeCompliance(x,users,standards){const user=users.find(u=>String(u.id)===String(x.usuario||''))||users.find(u=>normalizeRel(u.nombre)===normalizeRel(x.usuario||''));const std=standards.find(r=>normalizeRel(r.estandar)===normalizeRel(x.estandar)&&normalizeRel(r.doa)===normalizeRel(x.doa)&&normalizeRel(r.curso)===normalizeRel(x.curso_entrenamiento));const docs=Array.isArray(x.documentos)?x.documentos:[];return {id:String(x.id),usuarioId:user?String(user.id):String(x.usuario||''),usuarioNombre:user?.nombre||String(x.usuario||''),cargo:x.cargo||user?.cargo||'',estandarId:std?String(std.id):'',cursoId:std?String(std.id):'',estandar:x.estandar||std?.estandar||'',doa:x.doa||std?.doa||'',curso:x.curso_entrenamiento||std?.curso||'',metodo:x.metodo_entrega||std?.metodo||'',frecuenciaAnios:Number(x.frecuencia_anios||std?.frecuenciaAnios||0),frecuenciaDias:Number(x.frecuencia_dias||std?.frecuenciaDias||0),fechaRealizacion:x.fecha_realizacion||'',fechaFin:x.fecha_fin||'',estado:x.estado||'',archivos:docs,archivoNombre:docs[0]?.nombre||'',archivoTipo:docs[0]?.tipo||'',archivoData:docs[0]?.data||''}}
-async function all(s){if(s==='usuarios')return (await api('usuarios?select=*&order=id')).map(normalizeUser);if(s==='perfiles')return (await api('perfiles?select=*&order=id')).map(normalizeProfile);if(s==='estandares')return (await api('estandares_doa?select=*&order=id')).map(normalizeStandard);if(s==='cumplimientos'){const [cs,us,ss]=await Promise.all([api('cumplimiento?select=*&order=id'),api('usuarios?select=*&order=id'),api('estandares_doa?select=*&order=id')]);const nu=us.map(normalizeUser),ns=ss.map(normalizeStandard);return cs.map(x=>normalizeCompliance(x,nu,ns))}if(s==='historial')return (await api('historial_cambios?select=*&order=fecha_cambio.desc&limit=500')).map(normalizeHistory);return []}
+async function all(s){if(s==='usuarios')return (await api('usuarios?select=*&order=id')).map(normalizeUser);if(s==='perfiles')return (await api('perfiles?select=*&order=id')).map(normalizeProfile);if(s==='estandares')return (await api('estandares_doa?select=*&order=id')).map(normalizeStandard);if(s==='cumplimientos'){const [cs,us,ss]=await Promise.all([api('cumplimiento?select=*&order=id'),api('usuarios?select=*&order=id'),api('estandares_doa?select=*&order=id')]);const nu=us.map(normalizeUser),ns=ss.map(normalizeStandard);return cs.map(x=>normalizeCompliance(x,nu,ns))}if(s==='excepciones_doa')return (await api('excepciones_doa?select=id,usuario_id,doa&order=id')).map(x=>({id:String(x.id),usuarioId:String(x.usuario_id),doa:String(x.doa||'')}));if(s==='historial')return (await api('historial_cambios?select=*&order=fecha_cambio.desc&limit=500')).map(normalizeHistory);return []}
 function dbPayload(s,o){if(s==='usuarios')return {nombre_completo:o.nombre||'',cargo:o.cargo||''};if(s==='perfiles')return {cargo:o.cargo||'',doa:o.doa||''};if(s==='estandares')return {estandar:o.estandar||'',doa:o.doa||'',curso_entrenamiento:o.curso||'',metodo_entrega:o.metodo||'',course_id:o.courseId||'',frecuencia_anios:Number(o.frecuenciaAnios||0),frecuencia_dias:Number(o.frecuenciaDias||0)};if(s==='cumplimientos')return {usuario:o.usuarioId||'',cargo:o.cargo||'',estandar:o.estandar||'',doa:o.doa||'',curso_entrenamiento:o.curso||'',metodo_entrega:o.metodo||'',fecha_realizacion:o.fechaRealizacion||null,frecuencia_anios:Number(o.frecuenciaAnios||0),frecuencia_dias:Number(o.frecuenciaDias||0),fecha_fin:o.fechaFin||null,estado:o.estado||statusFor(o),documentos:Array.isArray(o.archivos)?o.archivos:[]}}
 async function put(s,o){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s),payload=dbPayload(s,o),isUpdate=!!(o.id&&/^\d+$/.test(String(o.id)));if(s==='cumplimientos'&&!isUpdate)payload.created_at=new Date().toISOString();let data;if(isUpdate)data=await api(table+'?id=eq.'+Number(o.id),{method:'PATCH',body:JSON.stringify(payload)});else data=await api(table,{method:'POST',body:JSON.stringify(payload)});const row=Array.isArray(data)?data[0]:data;if(row?.id!==undefined)o.id=String(row.id);return o}
 async function del(s,id){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s);await api(table+'?id=eq.'+Number(id),{method:'DELETE',headers:authHeaders({'Prefer':'return=minimal'})})}
@@ -552,11 +554,31 @@ function badge(s){let cl=s==='COMPLETO / VIGENTE'?'b-green':s==='VENCIDO'||s==='
 function calcEnd(date,years,days){if(!date)return '';let d=new Date(date+'T00:00:00');d.setFullYear(d.getFullYear()+Number(years||0));d.setDate(d.getDate()+Number(days||0));return d.toISOString().slice(0,10)}
 function doaList(value){return String(value||'').split(/[,;\n]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)}
 async function applicable(user){
- const [ps,ss]=await Promise.all([all('perfiles'),all('estandares')]);
+ const [ps,ss,exceptions]=await Promise.all([all('perfiles'),all('estandares'),all('excepciones_doa')]);
  const cargo=String(user?.cargo||'').trim().toLowerCase();
  const doas=[...new Set(ps.filter(p=>String(p.cargo||'').trim().toLowerCase()===cargo).flatMap(p=>doaList(p.doa)))];
  if(!doas.length)return [];
- return ss.filter(x=>doas.includes(String(x.doa||'').trim().toLowerCase()));
+ const excluded=new Set(exceptions.filter(e=>String(e.usuarioId)===String(user?.id||'')).map(e=>normalizeRel(e.doa)));
+ return ss.filter(x=>doas.includes(String(x.doa||'').trim().toLowerCase())&&!excluded.has(normalizeRel(x.doa)));
+}
+async function isDoaNotApplicable(userId,doa){if(!userId||!doa)return false;const rows=await all('excepciones_doa');return rows.some(x=>String(x.usuarioId)===String(userId)&&normalizeRel(x.doa)===normalizeRel(doa))}
+async function setDoaNotApplicable(userId,doa,motivo=''){
+ const rows=await all('excepciones_doa');const existing=rows.find(x=>String(x.usuarioId)===String(userId)&&normalizeRel(x.doa)===normalizeRel(doa));
+ if(existing){await api('excepciones_doa?id=eq.'+encodeURIComponent(existing.id),{method:'DELETE',headers:authHeaders({'Prefer':'return=minimal'})});return false}
+ await api('excepciones_doa',{method:'POST',body:JSON.stringify({usuario_id:String(userId),doa:String(doa).trim(),motivo:String(motivo||'').trim()})});return true
+}
+async function toggleDoaException(i){
+ if(!adminUnlocked)return requireAdmin(()=>toggleDoaException(i));
+ const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);const userId=$('cUsuario')?.value||row?.dataset.exceptionUser||'',doa=$('cDoa_'+i)?.value||row?.dataset.exceptionDoa||'';
+ if(!userId)return alert('Seleccione primero el usuario.');if(!doa)return alert('Seleccione primero el DOA.');
+ const user=(await all('usuarios')).find(u=>String(u.id)===String(userId));if(!user)return alert('No se encontró el usuario seleccionado.');
+ const excluded=await isDoaNotApplicable(userId,doa);
+ if(excluded){if(!confirm(`¿Desea restablecer el DOA "${doa}" para ${user.nombre||'este usuario'}? Volverá a contar como requisito obligatorio.`))return;await setDoaNotApplicable(userId,doa);if(row){row.dataset.notApplicable='false';delete row.dataset.exceptionDoa;delete row.dataset.exceptionUser;const sel=$('cDoa_'+i);if(sel)sel.value=doa;await entryDoaChanged(i)}await refresh();return alert('DOA restablecido para esta persona.')}
+ if(!confirm(`¿Confirma que el DOA "${doa}" NO APLICA a ${user.nombre||'este usuario'}? Esta excepción afectará únicamente a esta persona y no modificará el cargo ni a otros usuarios.`))return;
+ const motivo=prompt('Motivo o referencia de la decisión de la compañía (opcional):','');if(motivo===null)return;
+ await setDoaNotApplicable(userId,doa,motivo);
+ if(row){row.dataset.notApplicable='true';row.dataset.exceptionDoa=doa;row.dataset.exceptionUser=userId;await entryDoaChanged(i);}
+ await refresh();alert('Excepción guardada. El DOA no contará en la autorización de esta persona.');
 }
 function normalizePersonName(value){
  return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
@@ -854,7 +876,7 @@ function complianceEntryTemplate(i=0, c={}){
     </div>
     <div class="form-grid">
       <div class="field"><label>Estándar *</label><select id="cEstandar_${i}" onchange="entryStandardChanged(${i})"><option value="">Seleccione un estándar</option></select></div>
-      <div class="field"><label>DOA *</label><select id="cDoa_${i}" onchange="entryDoaChanged(${i})" disabled><option value="">Seleccione un DOA</option></select></div>
+      <div class="field"><label>DOA *</label><div style="display:flex;gap:7px;align-items:center"><select id="cDoa_${i}" onchange="entryDoaChanged(${i})" disabled style="flex:1;min-width:0"><option value="">Seleccione un DOA</option></select><button type="button" id="cDoaExceptionBtn_${i}" class="btn btn-light" style="padding:8px 10px;font-size:11px;white-space:nowrap" onclick="toggleDoaException(${i})" title="Excepción individual para este usuario">No aplica</button></div><div id="cDoaExceptionInfo_${i}" class="small" style="margin-top:5px"></div></div>
       <div class="field"><label>Cursos / Entrenamientos *</label><select id="cCurso_${i}" onchange="entryCourseChanged(${i})" disabled><option value="">Seleccione un curso</option></select></div>
       <div class="field"><label>Método de entrega</label><input id="cMetodo_${i}" readonly value="${esc(c.metodo||'')}" placeholder="Se mostrará según el curso"></div>
       <div class="field"><label>Frecuencia</label><input id="cFrecuencia_${i}" readonly value="" placeholder="Se mostrará según el curso"></div>
@@ -929,29 +951,29 @@ async function loadComplianceCatalog(){
 }
 async function entryStandardChanged(i){
   const stdEl=$('cEstandar_'+i),doa=$('cDoa_'+i),curso=$('cCurso_'+i);if(!stdEl||!doa||!curso)return;
-  const std=String(stdEl.value||'').trim();
-  const ss=await loadComplianceCatalog();
+  const std=String(stdEl.value||'').trim(),userId=$('cUsuario')?.value||'';
+  const ss=await loadComplianceCatalog(),exceptions=await all('excepciones_doa');
   const doas=[...new Map(ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&String(x.doa||'').trim()).map(x=>[normalizeRel(x.doa),String(x.doa).trim()])).values()].sort((a,b)=>a.localeCompare(b,'es'));
   const selected=String(doa.dataset.selectedDoa||'').trim();
-  doa.innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
-  doa.disabled=!doas.length;
-  curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>';
-  curso.disabled=true;
-  curso.dataset.selectedCurso='';
+  doa.innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>{const excluded=exceptions.some(e=>String(e.usuarioId)===String(userId)&&normalizeRel(e.doa)===normalizeRel(d));return `<option value="${esc(d)}">${esc(d)}${excluded?' — NO APLICA':''}</option>`}).join('');
+  doa.disabled=!doas.length;curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>';curso.disabled=true;curso.dataset.selectedCurso='';
   $('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';
-  const selectedDoa=doas.find(d=>normalizeRel(d)===normalizeRel(selected));
-  if(selectedDoa){doa.value=selectedDoa;await entryDoaChanged(i)}
+  const selectedDoa=doas.find(d=>normalizeRel(d)===normalizeRel(selected));if(selectedDoa){doa.value=selectedDoa;await entryDoaChanged(i)}else await updateDoaExceptionButton(i);
 }
 async function entryDoaChanged(i){
   const std=$('cEstandar_'+i)?.value||'',doa=$('cDoa_'+i)?.value||'',curso=$('cCurso_'+i);if(!curso)return;
   const ss=window.__complianceRows?.length?window.__complianceRows:await loadComplianceCatalog();
+  const excluded=await isDoaNotApplicable($('cUsuario')?.value||'',doa);
+  const info=$('cDoaExceptionInfo_'+i);if(info)info.textContent=excluded?'Este DOA está marcado como NO APLICA para esta persona. Restablézcalo si debe volver a ser obligatorio.':'';
   const rows=ss.filter(x=>normalizeRel(x.estandar)===normalizeRel(std)&&normalizeRel(x.doa)===normalizeRel(doa));
   const selected=String(curso.dataset.selectedCurso||'').trim();
   curso.innerHTML='<option value="">Seleccione un curso / entrenamiento</option>'+rows.map(r=>`<option value="${esc(r.id)}">${esc(r.curso||'Sin nombre')}</option>`).join('');
-  curso.disabled=!rows.length;
-  const selectedRow=rows.find(r=>String(r.id)===selected);
-  if(selectedRow){curso.value=String(selectedRow.id);await entryCourseChanged(i,true)}
+  curso.disabled=!rows.length||excluded;
+  if(excluded){$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';if($('cFecha_'+i))$('cFecha_'+i).disabled=true;if($('cArchivos_'+i))$('cArchivos_'+i).disabled=true;}
+  else {if($('cFecha_'+i))$('cFecha_'+i).disabled=false;if($('cArchivos_'+i))$('cArchivos_'+i).disabled=false;const selectedRow=rows.find(r=>String(r.id)===selected);if(selectedRow){curso.value=String(selectedRow.id);await entryCourseChanged(i,true)}}
+  await updateDoaExceptionButton(i);
 }
+async function updateDoaExceptionButton(i){const btn=$('cDoaExceptionBtn_'+i),doa=$('cDoa_'+i)?.value||'',userId=$('cUsuario')?.value||'';if(!btn)return;const excluded=await isDoaNotApplicable(userId,doa);btn.textContent=excluded?'Restablecer':'No aplica';btn.disabled=!userId||!doa;const info=$('cDoaExceptionInfo_'+i);if(info)info.textContent=excluded?'Este DOA está marcado como NO APLICA para esta persona.':''}
 async function entryCourseChanged(i,initial=false){
   const id=$('cCurso_'+i)?.value;if(!$('cMetodo_'+i))return;
   const ss=await all('estandares'),r=ss.find(x=>String(x.id)===String(id));
@@ -1045,7 +1067,9 @@ async function saveComplianceForm(id=''){
 
     for(const row of rows){
       const i=row.dataset.entryIndex, rid=$('cCurso_'+i)?.value||'', date=$('cFecha_'+i)?.value||'';
-      if(!rid||!$('cEstandar_'+i)?.value||!$('cDoa_'+i)?.value)return alert(`Complete Estándar, DOA y Curso / Entrenamiento en Entrenamiento ${Number(i)+1}.`);
+      const selectedDoa=$('cDoa_'+i)?.value||'';
+      if(row.dataset.notApplicable==='true'||(selectedDoa&&await isDoaNotApplicable(userId,selectedDoa)))continue;
+      if(!rid||!$('cEstandar_'+i)?.value||!selectedDoa)return alert(`Complete Estándar, DOA y Curso / Entrenamiento en Entrenamiento ${Number(i)+1}.`);
       if(!date)return alert(`La Fecha realización es obligatoria en Entrenamiento ${Number(i)+1}.`);
       if(!validateComplianceEntryFile(i))return;
 
@@ -1099,6 +1123,8 @@ async function saveComplianceForm(id=''){
         });
       }
     }
+
+    if(!payloads.length){closeModal();await refresh();showAdmin('compliance');return alert('La excepción individual quedó guardada. No hay cursos aplicables para registrar en esta ventana.')}
 
     // Validación dentro de la ventana: el mismo curso no se registra dos veces.
     const seen=new Set();
@@ -1186,7 +1212,7 @@ async function saveComplianceForm(id=''){
     if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Guardar cumplimiento'}
   }
 }
-async function complianceUserChanged(){const id=$('cUsuario')?.value;if(!id)return;const u=(await all('usuarios')).find(x=>x.id===id);if(u&&$('cCargo'))$('cCargo').value=u.cargo||''}
+async function complianceUserChanged(){const id=$('cUsuario')?.value;if(!id)return;const u=(await all('usuarios')).find(x=>String(x.id)===String(id));if(u&&$('cCargo'))$('cCargo').value=u.cargo||'';for(const row of document.querySelectorAll('.compliance-entry')){const i=row.dataset.entryIndex,el=$('cEstandar_'+i);if(el)await entryStandardChanged(i)}}
 async function complianceStandardChanged(){const std=$('cEstandar')?.value;if(!$('cDoa'))return;const ss=await all('estandares');const doas=[...new Set(ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()).map(x=>String(x.doa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));const selected=$('cEstandar').dataset.selectedDoa||'';$('cDoa').innerHTML='<option value="">Seleccione un DOA</option>'+doas.map(d=>`<option value="${esc(d)}" ${d===selected?'selected':''}>${esc(d)}</option>`).join('');$('cCurso').innerHTML='<option value="">Seleccione un curso</option>';$('cCurso').disabled=true;$('cMetodo').value='';$('cFrecuencia').value='';}
 async function complianceDoaChanged(){const std=$('cEstandar')?.value,doa=$('cDoa')?.value;if(!$('cCurso'))return;const ss=await all('estandares');const rows=ss.filter(x=>String(x.estandar||'').trim()===String(std||'').trim()&&String(x.doa||'').trim()===String(doa||'').trim());const selected=$('cEstandar').dataset.selectedCurso||'';$('cCurso').innerHTML='<option value="">Seleccione un curso / entrenamiento</option>'+rows.map(r=>`<option value="${esc(r.id)}" ${r.id===selected?'selected':''}>${esc(r.curso||'Sin nombre')}</option>`).join('');$('cCurso').disabled=!rows.length;if(rows.length&&selected&&rows.some(r=>r.id===selected))complianceCourseChanged();}
 function normalizeDuplicateText(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
@@ -1252,7 +1278,7 @@ async function saveCompliance(userId,rid){const cs=await all('cumplimientos');co
 async function openAttachment(cid){return openComplianceAttachment(cid,0)}
 let pendingRegistrationRows=[];
 async function buildPendingRegistrationRows(){
-  const [users,profiles,standards,compliances]=await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos')]);
+  const [users,profiles,standards,compliances,exceptions]=await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos'),all('excepciones_doa')]);
   const rows=[];
   users.forEach(user=>{
     const cargo=String(user.cargo||'').trim();
@@ -1260,7 +1286,8 @@ async function buildPendingRegistrationRows(){
     const profileRows=profiles.filter(p=>normalizeRel(p.cargo)===normalizeRel(cargo));
     const doas=[...new Set(profileRows.flatMap(p=>doaList(p.doa)))];
     if(!doas.length)return;
-    const applicableRows=standards.filter(r=>doas.some(d=>normalizeRel(d)===normalizeRel(r.doa)));
+    const excludedDoas=new Set(exceptions.filter(e=>String(e.usuarioId)===String(user.id)).map(e=>normalizeRel(e.doa)));
+    const applicableRows=standards.filter(r=>doas.some(d=>normalizeRel(d)===normalizeRel(r.doa))&&!excludedDoas.has(normalizeRel(r.doa)));
     applicableRows.forEach(r=>{
       const hasRealData=compliances.some(c=>{
         if(String(c.usuarioId)!==String(user.id) || !String(c.fechaRealizacion||'').trim())return false;
