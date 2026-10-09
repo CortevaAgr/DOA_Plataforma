@@ -425,6 +425,123 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
   .compliance-entry .field .btn[id^="cDoaExceptionBtn_"]{flex:0 0 auto;border-color:#d9c4ca;color:#7b1e3a;background:#fff8fa}
   .compliance-entry .field .btn[id^="cDoaExceptionBtn_"]:hover{background:#f8eaf0}
 </style>
+
+<style id="requirements-premium-linked">
+#requisitos>.page-title h2{font-size:30px;letter-spacing:-.5px}
+#requisitos>.page-title .subtitle{max-width:850px;line-height:1.6}
+#requisitos>.panel{padding:0;overflow:hidden;border:1px solid #dce6c9;box-shadow:0 18px 45px rgba(49,76,30,.08)}
+#requisitos .req-filter-panel{padding:20px 22px 17px;background:linear-gradient(120deg,#f5faef,#fffdf0);border-bottom:1px solid #dfe8c9;display:grid;grid-template-columns:minmax(220px,1fr) minmax(240px,1fr) auto;gap:14px;align-items:end}
+#requisitos .req-filter-panel .field{min-width:0}
+#requisitos .req-filter-panel label{font-size:12px;font-weight:800;color:#294c68}
+#requisitos .req-filter-panel select{width:100%;height:46px;border-radius:11px}
+#requisitos .req-filter-actions{display:flex;gap:8px;flex-wrap:wrap}
+#requisitos .req-filter-help{grid-column:1/-1;margin:0;color:#687e91;font-size:12px;line-height:1.5}
+#requisitos #reqDetail{padding:22px;background:linear-gradient(180deg,#fbfdf7 0%,#fffdf4 100%)}
+#requisitos .req-hero{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:25px 27px;border-radius:17px;background:linear-gradient(115deg,#315b36 0%,#527b45 68%,#7b985c 100%);color:#fff;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(49,91,54,.17)}
+#requisitos .req-hero:after{content:"";position:absolute;width:240px;height:240px;right:-80px;top:-120px;border:1px solid rgba(255,255,255,.16);border-radius:50%;box-shadow:0 0 0 28px rgba(255,255,255,.035),0 0 0 58px rgba(255,255,255,.025)}
+#requisitos .req-hero>div{position:relative;z-index:1}
+#requisitos .req-hero h2{font-size:27px;line-height:1.2;margin:8px 0}
+#requisitos .req-hero p{margin:0;color:#d6e8f5;font-size:13px;line-height:1.5}
+#requisitos .req-eyebrow{font-size:10px;letter-spacing:1.3px;font-weight:850;color:#6f8da5}
+#requisitos .req-hero .req-eyebrow{color:#b8dff5}
+#requisitos .req-hero-mark{min-width:110px;text-align:center;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.1);border-radius:15px;padding:12px 18px;backdrop-filter:blur(5px)}
+#requisitos .req-hero-mark span,#requisitos .req-hero-mark small{display:block;font-size:10px;letter-spacing:1px;font-weight:800;color:#d8ecf8}
+#requisitos .req-hero-mark b{display:block;font-size:32px;line-height:1.25;color:#fff}
+#requisitos .req-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+#requisitos .req-metric{position:relative;background:#fff;border:1px solid #e0e8ef;border-radius:13px;padding:16px;box-shadow:0 5px 15px rgba(18,51,78,.04);overflow:hidden}
+#requisitos .req-metric:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#8eaf62}
+#requisitos .req-metric span{display:block;color:#6b8092;font-size:11px;font-weight:700;line-height:1.4}
+#requisitos .req-metric b{display:block;margin-top:7px;color:#123d5e;font-size:27px;letter-spacing:-.4px}
+#requisitos .req-doa-card{background:#fff;border:1px solid #cbdcb8;border-left:5px solid #83a85f;border-radius:15px;overflow:hidden;margin-top:23px;box-shadow:0 9px 23px rgba(58,86,38,.09)}
+#requisitos .req-doa-card:nth-of-type(even){border-color:#e5dca9;border-left-color:#d5b94f;background:#fffef9}
+#requisitos .req-doa-card+.req-doa-card{margin-top:25px}
+#requisitos .req-doa-card:nth-of-type(even) .req-doa-head{background:linear-gradient(100deg,#fff7d9,#fffdf2);border-bottom-color:#eee3b9}
+#requisitos .req-doa-card:nth-of-type(odd) .req-doa-head{background:linear-gradient(100deg,#edf6e4,#fbfdf6);border-bottom-color:#dbe8ce}
+#requisitos .req-doa-head{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px 22px;background:linear-gradient(100deg,#edf6e4,#fbfdf6);border-bottom:1px solid #dbe8ce}
+#requisitos .req-doa-head h3{margin:5px 0 4px;color:#123e60;font-size:17px;overflow-wrap:anywhere}
+#requisitos .req-doa-head p{margin:0;color:#71869a;font-size:11px}
+#requisitos .req-count{white-space:nowrap;padding:7px 10px;border-radius:999px;background:#f0f6df;color:#3e6630;border:1px solid #d6e4bd;font-size:11px;font-weight:800}
+#requisitos .req-doa-card:nth-of-type(even) .req-count{background:#fff3c4;color:#78601a;border-color:#eadb9a}
+#requisitos .req-doa-card .table-wrap{border:0;border-radius:0;max-height:none;box-shadow:none}
+#requisitos .req-doa-card table{min-width:680px;font-size:12px}
+#requisitos .req-doa-card th{background:#f4f8ed;color:#42603a;font-size:11px}
+#requisitos .req-doa-card:nth-of-type(even) th{background:#fff9e5;color:#766321}
+#requisitos .req-doa-card td{line-height:1.5}
+#requisitos .req-user-summary{margin-top:15px;padding:18px 20px;background:#fff;border:1px solid #dce6ee;border-radius:15px;box-shadow:0 6px 18px rgba(17,49,76,.05)}
+#requisitos .req-user-id{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+#requisitos .req-avatar{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#0b5a95,#7b1e3a);color:#fff;font-size:14px;font-weight:900;flex-shrink:0}
+#requisitos .req-user-id h3{margin:4px 0;color:#153f5f;font-size:17px}
+#requisitos .req-user-id p{margin:0;color:#718397;font-size:12px}
+#requisitos .req-user-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:12px}
+#requisitos .req-user-stats>div{padding:11px 12px;background:#f7fafc;border:1px solid #e5edf3;border-radius:10px}
+#requisitos .req-user-stats span{display:block;color:#718397;font-size:10px;font-weight:750}
+#requisitos .req-user-stats b{display:block;margin-top:4px;color:#173f5e;font-size:20px}
+#requisitos .req-user-summary .progress{height:8px}
+#requisitos .req-user-summary .progress span{background:linear-gradient(90deg,#13815a,#50b58b)}
+@media(max-width:900px){#requisitos .req-filter-panel{grid-template-columns:1fr 1fr}#requisitos .req-filter-actions{grid-column:1/-1}#requisitos .req-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#requisitos .req-user-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){#requisitos #reqDetail{padding:12px}#requisitos .req-filter-panel{grid-template-columns:1fr;padding:14px}#requisitos .req-filter-actions{grid-column:auto;display:grid;grid-template-columns:1fr 1fr}#requisitos .req-filter-actions .btn{width:100%}#requisitos .req-hero{align-items:flex-start;padding:20px;flex-direction:column}#requisitos .req-hero h2{font-size:23px}#requisitos .req-hero-mark{display:flex;align-items:center;gap:10px;padding:8px 12px}#requisitos .req-hero-mark b{font-size:22px}#requisitos .req-metrics{gap:8px}#requisitos .req-metric{padding:12px}#requisitos .req-metric b{font-size:23px}#requisitos .req-doa-head{align-items:flex-start;padding:14px;flex-direction:column}#requisitos .req-user-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+
+<style id="requirements-professional-finish">
+/* Ajuste exclusivamente visual para Consultar Requisitos */
+#requisitos{--req-ink:#18384c;--req-muted:#627789;--req-green:#4e7442;--req-green-soft:#eef5e8;--req-yellow:#c9ad45;--req-yellow-soft:#fff8df;--req-border:#d9e3d3}
+#requisitos>.page-title{margin-bottom:18px}
+#requisitos>.page-title h2{color:var(--req-ink);font-size:29px;font-weight:780;letter-spacing:-.65px}
+#requisitos>.page-title .subtitle{color:var(--req-muted);font-size:13px}
+#requisitos>.panel{border:1px solid #dce5d7;border-radius:18px;box-shadow:0 14px 38px rgba(26,55,39,.075);background:#fff}
+#requisitos .req-filter-panel{padding:22px 24px;background:linear-gradient(120deg,#f3f8ef 0%,#fffdf3 100%);border-bottom:1px solid #dfe7d7;gap:16px}
+#requisitos .req-filter-panel label{color:#304d3a;font-size:11px;letter-spacing:.25px;text-transform:uppercase}
+#requisitos .req-filter-panel select{height:47px;border:1px solid #cbd8c6;border-radius:10px;background-color:#fff;color:#213c4e;box-shadow:0 2px 5px rgba(30,55,40,.025);transition:border-color .18s,box-shadow .18s}
+#requisitos .req-filter-panel select:focus{border-color:#77966a;box-shadow:0 0 0 3px rgba(119,150,106,.15);outline:none}
+#requisitos .req-filter-actions .btn{min-height:43px;border-radius:10px;padding:10px 16px;font-weight:750;box-shadow:none;transition:transform .18s,box-shadow .18s}
+#requisitos .req-filter-actions .btn:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(30,55,40,.12)}
+#requisitos .req-filter-actions .btn-primary{background:#456b3b;border-color:#456b3b}
+#requisitos .req-filter-actions .btn-light{background:#fff;border:1px solid #d7e0d2;color:#405a46}
+#requisitos #reqDetail{padding:24px;background:linear-gradient(180deg,#fbfcf8 0%,#fffdf6 100%)}
+#requisitos .req-hero{border-radius:15px;padding:24px 27px;background:linear-gradient(115deg,#284d34 0%,#456b40 72%,#688653 100%);box-shadow:0 9px 22px rgba(39,76,47,.15)}
+#requisitos .req-hero h2{font-size:28px;font-weight:780;letter-spacing:-.4px}
+#requisitos .req-hero .req-eyebrow{color:#d7e8ce;font-size:9px;letter-spacing:1.45px}
+#requisitos .req-hero-mark{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25);border-radius:12px}
+#requisitos .req-metrics{gap:13px;margin:17px 0 22px}
+#requisitos .req-metric{border-color:#e0e7dc;border-radius:12px;padding:15px 17px;box-shadow:0 3px 11px rgba(28,56,37,.035)}
+#requisitos .req-metric:before{width:3px;background:#779568}
+#requisitos .req-metric:nth-child(even):before{background:#d0b64c}
+#requisitos .req-metric span{color:#64796b;font-size:10px;letter-spacing:.15px}
+#requisitos .req-metric b{color:#234535;font-size:26px}
+#requisitos .req-doa-card{margin-top:26px;border:1px solid #cbdac1;border-left:5px solid #6e925d;border-radius:14px;background:#fff;box-shadow:0 7px 20px rgba(37,65,39,.07);overflow:hidden}
+#requisitos .req-doa-card+.req-doa-card{margin-top:28px}
+#requisitos .req-doa-card:nth-of-type(even){border-color:#e4d9a6;border-left-color:#c8ad43;background:#fffefb}
+#requisitos .req-doa-head{padding:20px 23px;background:linear-gradient(105deg,#edf5e8,#fbfdf9);border-bottom:1px solid #dce7d4}
+#requisitos .req-doa-card:nth-of-type(even) .req-doa-head{background:linear-gradient(105deg,#fff6d8,#fffdf5);border-bottom-color:#eee2b6}
+#requisitos .req-doa-head .req-eyebrow{display:inline-block;margin-bottom:3px;color:#5e7c50;font-size:9px;letter-spacing:1.2px}
+#requisitos .req-doa-card:nth-of-type(even) .req-doa-head .req-eyebrow{color:#88712b}
+#requisitos .req-doa-head h3{margin:4px 0 6px;color:#203f31;font-size:18px;line-height:1.35;font-weight:780}
+#requisitos .req-doa-head p{color:#687d70;font-size:11px}
+#requisitos .req-count{padding:7px 11px;background:#e5efdc;color:#385a32;border:1px solid #d0e0c5;font-size:10px;letter-spacing:.2px}
+#requisitos .req-doa-card:nth-of-type(even) .req-count{background:#fff1bd;color:#78611c;border-color:#eadb9c}
+#requisitos .req-doa-card .table-wrap{padding:0 13px 12px;background:transparent}
+#requisitos .req-doa-card table{min-width:700px;border-collapse:separate;border-spacing:0;font-size:12px}
+#requisitos .req-doa-card th{padding:12px 12px;background:#f2f6ee;color:#496342;font-size:10px;font-weight:800;letter-spacing:.25px;text-transform:uppercase;border-bottom:1px solid #dfe8d8}
+#requisitos .req-doa-card:nth-of-type(even) th{background:#fff9e8;color:#77672d;border-bottom-color:#efe4bd}
+#requisitos .req-doa-card td{padding:12px;border-bottom:1px solid #edf0e9;color:#405565;line-height:1.5;vertical-align:top}
+#requisitos .req-doa-card tbody tr:last-child td{border-bottom:0}
+#requisitos .req-doa-card tbody tr:hover td{background:#f8fbf5}
+#requisitos .req-doa-card:nth-of-type(even) tbody tr:hover td{background:#fffdf2}
+#requisitos .req-doa-card td strong{color:#244534;font-weight:750}
+#requisitos .req-user-summary{border-color:#dce5d7;border-radius:14px;box-shadow:0 5px 16px rgba(28,56,37,.045)}
+#requisitos .req-user-id h3{color:#234535}
+#requisitos .req-avatar{background:linear-gradient(135deg,#456b3b,#8ba66b);border-radius:12px}
+#requisitos .req-user-stats>div{background:#f7faf4;border-color:#e2e9dc}
+#requisitos .req-user-stats>div:nth-child(even){background:#fffdf3;border-color:#eee6c9}
+#requisitos .req-user-stats b{color:#244535}
+#requisitos .req-user-summary .progress{background:#e7ede2;border-radius:99px;overflow:hidden}
+#requisitos .req-user-summary .progress span{background:linear-gradient(90deg,#4f7943,#91ae70)}
+#requisitos #reqDetail .notice{border-radius:10px;border-color:#e9dfb6;background:#fff9e5;color:#665626}
+#requisitos #reqDetail .empty{border-radius:11px;border:1px dashed #d3dfcb;background:rgba(255,255,255,.78);color:#63776a;padding:20px}
+@media(max-width:760px){#requisitos #reqDetail{padding:14px}#requisitos .req-filter-panel{padding:16px}#requisitos .req-doa-card{margin-top:20px}#requisitos .req-doa-card+.req-doa-card{margin-top:22px}#requisitos .req-doa-head{padding:16px}}
+@media(prefers-reduced-motion:reduce){#requisitos .req-filter-actions .btn,#requisitos .req-filter-panel select{transition:none}}
+</style>
+
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
@@ -471,10 +588,10 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 <section id="requisitos" class="view">
 <div class="page-title"><div><h2>Consultar Requisitos</h2><div class="subtitle">Consulte los Estándares, DOA y Cursos/Entrenamientos requeridos según el Cargo.</div></div></div>
 <div class="panel">
-<div class="toolbar" style="align-items:end">
-  <div class="field" style="min-width:360px;flex:1"><label>Cargo</label><select class="select" id="reqCargo" onchange="renderRequirements()"><option value="">Seleccione un Cargo</option></select></div>
-  <button class="btn btn-primary" onclick="renderRequirements()">Consultar</button>
-  <button class="btn btn-light" onclick="clearRequirementSearch()">Limpiar</button>
+<div class="req-filter-panel">
+  <div class="field"><label for="reqCargo">Cargo / Perfil</label><select class="select" id="reqCargo" onchange="populateReqCargos().then(()=>renderRequirements())"><option value="">Seleccione un Cargo</option></select></div>
+  <div class="field"><label for="reqUsuario">Usuario (opcional)</label><select class="select" id="reqUsuario" onchange="renderRequirements()" disabled><option value="">Todos los usuarios del cargo</option></select></div>
+  <div class="req-filter-actions"><button class="btn btn-primary" onclick="renderRequirements()">Consultar requisitos</button><button class="btn btn-light" onclick="clearRequirementSearch()">Limpiar</button></div>
 </div>
 <div id="reqDetail"><div class="empty">Seleccione un Cargo para consultar los requisitos.</div></div>
 </div>
@@ -628,7 +745,7 @@ function userQrHtml(u){
   const url=userQrUrl(u.id);
   return `<div class="user-qr-card">
     <img class="user-qr-image" src="${esc(qrImageUrl(url))}" alt="Código QR de ${esc(u.nombre||'usuario')}" loading="eager">
-    <div class="user-qr-info"><h4>Código QR de ${esc(u.nombre||"usuario")}</h4><p>Al escanear este código se abrirá directamente la sección <b>Ver detalle</b> de este usuario.</p><div class="user-qr-url">${esc(url)}</div></div>
+    <div class="user-qr-info"><h4>Código QR de ${esc(u.nombre||"usuario")}</h4><p>Al escanear este código se abrirá directamente la sección <b>Ver detalle</b> de este usuario.</p></div>
   </div>`;
 }
 async function showUserQr(id){
@@ -806,73 +923,112 @@ async function viewUser(id){
   )
 }
 
-async function populateReqCargos(){let ps=await all('perfiles'),sel=$('reqCargo');if(!sel)return;let old=sel.value;let cargos=[...new Set(ps.map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));sel.innerHTML='<option value="">Seleccione un Cargo</option>'+cargos.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');if(cargos.includes(old))sel.value=old}
-function clearRequirementSearch(){let sel=$('reqCargo');if(sel)sel.value='';$('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>'}
+async function populateReqCargos(){
+  const [profiles,users]=await Promise.all([all('perfiles'),all('usuarios')]);
+  const sel=$('reqCargo'),userSel=$('reqUsuario');
+  if(!sel)return;
+  const old=sel.value,oldUser=userSel?.value||'';
+  const cargos=[...new Set(profiles.map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  sel.innerHTML='<option value="">Seleccione un Cargo</option>'+cargos.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  if(cargos.includes(old))sel.value=old;
+  if(userSel){
+    const applicableUsers=users.filter(u=>cargos.some(c=>normalizeRel(c)===normalizeRel(u.cargo))).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+    userSel.innerHTML='<option value="">Todos los usuarios del cargo</option>'+applicableUsers.map(u=>`<option value="${esc(u.id)}" data-cargo="${esc(u.cargo)}">${esc(u.nombre)} · ${esc(u.cargo)}</option>`).join('');
+    if(applicableUsers.some(u=>String(u.id)===oldUser))userSel.value=oldUser;
+    userSel.disabled=!sel.value;
+    if(sel.value&&userSel.value){
+      const chosen=applicableUsers.find(u=>String(u.id)===userSel.value);
+      if(chosen&&normalizeRel(chosen.cargo)!==normalizeRel(sel.value))userSel.value='';
+    }
+  }
+}
+function clearRequirementSearch(){
+  const sel=$('reqCargo'),userSel=$('reqUsuario');
+  if(sel)sel.value='';
+  if(userSel){userSel.value='';userSel.disabled=true;}
+  $('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';
+}
 async function renderRequirements(){
-  const cargo=$('reqCargo')?.value||'';
-  if(!cargo){
-    $('reqDetail').innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';
-    return;
-  }
+  const cargo=$('reqCargo')?.value||'', userId=$('reqUsuario')?.value||'';
+  const detail=$('reqDetail');
+  if(!detail)return;
+  if(!cargo){detail.innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';return;}
+  detail.innerHTML='<div class="empty">Consultando requisitos registrados…</div>';
+  try{
+    // Consultar primero las tablas maestras. La consulta por cargo no debe depender
+    // de que Cumplimiento o la tabla opcional de excepciones estén disponibles.
+    const [profiles,standards,users]=await Promise.all([all('perfiles'),all('estandares'),all('usuarios')]);
+    const cargoKey=normalizeRel(cargo);
+    const cargoProfiles=profiles.filter(p=>normalizeRel(p.cargo)===cargoKey);
+    // Primero respetamos el DOA completo si existe exactamente como registro en
+    // Estándares y DOA. Esto evita dividir nombres compuestos como «Constructor, Armador».
+    // Solo si el valor completo no existe en el catálogo, interpretamos coma/punto y coma
+    // o salto de línea como separadores de varios DOA.
+    const doaMap=new Map();
+    cargoProfiles.forEach(p=>{
+      const raw=String(p.doa||'').trim();
+      if(!raw)return;
+      const exactDoaExists=standards.some(r=>normalizeRel(r.doa)===normalizeRel(raw));
+      const values=exactDoaExists?[raw]:raw.split(/[,;\n]+/).map(d=>String(d).trim()).filter(Boolean);
+      values.forEach(d=>{
+        const key=normalizeRel(d);if(key&&!doaMap.has(key))doaMap.set(key,d);
+      });
+    });
+    const applicableDoas=[...doaMap.values()];
+    const cargoUsers=users.filter(u=>normalizeRel(u.cargo)===cargoKey).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+    const selectedUser=userId?cargoUsers.find(u=>String(u.id)===String(userId)):null;
+    if(userId&&!selectedUser){
+      detail.innerHTML='<div class="notice">El usuario seleccionado no pertenece al cargo actual. Seleccione el cargo correspondiente y vuelva a consultar.</div>';
+      return;
+    }
 
-  const [profiles, standards] = await Promise.all([all('perfiles'), all('estandares')]);
-  const cargoKey=String(cargo).trim().toLowerCase();
-
-  const applicableDoas=[...new Set(
-    profiles
-      .filter(p=>String(p.cargo||'').trim().toLowerCase()===cargoKey)
-      .flatMap(p=>doaList(p.doa))
-      .map(d=>String(d||'').trim())
-      .filter(Boolean)
-  )];
-
-  if(!applicableDoas.length){
-    $('reqDetail').innerHTML=`<div class="detail-head"><div><h3 style="margin:0">Cargo: ${esc(cargo)}</h3><div class="subtitle">No hay DOA configurados para este Cargo.</div></div><div class="auth no">SIN DOA CONFIGURADOS</div></div>`;
-    return;
-  }
-
-  const doaKeys=new Set(applicableDoas.map(d=>d.toLowerCase()));
-  const req=standards.filter(r=>doaKeys.has(String(r.doa||'').trim().toLowerCase()));
-
-  const standardsCount=new Set(req.map(r=>String(r.estandar||'').trim()).filter(Boolean)).size;
-  const coursesCount=new Set(req.map(r=>`${String(r.estandar||'').trim()}|${String(r.doa||'').trim()}|${String(r.curso||'').trim()}`).filter(Boolean)).size;
-
-  const grouped=applicableDoas.map(doa=>{
-    const rows=req.filter(r=>String(r.doa||'').trim().toLowerCase()===doa.toLowerCase());
-    return `<div class="panel" style="box-shadow:none;margin-top:14px;border-left:5px solid #1d4f91">
-      <div style="padding:16px 18px 10px">
-        <h3 style="margin:0;color:#1d4f91">${esc(doa)}</h3>
-        <div class="small">${rows.length} requisito(s) configurado(s)</div>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Estándar</th><th>Curso / Entrenamiento</th><th>Método de entrega</th><th>Course ID</th><th>Frecuencia</th></tr></thead>
-        <tbody>${rows.map(r=>`<tr>
-          <td><b>${esc(r.estandar||'')}</b></td>
-          <td>${esc(r.curso||'')}</td>
-          <td>${esc(r.metodo||'')}</td>
-          <td>${esc(r.courseId||'')}</td>
-          <td>${esc((r.frecuenciaAnios||0)+' años + '+(r.frecuenciaDias||0)+' días')}</td>
-        </tr>`).join('')||'<tr><td colspan="5" class="empty">No existen requisitos configurados para este DOA.</td></tr>'}</tbody>
-      </table></div>
-    </div>`;
-  }).join('');
-
-  $('reqDetail').innerHTML=`<div class="detail-head">
-    <div><h3 style="margin:0">Cargo: ${esc(cargo)}</h3><div class="subtitle">Información completa según Cargo → DOA → Estándar → Cursos / Entrenamientos</div></div>
-    <div class="auth ${req.length?'ok':'no'}">${req.length?req.length+' REQUISITO(S)':'SIN REQUISITOS CONFIGURADOS'}</div>
-  </div>
-  <div class="grid2" style="margin:16px 0">
-    <div class="panel" style="box-shadow:none"><h3>DOA aplicables</h3><div class="kpi-list">
-      ${applicableDoas.map(d=>`<div class="kpi-row"><span>${esc(d)}</span></div>`).join('')}
-    </div></div>
-    <div class="panel" style="box-shadow:none"><h3>Resumen</h3><div class="kpi-list">
-      <div class="kpi-row"><span>DOA aplicables</span><b>${applicableDoas.length}</b></div>
-      <div class="kpi-row"><span>Estándares requeridos</span><b>${standardsCount}</b></div>
-      <div class="kpi-row"><span>Cursos / Entrenamientos</span><b>${coursesCount}</b></div>
-      <div class="kpi-row"><span>Requisitos</span><b>${req.length}</b></div>
-    </div></div>
-  </div>
-  <div>${grouped||'<div class="empty">No existen requisitos configurados para este Cargo.</div>'}</div>`;
+    // Excepciones y cumplimiento son datos complementarios. Si la tabla de excepciones
+    // no existe o no está accesible, los requisitos maestros siguen mostrándose.
+    let exceptions=[], compliances=[], supplementalWarning='';
+    if(selectedUser){
+      try{exceptions=await all('excepciones_doa')}catch(e){console.warn('No fue posible leer excepciones DOA:',e);}
+      try{compliances=await all('cumplimientos')}catch(e){console.warn('No fue posible leer Cumplimiento:',e);supplementalWarning='Los requisitos se muestran desde los datos maestros, pero no fue posible consultar los estados de Cumplimiento.';}
+    }
+    const excluded=new Set(selectedUser?exceptions.filter(e=>String(e.usuarioId)===String(selectedUser.id)).map(e=>normalizeRel(e.doa)):[]);
+    const effectiveDoas=selectedUser?applicableDoas.filter(d=>!excluded.has(normalizeRel(d))):applicableDoas;
+    const doaSet=new Set(effectiveDoas.map(normalizeRel));
+    // Estándares/DOA es la fuente de verdad de los estándares, cursos y frecuencias.
+    const req=standards.filter(r=>doaSet.has(normalizeRel(r.doa)));
+    const standardsCount=new Set(req.map(r=>normalizeRel(r.estandar)).filter(Boolean)).size;
+    const coursesCount=new Set(req.map(r=>[r.estandar,r.doa,r.curso].map(normalizeRel).join('|')).filter(k=>k!=='||')).size;
+    const personCompliance=selectedUser?compliances.filter(c=>String(c.usuarioId)===String(selectedUser.id)|| (normalizeRel(c.usuarioNombre)===normalizeRel(selectedUser.nombre)&&normalizeRel(c.cargo)===cargoKey)):[];
+    const statusForRequirement=(r)=>{
+      const c=personCompliance.find(x=>normalizeRel(x.estandar)===normalizeRel(r.estandar)&&normalizeRel(x.doa)===normalizeRel(r.doa)&&normalizeRel(x.curso)===normalizeRel(r.curso));
+      return c?statusFor(c):'PENDIENTE';
+    };
+    const grouped=effectiveDoas.map(doa=>{
+      const rows=req.filter(r=>normalizeRel(r.doa)===normalizeRel(doa));
+      return `<article class="req-doa-card">
+        <div class="req-doa-head"><div><span class="req-eyebrow">DOA APLICABLE</span><h3>${esc(doa)}</h3><p>${rows.length} requisito(s) asociados</p></div><span class="req-count">${rows.length} cursos</span></div>
+        <div class="table-wrap"><table><thead><tr><th>Estándar</th><th>Curso / Entrenamiento</th><th>Método de entrega</th><th>Course ID</th><th>Frecuencia</th>${selectedUser?'<th>Estado de cumplimiento</th>':''}</tr></thead>
+        <tbody>${rows.map(r=>`<tr><td><strong>${esc(r.estandar||'—')}</strong></td><td>${esc(r.curso||'—')}</td><td>${esc(r.metodo||'—')}</td><td>${esc(r.courseId||'—')}</td><td>${esc((r.frecuenciaAnios||0)+' años + '+(r.frecuenciaDias||0)+' días')}</td>${selectedUser?`<td>${badge(statusForRequirement(r))}</td>`:''}</tr>`).join('')||`<tr><td colspan="${selectedUser?6:5}" class="empty">No hay cursos configurados para este DOA en Estándares y DOA.</td></tr>`}</tbody></table></div>
+      </article>`;
+    }).join('');
+    const userSummary=selectedUser?(()=>{
+      const states=req.map(statusForRequirement);
+      const vigente=states.filter(s=>s==='COMPLETO / VIGENTE').length;
+      const soon=states.filter(s=>s==='PRÓXIMO A VENCER').length;
+      const expired=states.filter(s=>s==='VENCIDO').length;
+      const pending=states.filter(s=>s==='PENDIENTE').length;
+      const pct=states.length?Math.round(vigente/states.length*100):0;
+      return `<div class="req-user-summary"><div class="req-user-id"><div class="req-avatar">${esc((selectedUser.nombre||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase())}</div><div><span class="req-eyebrow">CONSULTA INDIVIDUAL</span><h3>${esc(selectedUser.nombre)}</h3><p>Cargo asignado: <strong>${esc(selectedUser.cargo)}</strong></p></div></div><div class="req-user-stats"><div><span>Vigentes</span><b>${vigente}</b></div><div><span>Por vencer</span><b>${soon}</b></div><div><span>Vencidos</span><b>${expired}</b></div><div><span>Pendientes</span><b>${pending}</b></div><div><span>Cumplimiento</span><b>${pct}%</b></div></div><div class="progress"><span style="width:${pct}%"></span></div></div>`;
+    })():'';
+    detail.innerHTML=`
+      <div class="req-hero"><div><span class="req-eyebrow">CORTEVA | MASSY ENERGY · MATRIZ DE REQUISITOS</span><h2>${esc(cargo)}</h2></div><div class="req-hero-mark"><span>DOA</span><b>${effectiveDoas.length}</b><small>aplicables</small></div></div>
+      ${selectedUser?userSummary:''}
+      <div class="req-metrics"><div class="req-metric"><span>Usuarios con este cargo</span><b>${cargoUsers.length}</b></div><div class="req-metric"><span>DOA aplicables${selectedUser?' a la persona':''}</span><b>${effectiveDoas.length}</b></div><div class="req-metric"><span>Estándares</span><b>${standardsCount}</b></div><div class="req-metric"><span>Cursos / entrenamientos</span><b>${coursesCount}</b></div></div>
+      ${supplementalWarning?`<div class="notice">${esc(supplementalWarning)}</div>`:''}
+      ${selectedUser&&excluded.size?`<div class="notice">Se excluyeron ${excluded.size} DOA marcados como «NO APLICA» específicamente para este usuario.</div>`:''}
+      ${!cargoProfiles.length?'<div class="notice">No se encontró un perfil configurado para este cargo en Perfiles.</div>':''}
+      ${!effectiveDoas.length?'<div class="empty">No hay DOA aplicables configurados para este cargo/usuario. Verifique Perfiles.</div>':grouped}
+      ${req.length===0&&effectiveDoas.length?'<div class="empty">Hay DOA asignados en Perfiles, pero no se encontraron estándares asociados en Estándares y DOA. Verifique que el texto del DOA coincida en ambas secciones.</div>':''}
+    `;
+  }catch(e){console.error(e);detail.innerHTML=`<div class="notice">No fue posible consultar los datos maestros registrados. ${esc(e.message||'Verifique la conexión con Supabase y los registros de Perfiles y Estándares/DOA.')}</div>`;}
 }
 async function complianceRows(){const cs=await all('cumplimientos'),us=await all('usuarios'),ss=await all('estandares');return cs.map(c=>({c,u:us.find(x=>x.id===c.usuarioId),r:ss.find(x=>x.id===c.cursoId||x.id===c.estandarId)||ss.find(x=>x.id===c.estandarId)}))}
 let complianceEntrySeq=0;
@@ -1724,4 +1880,774 @@ document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=
   window.addEventListener('beforeunload',save);
 })();
 </script>
+
+<style id="user-detail-professional-blue">
+/* Mejora visual exclusiva del modal Ver detalle de Usuarios. No cambia datos ni lógica. */
+#modal .user-detail {
+  gap: 20px;
+  color: #203b53;
+  font-family: "Segoe UI", Inter, Arial, sans-serif;
+  letter-spacing: .01em;
+}
+#modal .user-detail-hero {
+  background: linear-gradient(128deg, #073b67 0%, #0b5d98 58%, #2f7eaf 100%);
+  border: 1px solid #0a4c7d;
+  border-radius: 18px;
+  padding: 24px 26px;
+  box-shadow: 0 12px 28px rgba(7, 59, 103, .16);
+}
+#modal .detail-avatar {
+  border-radius: 15px;
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.32);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+}
+#modal .user-detail-hero h2 {
+  font-size: clamp(21px, 2.2vw, 27px);
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -.35px;
+}
+#modal .detail-kicker {
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  font-weight: 800;
+}
+#modal .detail-role {
+  font-size: 13px;
+  line-height: 1.5;
+}
+#modal .detail-auth {
+  text-align: right;
+}
+#modal .detail-percent {
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+#modal .detail-summary {
+  gap: 12px;
+}
+#modal .detail-stat {
+  min-height: 88px;
+  border: 1px solid #e0eaf2;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #fff 0%, #f8fbfe 100%);
+  box-shadow: 0 4px 14px rgba(18, 58, 88, .055);
+  padding: 15px 16px;
+}
+#modal .detail-stat:before {
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: #2878ad;
+}
+#modal .detail-stat span {
+  color: #61788b;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+#modal .detail-stat b {
+  color: #123f63;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+#modal .stat-ok:before { background: #23845b; }
+#modal .stat-soon:before { background: #d19a20; }
+#modal .stat-expired:before { background: #c44747; }
+#modal .stat-pending:before { background: #7792a8; }
+#modal .detail-training-section {
+  padding: 22px;
+  border: 1px solid #dce8f1;
+  border-radius: 17px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfe 100%);
+  box-shadow: 0 7px 22px rgba(18, 58, 88, .06);
+}
+#modal .detail-section-title {
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e1ebf3;
+}
+#modal .detail-section-title h3 {
+  color: #103f64;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: -.15px;
+}
+#modal .detail-section-title small {
+  color: #70869a;
+  font-size: 11px;
+  line-height: 1.5;
+}
+#modal .detail-section-title > span {
+  padding: 7px 10px;
+  border: 1px solid #d6e6f1;
+  border-radius: 999px;
+  background: #edf6fc;
+  color: #215b82;
+  white-space: nowrap;
+}
+#modal .doa-detail-group {
+  margin-top: 17px;
+  border: 1px solid #cbddea;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(13, 67, 105, .055);
+}
+#modal .doa-detail-group + .doa-detail-group {
+  border-top: 1px solid #cbddea;
+}
+#modal .doa-detail-group .detail-group-head {
+  position: relative;
+  padding: 17px 20px 16px 23px;
+  border-bottom: 1px solid #d8e7f1;
+  background: linear-gradient(100deg, #eaf4fb 0%, #f5faff 72%, #ffffff 100%);
+}
+#modal .doa-detail-group .detail-group-head:before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: #17699f;
+}
+#modal .doa-detail-group .detail-group-head h4 {
+  color: #103f64;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -.1px;
+  overflow-wrap: anywhere;
+}
+#modal .detail-group-count {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border: 1px solid #d7e7f2;
+  border-radius: 999px;
+  background: #fff;
+  color: #55758e;
+  font-size: 10px;
+  font-weight: 750;
+}
+#modal .detail-courses {
+  padding: 8px 12px 12px;
+  background: #f8fbfe;
+}
+#modal .detail-course {
+  margin-top: 8px;
+  padding: 16px 16px 15px;
+  border: 1px solid #e0eaf2;
+  border-radius: 11px;
+  background: #fff;
+}
+#modal .detail-course:last-child {
+  border-bottom: 1px solid #e0eaf2;
+}
+#modal .detail-course-head {
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf2f6;
+}
+#modal .detail-course-title-wrap {
+  min-width: 0;
+}
+#modal .detail-course-index {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #cfe2f0;
+  border-radius: 9px;
+  background: #eaf4fb;
+  color: #145b8b;
+  font-size: 12px;
+}
+#modal .detail-course-name {
+  color: #183f5e;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+#modal .detail-meta {
+  color: #657e91;
+  font-size: 10px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+#modal .detail-meta span {
+  color: #3d617b;
+  font-weight: 800;
+}
+#modal .detail-course-grid {
+  gap: 9px;
+  margin-top: 12px;
+}
+#modal .detail-course-grid div {
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #e3edf4;
+  border-radius: 9px;
+  background: #f7fafc;
+}
+#modal .detail-course-grid span {
+  color: #6b8193;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+#modal .detail-course-grid b {
+  display: block;
+  color: #234861;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+#modal .detail-file-btn {
+  padding: 10px 12px;
+  border: 1px solid #d7e6f0;
+  border-radius: 10px;
+  background: #f2f8fc;
+}
+#modal .detail-file-btn:hover {
+  background: #e7f3fb;
+  border-color: #a9cde3;
+}
+#modal .detail-file-icon {
+  background: #17699f;
+}
+@media (max-width: 700px) {
+  #modal .user-detail-hero { padding: 19px; }
+  #modal .detail-auth { text-align: left; }
+  #modal .detail-training-section { padding: 14px; }
+  #modal .detail-section-title { align-items: flex-start; flex-direction: column; }
+  #modal .doa-detail-group .detail-group-head { padding: 15px 15px 14px 20px; }
+  #modal .detail-courses { padding: 7px; }
+  #modal .detail-course { padding: 12px; }
+}
+</style>
+
+
+<style id="user-detail-readable-redesign">
+/* Rediseño de lectura del modal Ver detalle: presentación exclusivamente visual. */
+#modal .modal-box:has(.user-detail) {
+  width: min(1120px, 96vw);
+  max-height: 94vh;
+  border: 1px solid #c8d9e7;
+  border-radius: 20px;
+  background: #f5f8fc;
+  box-shadow: 0 24px 70px rgba(8, 39, 66, .28);
+  overflow: auto;
+}
+#modal .modal-box:has(.user-detail) .modal-head {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  padding: 18px 28px;
+  background: #fff;
+  border-bottom: 1px solid #dce7f0;
+}
+#modal .modal-box:has(.user-detail) .modal-head h3 {
+  color: #123f63;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.2px;
+}
+#modal .modal-box:has(.user-detail) .modal-body {
+  padding: 26px 28px 30px;
+  background: #f5f8fc;
+}
+#modal .modal-box:has(.user-detail) .modal-foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 8;
+  padding: 14px 28px;
+  background: rgba(255,255,255,.97);
+  border-top: 1px solid #dce7f0;
+}
+#modal .user-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  color: #243f55;
+  font-family: "Segoe UI", Inter, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+#modal .user-detail-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 27px 30px;
+  border-radius: 17px;
+  background: linear-gradient(120deg, #083d68 0%, #105f94 62%, #397fac 100%);
+  border: 1px solid #0d5688;
+  box-shadow: 0 9px 24px rgba(12, 70, 111, .16);
+}
+#modal .detail-identity { gap: 17px; }
+#modal .detail-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  font-size: 27px;
+  flex: 0 0 64px;
+}
+#modal .detail-kicker {
+  margin-bottom: 5px;
+  color: #d7e9f6;
+  font-size: 10px;
+  letter-spacing: 1.8px;
+}
+#modal .user-detail-hero h2 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: clamp(22px, 2.4vw, 29px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -.45px;
+  overflow-wrap: anywhere;
+}
+#modal .detail-role { color: #e1edf7; font-size: 14px; font-weight: 600; }
+#modal .detail-auth { min-width: 170px; }
+#modal .detail-auth .badge { margin-bottom: 4px; }
+#modal .detail-percent {
+  margin-top: 7px;
+  color: #fff;
+  font-size: 38px;
+  font-weight: 850;
+  line-height: 1.1;
+}
+#modal .user-detail-hero .small { color: #e1edf7; font-size: 12px; }
+#modal .detail-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+#modal .detail-stat {
+  min-width: 0;
+  min-height: 100px;
+  padding: 17px 16px 15px 19px;
+  border: 1px solid #dce7f0;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(22, 57, 83, .045);
+}
+#modal .detail-stat:before { width: 4px; }
+#modal .detail-stat span {
+  display: block;
+  margin-bottom: 9px;
+  color: #61798d;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+#modal .detail-stat b {
+  color: #163f60;
+  font-size: 29px;
+  font-weight: 850;
+  line-height: 1.1;
+}
+#modal .detail-training-section {
+  padding: 24px;
+  border: 1px solid #d6e3ee;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(19, 57, 85, .045);
+}
+#modal .detail-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0 0 18px;
+  padding: 0 0 17px;
+  border-bottom: 1px solid #e1eaf2;
+}
+#modal .detail-section-title h3 {
+  margin: 0 0 4px;
+  color: #123f63;
+  font-size: 19px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+#modal .detail-section-title small {
+  display: block;
+  color: #657e92;
+  font-size: 12px;
+  line-height: 1.5;
+}
+#modal .detail-section-title > span {
+  padding: 8px 12px;
+  border: 1px solid #cfe2ef;
+  border-radius: 999px;
+  background: #eef6fb;
+  color: #1b5c88;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+#modal .doa-detail-group {
+  margin: 18px 0 0;
+  border: 1px solid #c9dce9;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(12, 57, 91, .05);
+  overflow: hidden;
+}
+#modal .doa-detail-group + .doa-detail-group {
+  margin-top: 20px;
+  padding-top: 0;
+  border-top: 1px solid #c9dce9;
+}
+#modal .doa-detail-group .detail-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 18px 22px 16px 25px;
+  background: linear-gradient(100deg, #e8f2fa 0%, #f3f8fc 72%, #f9fcfe 100%);
+  border-bottom: 1px solid #d5e5f0;
+  position: relative;
+}
+#modal .doa-detail-group .detail-group-head:before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: #17699f;
+}
+#modal .doa-detail-group .detail-group-head h4 {
+  margin: 0;
+  color: #123f63;
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1.4;
+  letter-spacing: -.15px;
+  overflow-wrap: anywhere;
+}
+#modal .detail-group-count {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 7px;
+  padding: 4px 9px;
+  border: 1px solid #d2e3ef;
+  border-radius: 999px;
+  background: #fff;
+  color: #55758e;
+  font-size: 11px;
+  font-weight: 750;
+}
+#modal .detail-courses {
+  padding: 11px 13px 14px;
+  background: #f7fafd;
+}
+#modal .detail-course {
+  margin: 8px 0 0;
+  padding: 19px 20px 17px;
+  border: 1px solid #e0e9f1;
+  border-radius: 12px;
+  background: #fff;
+}
+#modal .detail-course + .detail-course { margin-top: 12px; }
+#modal .detail-course-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaf0f5;
+}
+#modal .detail-course-title-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  min-width: 0;
+  flex: 1;
+}
+#modal .detail-course-index {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #c9deed;
+  border-radius: 10px;
+  background: #eaf4fb;
+  color: #155b8b;
+  font-size: 13px;
+  font-weight: 850;
+}
+#modal .detail-course-name {
+  margin-bottom: 5px;
+  color: #183f5e;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+#modal .detail-meta {
+  color: #60788c;
+  font-size: 11px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+#modal .detail-meta span { color: #345e7b; font-weight: 800; }
+#modal .detail-course-head .badge {
+  flex: 0 0 auto;
+  max-width: 170px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.35;
+}
+#modal .detail-course-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+  margin-top: 15px;
+}
+#modal .detail-course-grid div {
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid #e2ebf2;
+  border-radius: 10px;
+  background: #f8fbfd;
+}
+#modal .detail-course-grid span {
+  display: block;
+  margin-bottom: 6px;
+  color: #61798c;
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+#modal .detail-course-grid b {
+  display: block;
+  color: #234861;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+#modal .detail-file,
+#modal .detail-file-btn {
+  margin-top: 13px;
+  padding: 12px 14px;
+  border: 1px solid #d9e6f0;
+  border-radius: 10px;
+  background: #f3f8fc;
+  color: #285570;
+  font-size: 12px;
+}
+#modal .detail-file-btn { cursor: pointer; }
+#modal .detail-file-btn:hover { background: #eaf4fb; border-color: #a9cde3; }
+#modal .detail-file-icon { background: #17699f; }
+#modal .detail-file-btn small {
+  display: block;
+  margin-top: 3px;
+  color: #60788c;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+#modal .modal-box:has(.user-detail) .modal-foot .btn {
+  min-width: 110px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 750;
+}
+@media (max-width: 900px) {
+  #modal .modal-box:has(.user-detail) { width: 97vw; }
+  #modal .modal-box:has(.user-detail) .modal-body { padding: 18px; }
+  #modal .detail-summary { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  #modal .detail-course-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 620px) {
+  #modal .modal-box:has(.user-detail) .modal-head { padding: 15px 17px; }
+  #modal .modal-box:has(.user-detail) .modal-body { padding: 13px; }
+  #modal .modal-box:has(.user-detail) .modal-foot { padding: 12px 17px; }
+  #modal .user-detail { gap: 14px; }
+  #modal .user-detail-hero { flex-direction: column; align-items: stretch; padding: 19px; gap: 17px; }
+  #modal .detail-auth { text-align: left; }
+  #modal .detail-summary { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+  #modal .detail-stat { min-height: 82px; padding: 13px; }
+  #modal .detail-stat b { font-size: 25px; }
+  #modal .detail-training-section { padding: 14px; }
+  #modal .detail-section-title { align-items: flex-start; flex-direction: column; gap: 9px; }
+  #modal .doa-detail-group .detail-group-head { padding: 15px 14px 14px 19px; }
+  #modal .detail-courses { padding: 7px; }
+  #modal .detail-course { padding: 13px; }
+  #modal .detail-course-head { flex-direction: column; gap: 10px; }
+  #modal .detail-course-head .badge { align-self: flex-start; max-width: 100%; }
+  #modal .detail-course-grid { grid-template-columns: 1fr; gap: 7px; }
+}
+</style>
+
+
+<style id="user-detail-course-spacing-refinement">
+/* Ajuste de densidad visual solo en cursos/entrenamientos de Ver detalle. */
+#modal .detail-training-section { padding: 19px; }
+#modal .detail-section-title { margin-bottom: 13px; padding-bottom: 12px; gap: 12px; }
+#modal .doa-detail-group { margin-top: 13px; border-radius: 12px; }
+#modal .doa-detail-group + .doa-detail-group { margin-top: 14px; }
+#modal .doa-detail-group .detail-group-head { padding: 13px 18px 12px 21px; gap: 12px; }
+#modal .doa-detail-group .detail-group-head h4 { font-size: 16px; line-height: 1.35; }
+#modal .detail-group-count { margin-top: 5px; padding: 3px 8px; font-size: 10px; }
+#modal .detail-courses { padding: 6px 9px 9px; }
+#modal .detail-course { margin-top: 6px; padding: 13px 15px 12px; border-radius: 10px; }
+#modal .detail-course + .detail-course { margin-top: 7px; }
+#modal .detail-course-head { gap: 12px; padding-bottom: 9px; }
+#modal .detail-course-title-wrap { gap: 10px; }
+#modal .detail-course-index { flex-basis: 29px; width: 29px; height: 29px; border-radius: 8px; font-size: 12px; }
+#modal .detail-course-name { margin-bottom: 3px; font-size: 13px; line-height: 1.4; }
+#modal .detail-meta { font-size: 10.5px; line-height: 1.5; }
+#modal .detail-course-grid { gap: 8px; margin-top: 9px; }
+#modal .detail-course-grid div { padding: 9px 11px; border-radius: 8px; }
+#modal .detail-course-grid span { margin-bottom: 3px; font-size: 9.5px; }
+#modal .detail-course-grid b { font-size: 12px; line-height: 1.4; }
+#modal .detail-file, #modal .detail-file-btn { margin-top: 9px; padding: 9px 11px; border-radius: 8px; }
+@media (max-width: 620px) {
+  #modal .detail-training-section { padding: 12px; }
+  #modal .doa-detail-group { margin-top: 11px; }
+  #modal .doa-detail-group + .doa-detail-group { margin-top: 12px; }
+  #modal .doa-detail-group .detail-group-head { padding: 12px 11px 11px 16px; }
+  #modal .detail-courses { padding: 5px; }
+  #modal .detail-course { padding: 11px; }
+  #modal .detail-course + .detail-course { margin-top: 6px; }
+  #modal .detail-course-grid { gap: 6px; margin-top: 8px; }
+  #modal .detail-course-grid div { padding: 8px 9px; }
+}
+</style>
+
+
+<style id="user-detail-modal-background-refinement">
+/* Fondo suave para la ventana emergente Ver detalle; no modifica datos ni lógica. */
+#modal .modal-box:has(.user-detail) {
+  background: linear-gradient(145deg, #edf5fc 0%, #f7faff 48%, #fff8ed 100%) !important;
+  border-color: #c8d9e8 !important;
+}
+#modal .modal-box:has(.user-detail) .modal-head {
+  background: linear-gradient(105deg, #e3effb 0%, #f7faff 62%, #fff2df 100%) !important;
+  border-bottom-color: #d5e2ee !important;
+}
+#modal .modal-box:has(.user-detail) .modal-body {
+  background: linear-gradient(145deg, #eef5fb 0%, #f8fbff 55%, #fff9f0 100%) !important;
+}
+#modal .modal-box:has(.user-detail) .modal-foot {
+  background: linear-gradient(105deg, rgba(239,246,252,.98) 0%, rgba(255,255,255,.98) 72%, rgba(255,247,233,.98) 100%) !important;
+  border-top-color: #d5e2ee !important;
+}
+</style>
+
+<style id="doa-group-gray-separators">
+/* Separador gris discreto entre los recuadros de cada DOA */
+#modal .doa-detail-group + .doa-detail-group {
+  position: relative;
+}
+#modal .doa-detail-group + .doa-detail-group::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: #b8c1cc;
+  border-radius: 1px;
+}
+@media (max-width: 620px) {
+  #modal .doa-detail-group + .doa-detail-group::before {
+    top: -7px;
+    left: 10px;
+    right: 10px;
+  }
+}
+</style>
 </body></html>
+
+<style id="doa-massy-gradient-separation">
+/* Identidad visual azul, naranja y amarillo para separar claramente cada DOA. */
+#modal .doa-detail-group {
+  margin-top: 17px !important;
+  border: 1px solid #d6e0ea !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 5px 15px rgba(20, 57, 88, .075) !important;
+  overflow: hidden !important;
+}
+#modal .doa-detail-group + .doa-detail-group {
+  margin-top: 19px !important;
+  border-top: 1px solid #d6e0ea !important;
+}
+#modal .doa-detail-group .detail-group-head {
+  position: relative !important;
+  isolation: isolate;
+  padding: 14px 18px 13px 23px !important;
+  gap: 13px !important;
+  background: linear-gradient(105deg, #e5f1ff 0%, #f5f8fc 38%, #fff0df 72%, #fff5c9 100%) !important;
+  border-bottom: 1px solid #e3e8ee !important;
+}
+#modal .doa-detail-group .detail-group-head:before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  inset: 0 auto 0 0 !important;
+  width: 6px !important;
+  background: linear-gradient(180deg, #1769aa 0%, #f28a25 52%, #f2c532 100%) !important;
+}
+#modal .doa-detail-group .detail-group-head h4 {
+  color: #173f62 !important;
+  font-size: 16px !important;
+  font-weight: 850 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -.1px !important;
+  overflow-wrap: anywhere !important;
+}
+#modal .detail-group-count {
+  flex-shrink: 0;
+  border: 1px solid #e4d8bb !important;
+  background: linear-gradient(110deg, #fff 0%, #fff8e8 100%) !important;
+  color: #70531d !important;
+}
+#modal .detail-courses {
+  background: linear-gradient(180deg, #fbfdff 0%, #fff 100%) !important;
+}
+#modal .detail-course {
+  border-color: #dce6ef !important;
+  box-shadow: 0 2px 7px rgba(24, 64, 96, .035) !important;
+}
+@media (max-width: 620px) {
+  #modal .doa-detail-group .detail-group-head { padding: 12px 11px 11px 17px !important; }
+  #modal .doa-detail-group .detail-group-head h4 { font-size: 14px !important; }
+}
+</style>
+<style id="user-detail-doa-divider-and-qr-cleanup">
+/* Separador de DOA más visible, pero sobrio. */
+#modal .doa-detail-group {
+  border: 1px solid #c5d0da !important;
+  box-shadow: 0 2px 5px rgba(29, 55, 78, .045) !important;
+}
+#modal .doa-detail-group + .doa-detail-group {
+  position: relative;
+  margin-top: 19px !important;
+}
+#modal .doa-detail-group + .doa-detail-group::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: #aab7c3;
+}
+/* El enlace codificado sigue dentro del QR, pero no se muestra como texto. */
+#modal .user-qr-url { display: none !important; }
+</style>
