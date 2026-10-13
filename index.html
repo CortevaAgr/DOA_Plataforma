@@ -706,10 +706,30 @@ async function bootData(){await all('perfiles');await all('estandares');await al
 function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.fecha_cambio||x.created_at||'',usuario:x.usuario_email||x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.datos_anteriores??x.informacion_anterior??null,nueva:x.datos_nuevos??x.informacion_nueva??null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeRel(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
 function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
 function normalizeCompliance(x,users,standards){const user=users.find(u=>String(u.id)===String(x.usuario||''))||users.find(u=>normalizeRel(u.nombre)===normalizeRel(x.usuario||''));const std=standards.find(r=>normalizeRel(r.estandar)===normalizeRel(x.estandar)&&normalizeRel(r.doa)===normalizeRel(x.doa)&&normalizeRel(r.curso)===normalizeRel(x.curso_entrenamiento));const docs=Array.isArray(x.documentos)?x.documentos:[];return {id:String(x.id),usuarioId:user?String(user.id):String(x.usuario||''),usuarioNombre:user?.nombre||String(x.usuario||''),cargo:x.cargo||user?.cargo||'',estandarId:std?String(std.id):'',cursoId:std?String(std.id):'',estandar:x.estandar||std?.estandar||'',doa:x.doa||std?.doa||'',curso:x.curso_entrenamiento||std?.curso||'',metodo:x.metodo_entrega||std?.metodo||'',frecuenciaAnios:Number(x.frecuencia_anios||std?.frecuenciaAnios||0),frecuenciaDias:Number(x.frecuencia_dias||std?.frecuenciaDias||0),fechaRealizacion:x.fecha_realizacion||'',fechaFin:x.fecha_fin||'',estado:x.estado||'',archivos:docs,archivoNombre:docs[0]?.nombre||'',archivoTipo:docs[0]?.tipo||'',archivoData:docs[0]?.data||''}}
-async function all(s){if(s==='usuarios')return (await api('usuarios?select=*&order=id')).map(normalizeUser);if(s==='perfiles')return (await api('perfiles?select=*&order=id')).map(normalizeProfile);if(s==='estandares')return (await api('estandares_doa?select=*&order=id')).map(normalizeStandard);if(s==='cumplimientos'){const [cs,us,ss]=await Promise.all([api('cumplimiento?select=*&order=id'),api('usuarios?select=*&order=id'),api('estandares_doa?select=*&order=id')]);const nu=us.map(normalizeUser),ns=ss.map(normalizeStandard);return cs.map(x=>normalizeCompliance(x,nu,ns))}if(s==='excepciones_doa')return (await api('excepciones_doa?select=id,usuario_id,doa&order=id')).map(x=>({id:String(x.id),usuarioId:String(x.usuario_id),doa:String(x.doa||'')}));if(s==='historial')return (await api('historial_cambios?select=*&order=fecha_cambio.desc&limit=500')).map(normalizeHistory);return []}
+// Cache de datos en memoria: reutiliza consultas entre secciones y evita pedir las mismas tablas repetidamente.
+const dataCache=new Map();
+function invalidateDataCache(...keys){if(!keys.length){dataCache.clear();return}for(const key of keys)dataCache.delete(key)}
+async function all(s,options={}){
+  if(options.force)dataCache.delete(s);
+  if(dataCache.has(s))return dataCache.get(s);
+  const pending=(async()=>{
+    if(s==='usuarios')return (await api('usuarios?select=*&order=id')).map(normalizeUser);
+    if(s==='perfiles')return (await api('perfiles?select=*&order=id')).map(normalizeProfile);
+    if(s==='estandares')return (await api('estandares_doa?select=*&order=id')).map(normalizeStandard);
+    if(s==='cumplimientos'){
+      const [cs,us,ss]=await Promise.all([api('cumplimiento?select=id,usuario,cargo,estandar,doa,curso_entrenamiento,metodo_entrega,fecha_realizacion,frecuencia_anios,frecuencia_dias,fecha_fin,estado&order=id'),all('usuarios'),all('estandares')]);
+      return cs.map(x=>normalizeCompliance(x,us,ss));
+    }
+    if(s==='excepciones_doa')return (await api('excepciones_doa?select=id,usuario_id,doa&order=id')).map(x=>({id:String(x.id),usuarioId:String(x.usuario_id),doa:String(x.doa||'')}));
+    if(s==='historial')return (await api('historial_cambios?select=*&order=fecha_cambio.desc&limit=500')).map(normalizeHistory);
+    return [];
+  })();
+  dataCache.set(s,pending);
+  try{const result=await pending;dataCache.set(s,result);return result}catch(e){dataCache.delete(s);throw e}
+}
 function dbPayload(s,o){if(s==='usuarios')return {nombre_completo:o.nombre||'',cargo:o.cargo||''};if(s==='perfiles')return {cargo:o.cargo||'',doa:o.doa||''};if(s==='estandares')return {estandar:o.estandar||'',doa:o.doa||'',curso_entrenamiento:o.curso||'',metodo_entrega:o.metodo||'',course_id:o.courseId||'',frecuencia_anios:Number(o.frecuenciaAnios||0),frecuencia_dias:Number(o.frecuenciaDias||0)};if(s==='cumplimientos')return {usuario:o.usuarioId||'',cargo:o.cargo||'',estandar:o.estandar||'',doa:o.doa||'',curso_entrenamiento:o.curso||'',metodo_entrega:o.metodo||'',fecha_realizacion:o.fechaRealizacion||null,frecuencia_anios:Number(o.frecuenciaAnios||0),frecuencia_dias:Number(o.frecuenciaDias||0),fecha_fin:o.fechaFin||null,estado:o.estado||statusFor(o),documentos:Array.isArray(o.archivos)?o.archivos:[]}}
-async function put(s,o){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s),payload=dbPayload(s,o),isUpdate=!!(o.id&&/^\d+$/.test(String(o.id)));if(s==='cumplimientos'&&!isUpdate)payload.created_at=new Date().toISOString();let data;if(isUpdate)data=await api(table+'?id=eq.'+Number(o.id),{method:'PATCH',body:JSON.stringify(payload)});else data=await api(table,{method:'POST',body:JSON.stringify(payload)});const row=Array.isArray(data)?data[0]:data;if(row?.id!==undefined)o.id=String(row.id);return o}
-async function del(s,id){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s);await api(table+'?id=eq.'+Number(id),{method:'DELETE',headers:authHeaders({'Prefer':'return=minimal'})})}
+async function put(s,o){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s),payload=dbPayload(s,o),isUpdate=!!(o.id&&/^\d+$/.test(String(o.id)));if(s==='cumplimientos'&&!isUpdate)payload.created_at=new Date().toISOString();let data;if(isUpdate)data=await api(table+'?id=eq.'+Number(o.id),{method:'PATCH',body:JSON.stringify(payload)});else data=await api(table,{method:'POST',body:JSON.stringify(payload)});const row=Array.isArray(data)?data[0]:data;if(row?.id!==undefined)o.id=String(row.id);invalidateDataCache(s,...(s==='usuarios'?['cumplimientos']:s==='estandares'?['cumplimientos']:s==='perfiles'?['excepciones_doa']:[]));return o}
+async function del(s,id){const table=s==='estandares'?'estandares_doa':(s==='cumplimientos'?'cumplimiento':s);await api(table+'?id=eq.'+Number(id),{method:'DELETE',headers:authHeaders({'Prefer':'return=minimal'})});invalidateDataCache(s,'cumplimientos',...(s==='usuarios'?['usuarios']:[]),...(s==='estandares'?['estandares']:[]))}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function statusFor(c){if(!c.fechaRealizacion)return 'PENDIENTE';let end=new Date(c.fechaFin);if(isNaN(end))return 'PENDIENTE';let now=new Date(), soon=new Date();soon.setDate(soon.getDate()+60);if(end<now)return 'VENCIDO';if(end<=soon)return 'PRÓXIMO A VENCER';return 'COMPLETO / VIGENTE'}
 function badge(s){let cl=s==='COMPLETO / VIGENTE'?'b-green':s==='VENCIDO'||s==='NO AUTORIZADO'?'b-red':s==='PRÓXIMO A VENCER'?'b-amber':'b-gray';return `<span class="badge ${cl}">${esc(s)}</span>`}
@@ -726,8 +746,8 @@ async function applicable(user){
 async function isDoaNotApplicable(userId,doa){if(!userId||!doa)return false;const rows=await all('excepciones_doa');return rows.some(x=>String(x.usuarioId)===String(userId)&&normalizeRel(x.doa)===normalizeRel(doa))}
 async function setDoaNotApplicable(userId,doa,motivo=''){
  const rows=await all('excepciones_doa');const existing=rows.find(x=>String(x.usuarioId)===String(userId)&&normalizeRel(x.doa)===normalizeRel(doa));
- if(existing){await api('excepciones_doa?id=eq.'+encodeURIComponent(existing.id),{method:'DELETE',headers:authHeaders({'Prefer':'return=minimal'})});return false}
- await api('excepciones_doa',{method:'POST',body:JSON.stringify({usuario_id:String(userId),doa:String(doa).trim(),motivo:String(motivo||'').trim()})});return true
+ if(existing){await api('excepciones_doa?id=eq.'+encodeURIComponent(existing.id),{method:'DELETE',headers:authHeaders({'Prefer':'return=minimal'})});invalidateDataCache('excepciones_doa');return false}
+ await api('excepciones_doa',{method:'POST',body:JSON.stringify({usuario_id:String(userId),doa:String(doa).trim(),motivo:String(motivo||'').trim()})});invalidateDataCache('excepciones_doa');return true
 }
 async function toggleDoaException(i){
  if(!adminUnlocked)return requireAdmin(()=>toggleDoaException(i));
@@ -769,7 +789,7 @@ async function authFor(user){
  const pct=total?Math.round(done/total*100):0;
  return {ok:total>0&&done===total,total,done,soon,expired,pending,pct,states};
 }
-async function refresh(){await renderDashboard();await renderUsers();await populateReqCargos();if($('reqCargo').value)await renderRequirements();await renderAdmin()}
+async function refresh(){await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos')]);await renderDashboard();await renderUsers();await populateReqCargos();if($('reqCargo')?.value)await renderRequirements();await renderAdmin()}
 function openModal(title,body,foot){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML=foot||'';$('modal').classList.add('open')}function userQrUrl(id){
   const base=window.location.origin+window.location.pathname;
   return base+'?usuario='+encodeURIComponent(String(id));
@@ -1085,6 +1105,8 @@ async function openCompliance(id=''){
   if(!adminUnlocked)return requireAdmin(()=>openCompliance(id));
   const cs=await all('cumplimientos'), us=await all('usuarios'), ss=await all('estandares');
   const c=id?(cs.find(x=>x.id===id)||{}):{};
+  /* Los documentos se solicitan solo al abrir un cumplimiento para editarlo. */
+  if(id){try{const full=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(id));const row=full?.[0];if(row){const docs=Array.isArray(row.documentos)?row.documentos:[];c.archivos=docs;c.archivoNombre=docs[0]?.nombre||'';c.archivoTipo=docs[0]?.tipo||'';c.archivoData=docs[0]?.data||''}}catch(err){console.warn('No se pudieron cargar los documentos del cumplimiento para edición.',err)}}
   const selectedRow=c.cursoId?ss.find(x=>String(x.id)===String(c.cursoId)):ss.find(x=>normalizeRel(x.estandar)===normalizeRel(c.estandar)&&normalizeRel(x.doa)===normalizeRel(c.doa)&&normalizeRel(x.curso)===normalizeRel(c.curso));
   const cargos=[...new Set((await all('perfiles')).map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
   const userOptions=us.slice().sort((a,b)=>String(a.nombre||'').localeCompare(String(b.nombre||''),'es')).map(u=>`<option value="${esc(u.id)}" ${u.id===c.usuarioId?'selected':''}>${esc(u.nombre)}${u.cargo?' — '+esc(u.cargo):''}</option>`).join('');
@@ -1586,7 +1608,7 @@ function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new F
 function validateComplianceFiles(){const files=[...($('cArchivos')?.files||[])];if(files.length>1){alert('Puede adjuntar máximo 1 documento por cumplimiento.');$('cArchivos').value='';return false}if(files.some(f=>!(String(f.type||'').startsWith('image/')||String(f.type||'')==='application/pdf'))){alert('Solo se permiten imágenes o PDF como documento soporte.');$('cArchivos').value='';return false}return true}
 function renderExistingComplianceFiles(c){const box=$('cArchivosExistentes');if(!box)return;const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);box.innerHTML=arr.length?`Documentos actuales: ${arr.slice(0,1).map((a,i)=>`<button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',${i})">${esc(a.nombre||'Documento')}</button>`).join(' ')}`:'Sin documentos adjuntos.'}
 async function deleteCompliance(id){if(!adminUnlocked)return requireAdmin(()=>deleteCompliance(id));if(!confirm('¿Desea eliminar este cumplimiento?'))return;await del('cumplimientos',id);await refresh()}
-async function openComplianceAttachment(cid,index=0){const c=(await all('cumplimientos')).find(x=>x.id===cid);const arr=Array.isArray(c?.archivos)?c.archivos:(c?.archivoData?[{nombre:c.archivoNombre||'Documento',data:c.archivoData}]:[]);const a=arr[index];if(!a?.data)return;const link=document.createElement('a');link.href=a.data;link.target='_blank';link.download=a.nombre||'documento';link.click()}
+async function openComplianceAttachment(cid,index=0){let arr=[];try{const rows=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(cid));const docs=rows?.[0]?.documentos;arr=Array.isArray(docs)?docs:[]}catch(e){alert('No fue posible cargar el documento. '+(e.message||''));return}const a=arr[index];if(!a?.data){alert('Este cumplimiento no tiene un documento disponible.');return}const link=document.createElement('a');link.href=a.data;link.target='_blank';link.rel='noopener';link.download=a.nombre||'documento';link.click()}
 async function editCompliance(uid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===uid);return c?openCompliance(c.id):openCompliance()}
 async function saveComplianceWithFile(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
 async function saveCompliance(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
