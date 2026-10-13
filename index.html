@@ -887,20 +887,27 @@ async function openUser(id=''){if(!adminUnlocked){return requireAdmin(()=>openUs
 <div class="field"><label>Identificación</label><input id="fId" value="${esc(u.identificacion)}"></div>
 <div class="field full"><label>Observaciones</label><textarea id="fObs">${esc(u.observaciones)}</textarea></div></div>`, `<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveUser('${id}')">Guardar</button>`)}
 async function saveUser(id){
-  let o={id:id||uid(),nombre:$('fNombre').value.trim(),email:$('fEmail').value.trim(),cargo:$('fCargo').value,identificacion:$('fId').value,observaciones:$('fObs').value};
+  const o={id:id||uid(),nombre:$('fNombre').value.trim(),email:$('fEmail').value.trim(),cargo:$('fCargo').value,identificacion:$('fId').value.trim(),observaciones:$('fObs').value.trim()};
   if(!o.nombre||!o.cargo)return alert('Nombre y Cargo son obligatorios.');
-  let users=await all('usuarios');
-  let currentId=String(id||'');
-  let duplicate=users.find(x=>String(x.id)!==currentId && (
-    normalizeDuplicateText(x.nombre)===normalizeDuplicateText(o.nombre) ||
-    (o.email && normalizeDuplicateText(x.email)===normalizeDuplicateText(o.email)) ||
-    (o.identificacion && normalizeDuplicateText(x.identificacion)===normalizeDuplicateText(o.identificacion))
-  ));
-  if(duplicate){
-    showMasterDuplicateAlert('users','Este usuario ya está ingresado','El usuario seleccionado ya se encuentra registrado. Para modificar sus datos, vaya a la sesión Actualizar.');
-    return;
-  }
-  const isNew=!id;await put('usuarios',o);closeModal();await refresh();if(isNew)await showUserQr(o.id)
+  try{
+    const users=await all('usuarios',{force:true});
+    const currentId=String(id||'');
+    const duplicate=users.find(x=>String(x.id)!==currentId && (
+      normalizeDuplicateText(x.nombre)===normalizeDuplicateText(o.nombre) ||
+      (o.email && normalizeDuplicateText(x.email)===normalizeDuplicateText(o.email)) ||
+      (o.identificacion && normalizeDuplicateText(x.identificacion)===normalizeDuplicateText(o.identificacion))
+    ));
+    if(duplicate){showMasterDuplicateAlert('users','Este usuario ya está ingresado','El usuario seleccionado ya se encuentra registrado. Para modificar sus datos, vaya a la sesión Actualizar.');return;}
+    // Guardar y luego volver a consultar Supabase para confirmar que correo e identificación persistieron.
+    await put('usuarios',o);
+    invalidateDataCache();
+    const saved=(await all('usuarios',{force:true})).find(x=>String(x.id)===String(o.id));
+    if(!saved)throw new Error('Supabase no devolvió el usuario guardado. No se cerró el formulario para evitar perder los datos ingresados.');
+    if(String(saved.email||'')!==String(o.email||'') || String(saved.identificacion||'')!==String(o.identificacion||'')){
+      throw new Error('Supabase no confirmó el correo o la identificación guardados. Verifica que las columnas se llamen exactamente email e identificacion en public.usuarios. El formulario permanece abierto para que no pierdas lo escrito.');
+    }
+    closeModal();invalidateDataCache();await refresh();if(!id)await showUserQr(saved.id);
+  }catch(e){console.error('Error guardando usuario en Supabase:',e);alert('No se pudo confirmar el guardado del usuario. No cierres esta ventana todavía. Detalle: '+(e.message||'Error desconocido'));}
 }
 async function syncRequirements(user){let req=await applicable(user),cs=await all('cumplimientos');for(const r of req){if(!cs.some(c=>c.usuarioId===user.id&&c.estandarId===r.id))await put('cumplimientos',{id:uid(),usuarioId:user.id,estandarId:r.id,fechaRealizacion:'',fechaFin:'',archivoNombre:'',archivoData:''})}}
 function filterUserDetailCourses(filter,button){
