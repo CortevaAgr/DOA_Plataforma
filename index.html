@@ -579,6 +579,23 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 #modal:has(#pCargo) .modal-foot .btn-primary{background:linear-gradient(135deg,#1478bd,#0a4f8d)}
 @media(max-width:640px){#modal:has(#pCargo) .modal-head{padding:16px}#modal:has(#pCargo) .modal-body{padding:14px}#modal:has(#pCargo) .modal-body .field.full{padding:13px}#modal:has(#pCargo) .modal-foot{padding:12px 14px}}
 </style>
+<style id="requirements-interactive-views">
+#requisitos .req-metrics{grid-template-columns:repeat(5,minmax(0,1fr))}\n#requisitos .req-view-button{appearance:none;text-align:left;font:inherit;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+#requisitos .req-view-button:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(18,51,78,.10);border-color:#a8c49a}
+#requisitos .req-view-button.active{background:linear-gradient(135deg,#edf6e4,#fff);border-color:#7da65b;box-shadow:inset 0 0 0 1px #a8c98c,0 6px 16px rgba(58,86,38,.08)}
+#requisitos .req-view-button b{display:block}
+#requisitos .req-view-button small{display:block;margin-top:5px;font-size:10px;color:#718397;font-weight:700}
+#requisitos .req-view-panel[hidden]{display:none!important}
+#requisitos .req-view-panel{margin-top:18px;background:#fff;border:1px solid #dfe8d6;border-radius:14px;overflow:hidden}
+#requisitos .req-list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 19px;background:linear-gradient(100deg,#edf6e4,#fffdf4);border-bottom:1px solid #e0e8d7}
+#requisitos .req-list-head h3{margin:0;color:#173f5f;font-size:16px}
+#requisitos .req-list-head>span{font-size:11px;font-weight:800;color:#4f713b;background:#f5f9ed;border:1px solid #dce8cc;border-radius:999px;padding:6px 10px;white-space:nowrap}
+#requisitos .req-name-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:16px}
+#requisitos .req-name-item{display:flex;align-items:center;gap:10px;min-width:0;padding:12px;border:1px solid #e5ebdf;border-radius:10px;background:#fcfdf9;color:#24445b;font-size:13px;font-weight:650;overflow-wrap:anywhere}
+#requisitos .req-name-icon{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:8px;background:#eaf3df;color:#466d35;font-size:11px;font-weight:900}
+#requisitos .req-course-item small{display:block;margin-top:4px;color:#7a8997;font-size:10px;font-weight:600}
+@media(max-width:900px){#requisitos .req-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}#requisitos .req-name-list{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
@@ -1056,6 +1073,18 @@ function clearRequirementSearch(){
   const detail=$('reqDetail');
   if(detail)detail.innerHTML='<div class="empty">Seleccione un Cargo para consultar los requisitos.</div>';
 }
+function filterRequirementsView(view,button){
+  const detail=$('reqDetail');
+  if(!detail)return;
+  detail.querySelectorAll('[data-req-view]').forEach(panel=>{
+    panel.hidden=panel.dataset.reqView!==view;
+  });
+  detail.querySelectorAll('.req-view-button').forEach(btn=>{
+    const active=btn===button;
+    btn.classList.toggle('active',active);
+    btn.setAttribute('aria-pressed',active?'true':'false');
+  });
+}
 async function renderRequirements(){
   const cargo=$('reqCargo')?.value||'', userId=$('reqUsuario')?.value||'';
   const detail=$('reqDetail');
@@ -1129,12 +1158,24 @@ async function renderRequirements(){
     detail.innerHTML=`
       <div class="req-hero"><div><span class="req-eyebrow">CORTEVA | MASSY ENERGY · MATRIZ DE REQUISITOS</span><h2>${esc(cargo)}</h2></div><div class="req-hero-mark"><span>DOA</span><b>${effectiveDoas.length}</b><small>aplicables</small></div></div>
       ${selectedUser?userSummary:''}
-      <div class="req-metrics"><div class="req-metric"><span>Usuarios con este cargo</span><b>${cargoUsers.length}</b></div><div class="req-metric"><span>DOA aplicables${selectedUser?' a la persona':''}</span><b>${effectiveDoas.length}</b></div><div class="req-metric"><span>Estándares</span><b>${standardsCount}</b></div><div class="req-metric"><span>Cursos / entrenamientos</span><b>${coursesCount}</b></div></div>
-      ${supplementalWarning?`<div class="notice">${esc(supplementalWarning)}</div>`:''}
-      ${selectedUser&&excluded.size?`<div class="notice">Se excluyeron ${excluded.size} DOA marcados como «NO APLICA» específicamente para este usuario.</div>`:''}
-      ${!cargoProfiles.length?'<div class="notice">No se encontró un perfil configurado para este cargo en Perfiles.</div>':''}
-      ${!effectiveDoas.length?'<div class="empty">No hay DOA aplicables configurados para este cargo/usuario. Verifique Perfiles.</div>':grouped}
-      ${req.length===0&&effectiveDoas.length?'<div class="empty">Hay DOA asignados en Perfiles, pero no se encontraron estándares asociados en Estándares y DOA. Verifique que el texto del DOA coincida en ambas secciones.</div>':''}
+      <div class="req-metrics">
+        <button type="button" class="req-metric req-view-button active" data-req-target="all" onclick="filterRequirementsView('all',this)"><span>Mostrar todo</span><b>↗</b><small>Todos los requisitos</small></button>
+        <button type="button" class="req-metric req-view-button" data-req-target="users" onclick="filterRequirementsView('users',this)"><span>Usuarios con este cargo</span><b>${cargoUsers.length}</b><small>Ver solo usuarios</small></button>
+        <button type="button" class="req-metric req-view-button" data-req-target="doas" onclick="filterRequirementsView('doas',this)"><span>DOA aplicables${selectedUser?' a la persona':''}</span><b>${effectiveDoas.length}</b><small>Ver solo DOA</small></button>
+        <button type="button" class="req-metric req-view-button" data-req-target="standards" onclick="filterRequirementsView('standards',this)"><span>Estándares</span><b>${standardsCount}</b><small>Ver solo nombres</small></button>
+        <button type="button" class="req-metric req-view-button" data-req-target="courses" onclick="filterRequirementsView('courses',this)"><span>Cursos / entrenamientos</span><b>${coursesCount}</b><small>Ver solo cursos</small></button>
+      </div>
+      <div class="req-view-panel" data-req-view="users" hidden><div class="req-list-head"><h3>Usuarios con el cargo ${esc(cargo)}</h3><span>${cargoUsers.length} usuario(s)</span></div><div class="req-name-list">${cargoUsers.map(u=>`<div class="req-name-item"><span class="req-name-icon">U</span><span>${esc(u.nombre||'Sin nombre')}</span></div>`).join('')||'<div class="empty">No hay usuarios registrados con este cargo.</div>'}</div></div>
+      <div class="req-view-panel" data-req-view="doas" hidden><div class="req-list-head"><h3>DOA aplicables</h3><span>${effectiveDoas.length} DOA</span></div><div class="req-name-list">${effectiveDoas.map(d=>`<div class="req-name-item"><span class="req-name-icon">D</span><span>${esc(d)}</span></div>`).join('')||'<div class="empty">No hay DOA aplicables.</div>'}</div></div>
+      <div class="req-view-panel" data-req-view="standards" hidden><div class="req-list-head"><h3>Estándares aplicables</h3><span>${standardsCount} estándar(es)</span></div><div class="req-name-list">${[...new Map(req.filter(r=>String(r.estandar||'').trim()).map(r=>[normalizeRel(r.estandar),String(r.estandar).trim()])).values()].sort((a,b)=>a.localeCompare(b,'es')).map(n=>`<div class="req-name-item"><span class="req-name-icon">E</span><span>${esc(n)}</span></div>`).join('')||'<div class="empty">No hay estándares asociados.</div>'}</div></div>
+      <div class="req-view-panel" data-req-view="courses" hidden><div class="req-list-head"><h3>Cursos / entrenamientos aplicables</h3><span>${coursesCount} curso(s)</span></div><div class="req-name-list">${[...new Map(req.filter(r=>String(r.curso||'').trim()).map(r=>[[normalizeRel(r.estandar),normalizeRel(r.doa),normalizeRel(r.curso)].join('|'),{curso:String(r.curso).trim(),estandar:String(r.estandar||'').trim(),doa:String(r.doa||'').trim()}])).values()].sort((a,b)=>a.curso.localeCompare(b.curso,'es')).map(c=>`<div class="req-name-item req-course-item"><span class="req-name-icon">C</span><span><strong>${esc(c.curso)}</strong><small>${esc(c.estandar)} · ${esc(c.doa)}</small></span></div>`).join('')||'<div class="empty">No hay cursos / entrenamientos asociados.</div>'}</div></div>
+      <div class="req-view-panel" data-req-view="all">
+        ${supplementalWarning?`<div class="notice">${esc(supplementalWarning)}</div>`:''}
+        ${selectedUser&&excluded.size?`<div class="notice">Se excluyeron ${excluded.size} DOA marcados como «NO APLICA» específicamente para este usuario.</div>`:''}
+        ${!cargoProfiles.length?'<div class="notice">No se encontró un perfil configurado para este cargo en Perfiles.</div>':''}
+        ${!effectiveDoas.length?'<div class="empty">No hay DOA aplicables configurados para este cargo/usuario. Verifique Perfiles.</div>':grouped}
+        ${req.length===0&&effectiveDoas.length?'<div class="empty">Hay DOA asignados en Perfiles, pero no se encontraron estándares asociados en Estándares y DOA. Verifique que el texto del DOA coincida en ambas secciones.</div>':''}
+      </div>
     `;
   }catch(e){console.error(e);detail.innerHTML=`<div class="notice">No fue posible consultar los datos maestros registrados. ${esc(e.message||'Verifique la conexión con Supabase y los registros de Perfiles y Estándares/DOA.')}</div>`;}
 }
