@@ -754,6 +754,30 @@ aside{
 }
 </style>
 
+
+<style id="standards-consultation-style">
+#consultarEstandares .standards-consult-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:18px}
+#consultarEstandares .standards-consult-panel{min-width:0;padding:22px}
+#consultarEstandares .standards-consult-panel h3{margin-bottom:8px;font-size:18px}
+#consultarEstandares .standards-consult-panel>.small{line-height:1.55;margin:0 0 16px}
+#consultarEstandares .field select,#consultarEstandares .field input{width:100%;height:44px}
+.standards-result-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px solid #d9e6ef;border-radius:11px;background:linear-gradient(110deg,#f0f7fc,#fff);margin-bottom:12px;color:#234b69;font-size:12px}
+.standards-result-summary b{font-size:15px;color:#0b5b94}
+.standards-result-card{overflow:hidden;border:1px solid #d8e4ed;border-radius:13px;background:#fff;margin-top:12px;box-shadow:0 5px 14px rgba(20,48,76,.05)}
+.standards-result-head{padding:14px 16px;background:linear-gradient(110deg,#edf5fb,#fff);border-bottom:1px solid #dce7ef}
+.standards-result-head h4{margin:0;color:#123f63;font-size:15px;overflow-wrap:anywhere}
+.standards-result-head .small{margin-top:5px;line-height:1.45}
+.standards-doa-block{padding:13px 15px;border-bottom:1px solid #e8eef3}
+.standards-doa-block:last-child{border-bottom:0}
+.standards-doa-title{font-size:13px;font-weight:850;color:#7b1e3a;margin-bottom:9px;overflow-wrap:anywhere}
+.standards-course-list{display:grid;gap:7px}
+.standards-course-row{padding:10px 11px;border:1px solid #e3ebf1;border-radius:9px;background:#fbfdff}
+.standards-course-name{font-size:12px;font-weight:750;color:#244a67;overflow-wrap:anywhere}
+.standards-course-meta{display:flex;gap:6px 12px;flex-wrap:wrap;margin-top:5px;font-size:11px;color:#718397}
+.standards-course-meta span{overflow-wrap:anywhere}
+@media(max-width:900px){#consultarEstandares .standards-consult-grid{grid-template-columns:1fr}}
+</style>
+
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
@@ -772,6 +796,7 @@ aside{
 <button class="nav active" data-view="dashboard"><span>📊 &nbsp;</span>Dashboard</button>
 <button class="nav" data-view="usuarios"><span>👤 &nbsp;</span>Usuarios</button>
 <button class="nav" data-view="requisitos"><span>✓ &nbsp;</span>Consultar Requisitos</button>
+<button class="nav" data-view="consultarEstandares"><span>▤ &nbsp;</span>Consultar Estandares</button>
 <button class="nav" data-view="doaConsulta"><span>⌕ &nbsp;</span>Consulta Asignación DOA</button>
 <button class="nav" data-view="pendientes"><span>⏳ &nbsp;</span>Pendiente por registrar</button>
 <button class="nav" data-view="admin"><span>⚙ &nbsp;</span>Administrador</button>
@@ -802,6 +827,14 @@ aside{
   <div class="req-filter-actions"><button class="btn btn-primary" onclick="renderRequirements()">Consultar requisitos</button><button class="btn btn-light" onclick="clearRequirementSearch()">Limpiar búsqueda</button></div>
 </div>
 <div id="reqDetail"><div class="empty">Seleccione un Cargo para consultar los requisitos.</div></div>
+</div>
+</section>
+
+<section id="consultarEstandares" class="view">
+<div class="page-title"><div><h2>Consultar Estandares</h2><div class="subtitle">Consulta los estándares por clasificación o busca un estándar para revisar sus DOA y los cursos asociados. Esta sesión es únicamente de consulta.</div></div><button class="btn btn-light" type="button" onclick="refreshStandardsConsultation()">Actualizar datos</button></div>
+<div class="grid2 standards-consult-grid">
+  <div class="panel standards-consult-panel"><h3>Consultar por clasificación</h3><p class="small">Selecciona una clasificación para ver los estándares asociados y su estructura de DOA y cursos.</p><div class="field"><label for="standardsClassificationFilter">Clasificación</label><select class="select" id="standardsClassificationFilter" onchange="renderStandardsByClassification()"><option value="">Selecciona una clasificación</option></select></div><div id="standardsClassificationResults" style="margin-top:16px"><div class="empty">Selecciona una clasificación para consultar sus estándares.</div></div></div>
+  <div class="panel standards-consult-panel"><h3>Buscar un estándar</h3><p class="small">Escribe el nombre total o parcial del estándar. Los resultados muestran cada DOA y los cursos que pertenecen a ese DOA.</p><div class="field"><label for="standardsNameSearch">Estándar</label><select class="select" id="standardsNameSearch" onchange="renderStandardsByName()"><option value="">Selecciona un estándar</option></select></div><div id="standardsNameResults" style="margin-top:16px"><div class="empty">Selecciona un estándar para consultar sus DOA y cursos.</div></div></div>
 </div>
 </section>
 
@@ -2284,7 +2317,60 @@ function exportData(){
 }
 async function importData(file){if(!file)return;if(!adminUnlocked)return requireAdmin(()=>importData(file));try{let d=JSON.parse(await file.text());for(const s of stores)for(const o of (d[s]||[]))await put(s,o);await refresh();alert('Datos importados correctamente.')}catch(e){alert('No se pudo importar el archivo: '+(e.message||'Error desconocido'))}}
 
-document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');if(b.dataset.view==='dashboard')await renderDashboard();if(b.dataset.view==='usuarios')await renderUsers();if(b.dataset.view==='requisitos')await populateReqCargos();if(b.dataset.view==='doaConsulta')await renderDoaProfilesView();if(b.dataset.view==='pendientes')await renderPendingRegistrations();if(b.dataset.view==='admin')await renderAdmin();}));
+const STANDARD_CLASSIFICATION_LABELS=['Estándar legal','Estándar de Seguridad Corteva EHSS','Estándar de Seguridad - Otros','Estándar de Procedimientos'];
+function standardsCoursesMarkup(rows){
+  const groups=new Map();
+  rows.forEach(r=>{const k=normalizeRel(r.doa)||'__sin_doa__';if(!groups.has(k))groups.set(k,{doa:String(r.doa||'Sin DOA registrado').trim()||'Sin DOA registrado',courses:[]});groups.get(k).courses.push(r)});
+  if(!groups.size)return '<div class="empty">Este estándar no tiene DOA ni cursos registrados.</div>';
+  return [...groups.values()].sort((a,b)=>a.doa.localeCompare(b.doa,'es',{sensitivity:'base'})).map(g=>`<div class="standards-doa-block"><div class="standards-doa-title">DOA: ${esc(g.doa)}</div><div class="standards-course-list">${g.courses.sort((a,b)=>String(a.curso||'').localeCompare(String(b.curso||''),'es',{sensitivity:'base'})).map(c=>`<div class="standards-course-row"><div class="standards-course-name">${esc(c.curso||'Curso sin nombre')}</div><div class="standards-course-meta">${c.metodo?`<span><b>Método:</b> ${esc(c.metodo)}</span>`:''}${c.courseId?`<span><b>Course ID:</b> ${esc(c.courseId)}</span>`:''}${(Number(c.frecuenciaAnios)||Number(c.frecuenciaDias))?`<span><b>Frecuencia:</b> ${Number(c.frecuenciaAnios)||0} año(s) · ${Number(c.frecuenciaDias)||0} día(s)</span>`:''}</div></div>`).join('')}</div></div>`).join('');
+}
+function standardsCardMarkup(name,rows,classificationText=''){
+ const doas=new Set(rows.map(r=>normalizeRel(r.doa)).filter(Boolean));
+ return `<article class="standards-result-card"><div class="standards-result-head"><h4>${esc(name)}</h4><div class="small">${classificationText?`Clasificación: ${esc(classificationText)} · `:''}${doas.size} DOA · ${rows.length} curso(s)/entrenamiento(s)</div></div>${standardsCoursesMarkup(rows)}</article>`;
+}
+async function renderStandardsConsultation(){
+ const cls=$('standardsClassificationFilter'),search=$('standardsNameSearch');
+ if(!cls||!search)return;
+ try{
+  const [standards,classifications]=await Promise.all([all('estandares'),all('clasificaciones')]);
+  const previous=cls.value;
+  const previousStandard=search.value;
+  const labels=[...new Set([...STANDARD_CLASSIFICATION_LABELS,...classifications.flatMap(r=>r.clasificaciones||[])])].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+  cls.innerHTML='<option value="">Selecciona una clasificación</option>'+labels.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  if(labels.includes(previous))cls.value=previous;
+  const standardNames=[...new Set(standards.map(r=>String(r.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+  search.innerHTML='<option value="">Selecciona un estándar</option>'+standardNames.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  if(standardNames.includes(previousStandard))search.value=previousStandard;
+  renderStandardsByClassification();renderStandardsByName();
+ }catch(e){
+  const msg=`<div class="notice">No fue posible cargar el catálogo de estándares y clasificaciones desde la plataforma. ${esc(e.message||e)}</div>`;
+  $('standardsClassificationResults').innerHTML=msg;$('standardsNameResults').innerHTML=msg;
+ }
+}
+function renderStandardsByClassification(){
+ const target=$('standardsClassificationResults');if(!target)return;
+ const classification=$('standardsClassificationFilter')?.value||'';
+ if(!classification){target.innerHTML='<div class="empty">Selecciona una clasificación para consultar sus estándares.</div>';return;}
+ Promise.all([all('estandares'),all('clasificaciones')]).then(([standards,classifications])=>{
+  const matching=new Set(classifications.filter(c=>(c.clasificaciones||[]).some(x=>normalizeRel(x)===normalizeRel(classification))).map(c=>normalizeRel(c.estandar)));
+  const names=[...new Set(standards.filter(r=>matching.has(normalizeRel(r.estandar))).map(r=>String(r.estandar||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+  if(!names.length){target.innerHTML=`<div class="empty">No hay estándares asociados a «${esc(classification)}».</div>`;return;}
+  target.innerHTML=`<div class="standards-result-summary"><span>Estándares encontrados</span><b>${names.length}</b></div>`+names.map(name=>standardsCardMarkup(name,standards.filter(r=>normalizeRel(r.estandar)===normalizeRel(name)),classification)).join('');
+ }).catch(e=>target.innerHTML=`<div class="notice">No se pudo consultar la clasificación. ${esc(e.message||e)}</div>`);
+}
+function renderStandardsByName(){
+ const target=$('standardsNameResults');if(!target)return;
+ const q=normalizeRel($('standardsNameSearch')?.value||'');
+ if(!q){target.innerHTML='<div class="empty">Selecciona un estándar para consultar sus DOA y cursos.</div>';return;}
+ Promise.all([all('estandares'),all('clasificaciones')]).then(([standards,classifications])=>{
+  const names=[...new Set(standards.map(r=>String(r.estandar||'').trim()).filter(n=>n&&normalizeRel(n)===q))].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+  if(!names.length){target.innerHTML='<div class="empty">No se encontraron estándares con ese nombre.</div>';return;}
+  target.innerHTML=`<div class="standards-result-summary"><span>Coincidencias</span><b>${names.length}</b></div>`+names.map(name=>{const cls=classifications.find(c=>normalizeRel(c.estandar)===normalizeRel(name));return standardsCardMarkup(name,standards.filter(r=>normalizeRel(r.estandar)===normalizeRel(name)),(cls?.clasificaciones||[]).join(', '));}).join('');
+ }).catch(e=>target.innerHTML=`<div class="notice">No se pudo buscar el estándar. ${esc(e.message||e)}</div>`);
+}
+async function refreshStandardsConsultation(){invalidateDataCache('estandares','clasificaciones');await renderStandardsConsultation()}
+
+document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');if(b.dataset.view==='dashboard')await renderDashboard();if(b.dataset.view==='usuarios')await renderUsers();if(b.dataset.view==='requisitos')await populateReqCargos();if(b.dataset.view==='consultarEstandares')await renderStandardsConsultation();if(b.dataset.view==='doaConsulta')await renderDoaProfilesView();if(b.dataset.view==='pendientes')await renderPendingRegistrations();if(b.dataset.view==='admin')await renderAdmin();}));
 (async()=>{try{showApp();await bootData();await refresh();const qrUserId=new URLSearchParams(window.location.search).get('usuario');if(qrUserId){await viewUser(qrUserId)}}catch(e){console.error('DOA: no fue posible cargar los datos públicos desde Supabase.',e);alert('No fue posible cargar los datos de la plataforma. Supabase respondió: '+(e.message||'error desconocido')+'\n\nSi las políticas públicas aún no fueron ejecutadas, use SUPABASE_PUBLIC_VIEW_POLICIES.sql del ZIP. No se modifica ni se borra ningún dato.')}})()
 </script>
 
