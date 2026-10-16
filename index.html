@@ -1102,7 +1102,7 @@ async function renderUsers(){
     let pct=x.total?Math.round(x.done/x.total*100):0;
     let doas=await profileDoas(u.cargo);
     let exceptions=await userDoaExceptions(u);
-    let doaCell=doaListHtml(doas)+(exceptions.length?doaExceptionNoticeHtml(exceptions):'');
+    let doaCell=doaListHtml(doas)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
     body+=`<tr>
       <td><b>${esc(u.nombre)}</b><div class="small">${esc(u.email||'')}</div></td>
       <td>${esc(u.cargo||'')}</td>
@@ -1136,10 +1136,11 @@ async function userDoaExceptions(user){
   const assigned=new Set(profiles.filter(p=>normalizeRel(p.cargo)===normalizeRel(user.cargo)).flatMap(p=>doaList(p.doa).map(normalizeRel)));
   return uniqueDoas(exceptions.filter(e=>String(e.usuarioId)===String(user.id)&&assigned.has(normalizeRel(e.doa))).map(e=>String(e.doa||'').trim()).filter(Boolean));
 }
-function doaExceptionNoticeHtml(doas){
+function doaExceptionNoticeHtml(doas,cargo=''){
   const arr=uniqueDoas(doas);
   if(!arr.length)return '';
-  return `<div style="margin-top:8px;padding:9px 10px;border:1px solid #d8c2ad;border-left:4px solid #70452a;border-radius:8px;background:#f5eee8;color:#56351f;font-size:12px;line-height:1.45;"><div style="font-weight:800;margin-bottom:4px;">Excepciones registradas</div><div>Los siguientes DOA, asignados al cargo, han sido declarados no aplicables a este usuario:</div><ul style="margin:5px 0 0;padding-left:18px;">${arr.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div>`;
+  const role=String(cargo||'').trim()||'no especificado';
+  return `<div style="margin-top:8px;padding:9px 10px;border:1px solid #d8c2ad;border-left:4px solid #70452a;border-radius:8px;background:#f5eee8;color:#56351f;font-size:12px;line-height:1.45;"><div style="font-weight:800;margin-bottom:4px;">Excepciones registradas</div><div>Los siguientes DOA, asignados al cargo <strong>${esc(role)}</strong> de este usuario, han sido declarados no aplicables a esta persona:</div><ul style="margin:5px 0 0;padding-left:18px;">${arr.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div>`;
 }
 async function openUser(id=''){if(!adminUnlocked){return requireAdmin(()=>openUser(id))}let u=id?(await all('usuarios')).find(x=>x.id===id):{};let ps=await all('perfiles');let cargos=[...new Set(ps.map(p=>String(p.cargo||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));openModal(id?'Editar usuario':'Nuevo usuario',`<div class="form-grid">
 <div class="field"><label>Nombre completo *</label><input id="fNombre" value="${esc(u.nombre)}"></div>
@@ -1294,7 +1295,7 @@ async function viewUser(id){
         <button type="button" class="detail-stat stat-expired detail-filter" data-filter="VENCIDO" onclick="filterUserDetailCourses('VENCIDO',this)" aria-pressed="false"><span>Vencidos</span><b>${expired}</b></button>
         <button type="button" class="detail-stat stat-pending detail-filter" data-filter="PENDIENTE" onclick="filterUserDetailCourses('PENDIENTE',this)" aria-pressed="false"><span>Pendientes</span><b>${pending}</b></button>
       </div>
-      ${exceptions.length?doaExceptionNoticeHtml(exceptions):''}
+      ${exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):''}
       <div class="detail-section detail-training-section">
         <div class="detail-section-title"><div><h3>Entrenamientos por DOA</h3><small>Cada DOA reúne todos sus cursos, fechas, frecuencia y documentos</small></div><span>${x.done} de ${x.total} vigentes</span></div>
         ${detail||'<div class="empty">No hay entrenamientos configurados para este Cargo.</div>'}
