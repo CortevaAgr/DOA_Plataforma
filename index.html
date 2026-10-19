@@ -383,6 +383,9 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
   display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;
   background:#eef5fb;border:1px solid #d4e3ef;color:#17486d;font-size:12px;font-weight:700;
 }
+/* Estado visual de los DOA en Usuarios: solo presentación, sin modificar datos ni reglas. */
+#usuarios .doa-chip.doa-chip-complete{background:#d9f2df;border-color:#a8d9b5;color:#205c32}
+#usuarios .doa-chip.doa-chip-exception{background:#b8bec5;border-color:#9da5ad;color:#303840}
 .empty-inline{color:#7c8b99;font-size:12px}
 .user-detail{display:flex;flex-direction:column;gap:18px}
 .user-detail-hero{
@@ -464,6 +467,11 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .compliance-entries-title h4{margin:0;color:#173f5e;font-size:16px}.compliance-entries-title span{font-size:12px;color:#667f93}
 .compliance-entry{margin-top:14px;padding:15px;border:1px solid rgba(255,255,255,.72);border-radius:16px;background:rgba(255,255,255,.78);box-shadow:0 9px 22px rgba(12,52,79,.12)}
 .compliance-entry-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:2px solid #173f5e}
+.compliance-course-id{display:inline-flex;align-items:center;gap:5px;max-width:48%;padding:6px 10px;border:1px solid #c6dff2;border-radius:8px;background:#eaf5ff;color:#155a91;font-size:11px;font-weight:800;line-height:1.35;overflow-wrap:anywhere;text-align:right}
+.compliance-course-id[hidden]{display:none!important}
+.compliance-course-id .course-id-label{color:#52738c;font-weight:700}
+@media(max-width:560px){.compliance-entry-head{align-items:flex-start}.compliance-course-id{max-width:58%;font-size:10px;padding:5px 7px}}
+
 .compliance-entry-head>div{display:flex;align-items:center;gap:9px;color:#173f5e}
 .compliance-entry-number{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#7b1e3a;color:#fff;font-weight:800}
 .compliance-remove-entry{font-size:12px!important;padding:7px 10px!important}
@@ -1233,7 +1241,17 @@ async function renderUsers(){
     const state=x.ok?"AUTORIZADO PARA OPERAR":"NO AUTORIZADO";
     if(f&&f!==state)return '';
     const pct=x.total?Math.round(x.done/x.total*100):0;
-    const doaCell=doaListHtml(doas)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
+    // Verde claro únicamente cuando todos los cursos del DOA están completos y vigentes.
+    // Los DOA declarados no aplicables a esta persona se muestran en gris medio.
+    const exceptionKeys=new Set(exceptions.map(normalizeRel));
+    const doaClasses={};
+    uniqueDoas(doas).forEach(d=>{
+      const key=normalizeRel(d);
+      if(exceptionKeys.has(key)){doaClasses[key]='doa-chip-exception';return;}
+      const courses=x.details.filter(item=>normalizeRel(item.doa)===key);
+      if(courses.length&&courses.every(item=>statusFor({fechaRealizacion:item.fechaRealizacion,fechaFin:item.fechaFin})==='COMPLETO / VIGENTE'))doaClasses[key]='doa-chip-complete';
+    });
+    const doaCell=doaListHtml(doas,'Sin DOA aplicables',doaClasses)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
     return `<tr>
       <td><b>${esc(u.nombre)}</b><div class="small">${esc(u.email||'')}</div></td>
       <td>${esc(u.cargo||'')}</td>
@@ -1255,10 +1273,10 @@ async function profileDoa(cargo){
 function uniqueDoas(list){
   return [...new Set((list||[]).map(x=>String(x||'').trim()).filter(Boolean))]
 }
-function doaListHtml(doas, empty='Sin DOA aplicables'){
+function doaListHtml(doas, empty='Sin DOA aplicables', classes={}){
   let arr=uniqueDoas(doas);
   if(!arr.length)return `<div class="empty-inline">${empty}</div>`;
-  return `<div class="doa-list">${arr.map(d=>`<span class="doa-chip">${esc(d)}</span>`).join('')}</div>`;
+  return `<div class="doa-list">${arr.map(d=>`<span class="doa-chip ${classes[normalizeRel(d)]||''}">${esc(d)}</span>`).join('')}</div>`;
 }
 // Presenta las excepciones individuales sin modificar los DOA configurados para el Cargo.
 async function userDoaExceptions(user){
@@ -1564,6 +1582,7 @@ function complianceEntryTemplate(i=0, c={}){
   return `<div class="compliance-entry" data-entry-index="${i}" data-existing-id="${esc(c.id||'')}" data-remove-attachment="false">
     <div class="compliance-entry-head">
       <div><span class="compliance-entry-number">${i+1}</span><strong>Entrenamiento ${i+1}</strong></div>
+      <span class="compliance-course-id" id="cCourseId_${i}" hidden></span>
       ${i>0?`<button type="button" class="btn btn-light compliance-remove-entry" onclick="removeComplianceEntry(${i})">Quitar</button>`:''}
     </div>
     <div class="form-grid">
@@ -1683,7 +1702,7 @@ function renumberComplianceEntries(){
     const number=row.querySelector('.compliance-entry-number');if(number)number.textContent=String(n+1);
     const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent='Entrenamiento '+(n+1);
     // Mantener los identificadores internos alineados con el índice visual.
-    ['cEstandar','cDoa','cCurso','cMetodo','cFrecuencia','cFecha','cFechaFin','cEstado','cArchivos','cArchivoInfo','cArchivosExistentes','cDoaExceptionBtn','cDoaExceptionInfo','cExistingData'].forEach(prefix=>{
+    ['cEstandar','cDoa','cCurso','cMetodo','cFrecuencia','cFecha','cFechaFin','cEstado','cArchivos','cArchivoInfo','cArchivosExistentes','cDoaExceptionBtn','cDoaExceptionInfo','cExistingData','cCourseId'].forEach(prefix=>{
       const el=row.querySelector('[id="'+prefix+'_'+old+'"]');if(el)el.id=prefix+'_'+n;
       if(el){const h=el.getAttribute('onchange');if(h)el.setAttribute('onchange',h.replaceAll('('+old+')','('+n+')'));const click=el.getAttribute('onclick');if(click)el.setAttribute('onclick',click.replaceAll('('+old+')','('+n+')'));}
     });
@@ -1716,6 +1735,7 @@ async function buildComplianceCourseEntries(std,doa,courseRows){
     if(standard)standard.dataset.previousStandard=std;
     if(doaSelect){doaSelect.innerHTML='<option value="">Seleccione un DOA</option>'+allowedDoasForSelected.map(x=>`<option value="${esc(x.doa)}">${esc(x.doa)}${x.excluded?' — NO APLICA PARA ESTA PERSONA':''}</option>`).join('');doaSelect.value=allowedDoasForSelected.some(x=>normalizeRel(x.doa)===normalizeRel(doa))?doa:'';doaSelect.dataset.selectedDoa=doa;doaSelect.disabled=n>0;}
     if(courseSelect){courseSelect.innerHTML=`<option value="${esc(course.id)}">${esc(course.curso||'Sin nombre')}</option>`;courseSelect.value=String(course.id);courseSelect.dataset.selectedCurso=String(course.id);courseSelect.disabled=true;}
+    renderComplianceCourseId(n,course);
     const exceptionBtn=$('cDoaExceptionBtn_'+n);if(exceptionBtn&&n>0)exceptionBtn.style.display='none';
     if(n>0){const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent=course.curso||('Entrenamiento '+(n+1));}
   });
@@ -1811,9 +1831,18 @@ async function entryDoaChanged(i){
   await updateDoaExceptionButton(i);
 }
 async function updateDoaExceptionButton(i){const btn=$('cDoaExceptionBtn_'+i),doa=$('cDoa_'+i)?.value||'',userId=$('cUsuario')?.value||'';if(!btn)return;const excluded=await isDoaNotApplicable(userId,doa);btn.textContent=excluded?'Restablecer':'No aplica';btn.disabled=!userId||!doa;const info=$('cDoaExceptionInfo_'+i);if(info)info.textContent=excluded?'Este DOA está marcado como NO APLICA para esta persona.':''}
+function renderComplianceCourseId(i, course){
+  const el=$('cCourseId_'+i);
+  if(!el)return;
+  const courseId=String(course?.courseId||course?.course_id||'').trim();
+  if(!courseId){el.hidden=true;el.textContent='';return}
+  el.innerHTML=`<span class="course-id-label">COURSE ID</span> ${esc(courseId)}`;
+  el.hidden=false;
+}
 async function entryCourseChanged(i,initial=false){
   const id=$('cCurso_'+i)?.value;if(!$('cMetodo_'+i))return;
   const ss=await all('estandares'),r=ss.find(x=>String(x.id)===String(id));
+  renderComplianceCourseId(i,r);
   if(!r){$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return}
   $('cMetodo_'+i).value=r.metodo||'';$('cFrecuencia_'+i).value=`${Number(r.frecuenciaAnios||0)} años + ${Number(r.frecuenciaDias||0)} días`;entryDateChanged(i);
   const userId=$('cUsuario')?.value||'',currentId=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`)?.dataset.existingId||'';
