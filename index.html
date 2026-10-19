@@ -807,6 +807,90 @@ aside{
 @media(max-width:900px){#consultarEstandares .standards-consult-grid{grid-template-columns:1fr}}
 </style>
 
+
+
+<style id="compliance-dropdown-visual-polish">
+/* Mejora visual localizada: desplegable de Usuario y campos Usuario/Estándar/DOA.
+   Solo presentación; conserva IDs, eventos, datos y lógica existentes. */
+.compliance-modal-box .compliance-shared-fields .field:has(#cUsuario){
+  padding:9px 10px!important;
+  border:1px solid #d7e4ee!important;
+  border-left:3px solid #9bbbd3!important;
+  border-radius:10px!important;
+  background:linear-gradient(135deg,#f5faff 0%,#ffffff 82%)!important;
+  box-shadow:inset 0 1px 2px rgba(20,48,76,.025)!important;
+}
+.compliance-modal-box #cUsuario{
+  min-height:42px!important;
+  height:auto!important;
+  padding:10px 38px 10px 12px!important;
+  border:1px solid #9ebbd1!important;
+  border-radius:9px!important;
+  background-color:#fff!important;
+  color:#123b5b!important;
+  font-size:13px!important;
+  font-weight:650!important;
+  box-shadow:0 2px 5px rgba(20,48,76,.045)!important;
+  cursor:pointer;
+}
+.compliance-modal-box #cUsuario:focus{
+  outline:none!important;
+  border-color:#1976c8!important;
+  box-shadow:0 0 0 3px rgba(25,118,200,.14),0 3px 9px rgba(20,48,76,.06)!important;
+}
+.compliance-modal-box #cUsuario option{
+  padding:8px 10px;
+  background:#fff;
+  color:#173b58;
+  font-size:13px;
+}
+.compliance-modal-box #cUsuario option:first-child{
+  color:#60788d;
+  background:#f0f5f9;
+  font-weight:700;
+}
+.compliance-modal-box .compliance-entry .form-grid>.field:has(select[id^="cEstandar_"]),
+.compliance-modal-box .compliance-entry .form-grid>.field:has(select[id^="cDoa_"]){
+  padding:9px 10px!important;
+  border:1px solid #e0e8ef!important;
+  border-left:3px solid #c2d4e2!important;
+  border-radius:10px!important;
+  background:linear-gradient(135deg,#f7fafc 0%,#fff 88%)!important;
+  box-shadow:inset 0 1px 2px rgba(20,48,76,.02)!important;
+}
+.compliance-modal-box .compliance-entry .form-grid>.field:has(select[id^="cEstandar_"]) label,
+.compliance-modal-box .compliance-entry .form-grid>.field:has(select[id^="cDoa_"]) label{
+  color:#3d5b73!important;
+  font-weight:800!important;
+}
+.compliance-modal-box .compliance-entry select[id^="cEstandar_"],
+.compliance-modal-box .compliance-entry select[id^="cDoa_"]{
+  min-height:40px!important;
+  border-color:#c2d3e0!important;
+  background-color:#fff!important;
+  color:#173b58!important;
+  font-size:13px!important;
+  font-weight:550!important;
+}
+.compliance-modal-box .compliance-entry select[id^="cEstandar_"]:focus,
+.compliance-modal-box .compliance-entry select[id^="cDoa_"]:focus{
+  border-color:#6c9fc3!important;
+  box-shadow:0 0 0 3px rgba(25,118,200,.09)!important;
+  outline:none!important;
+}
+.compliance-modal-box .compliance-entry select[id^="cDoa_"]:disabled{
+  background:#f2f6f9!important;
+  color:#8192a0!important;
+  border-color:#d7e1e9!important;
+  cursor:not-allowed;
+}
+@media(max-width:640px){
+  .compliance-modal-box .compliance-shared-fields .field:has(#cUsuario),
+  .compliance-modal-box .compliance-entry .form-grid>.field:has(select[id^="cEstandar_"]),
+  .compliance-modal-box .compliance-entry .form-grid>.field:has(select[id^="cDoa_"]){padding:8px!important}
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
@@ -951,7 +1035,11 @@ async function signIn(){return adminSignIn()}
 async function adminSignIn(){const email=$('adminEmail')?.value.trim(),password=$('adminPassword')?.value;if(!email||!password){return alert('Ingrese correo y contraseña.')}const btn=$('adminLoginBtn');if(btn){btn.disabled=true;btn.textContent='Verificando…'}try{const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:SUPABASE_HEADERS,body:JSON.stringify({email,password})});const raw=await r.text();let data={};try{data=raw?JSON.parse(raw):{}}catch{}if(!r.ok){const msg=data?.error_description||data?.msg||data?.message||data?.error||raw||('HTTP '+r.status);throw new Error(msg+' (HTTP '+r.status+')')}setSession(data);adminUnlocked=true;const action=pendingAdminAction;pendingAdminAction=null;closeModal();if(action)await action();else await refresh()}catch(e){const msg=e.message||'No fue posible iniciar sesión.';const el=$('adminLoginError');if(el){el.textContent=msg;el.style.display='block'}else alert(msg)}finally{if(btn){btn.disabled=false;btn.textContent='Ingresar'}}}
 async function signOut(){clearSession();adminUnlocked=false;pendingAdminAction=null;await refresh()}
 function goToAdministration(){const b=document.querySelector('.nav[data-view="admin"]');if(b)b.click()}
-async function bootData(){await all('perfiles');await all('estandares');await all('usuarios');await all('cumplimientos')}
+async function bootData(){
+  // Las tablas maestras no dependen unas de otras: cargarlas en paralelo reduce la espera inicial.
+  // all() conserva su caché de promesas y cumplimientos reutiliza usuarios/estándares ya solicitados.
+  await Promise.all([all('perfiles'),all('estandares'),all('usuarios'),all('cumplimientos')]);
+}
 function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||'',identificacion:x.identificacion||'',observaciones:x.observaciones||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.fecha_cambio||x.created_at||'',usuario:x.usuario_email||x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.datos_anteriores??x.informacion_anterior??null,nueva:x.datos_nuevos??x.informacion_nueva??null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeRel(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
 function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
 function normalizeClassification(x){return {id:String(x.id),estandar:x.estandar||'',clasificaciones:Array.isArray(x.clasificaciones)?x.clasificaciones:[]}}
@@ -1049,7 +1137,13 @@ async function authFor(user){
  return {ok:total>0&&done===total,total,done,soon,expired,pending,pct,states,details,dashSoon,dashExpired};
 }
 function dashboardStatusFor(d){if(!d.fechaRealizacion||!d.fechaFin)return 'PENDIENTE';const end=new Date(d.fechaFin+'T23:59:59');if(isNaN(end))return 'PENDIENTE';const today=new Date();today.setHours(0,0,0,0);const limit=new Date();limit.setMonth(limit.getMonth()+3);limit.setHours(23,59,59,999);if(end<today)return 'VENCIDO';if(end<=limit)return 'PRÓXIMO A VENCER';return 'COMPLETO / VIGENTE'}
-async function refresh(){await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos')]);await renderDashboard();await renderUsers();await populateReqCargos();if($('reqCargo')?.value)await renderRequirements();await renderAdmin()}
+async function refresh(){
+  await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos')]);
+  // Dashboard y tabla de usuarios usan la misma caché; renderizarlos en paralelo evita esperas acumuladas.
+  await Promise.all([renderDashboard(),renderUsers(),populateReqCargos()]);
+  if($('reqCargo')?.value)await renderRequirements();
+  await renderAdmin();
+}
 function openModal(title,body,foot){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML=foot||'';$('modal').classList.add('open')}function userQrUrl(id){
   const base=window.location.origin+window.location.pathname;
   return base+'?usuario='+encodeURIComponent(String(id));
@@ -1124,16 +1218,16 @@ async function renderDashboard(filter=dashboardFilter){
  $('dashUsers').innerHTML=`<div class="small" style="margin-bottom:10px">Mostrando ${selected.length} de ${us.length} ${labels[dashboardFilter]||labels.all}.</div>`+(rows||'<div class="empty">No hay usuarios que coincidan con este estado.</div>');
 }
 async function renderUsers(){
-  let us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';
-  let body='';
-  for(const u of us.filter(x=>(!q||`${x.nombre} ${x.cargo}`.toLowerCase().includes(q)))){
-    let x=await authFor(u),state=x.ok?"AUTORIZADO PARA OPERAR":"NO AUTORIZADO";
-    if(f&&f!==state)continue;
-    let pct=x.total?Math.round(x.done/x.total*100):0;
-    let doas=await profileDoas(u.cargo);
-    let exceptions=await userDoaExceptions(u);
-    let doaCell=doaListHtml(doas)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
-    body+=`<tr>
+  const us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';
+  const visible=us.filter(x=>(!q||`${x.nombre} ${x.cargo}`.toLowerCase().includes(q)));
+  // Evita consultar usuario por usuario de forma secuencial: los datos compartidos vienen de la caché.
+  const rows=await Promise.all(visible.map(async u=>{
+    const [x,doas,exceptions]=await Promise.all([authFor(u),profileDoas(u.cargo),userDoaExceptions(u)]);
+    const state=x.ok?"AUTORIZADO PARA OPERAR":"NO AUTORIZADO";
+    if(f&&f!==state)return '';
+    const pct=x.total?Math.round(x.done/x.total*100):0;
+    const doaCell=doaListHtml(doas)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
+    return `<tr>
       <td><b>${esc(u.nombre)}</b><div class="small">${esc(u.email||'')}</div></td>
       <td>${esc(u.cargo||'')}</td>
       <td>${doaCell}</td>
@@ -1141,8 +1235,8 @@ async function renderUsers(){
       <td><b>${pct}%</b><div class="progress"><span style="width:${pct}%"></span></div><div class="small">${x.done} de ${x.total} entrenamientos vigentes</div></td>
       <td><button class="btn btn-light" onclick="viewUser('${u.id}')">Ver detalle</button> <button class="btn btn-light" onclick="showUserQr('${u.id}')">QR</button> <button class="btn btn-light" onclick="openUser('${u.id}')">Editar</button></td>
     </tr>`;
-  }
-  $('usersBody').innerHTML=body||'<tr><td colspan="6" class="empty">No hay usuarios.</td></tr>'
+  }));
+  $('usersBody').innerHTML=rows.filter(Boolean).join('')||'<tr><td colspan="6" class="empty">No hay usuarios.</td></tr>';
 }
 async function profileDoas(cargo){
   let p=await all('perfiles');
