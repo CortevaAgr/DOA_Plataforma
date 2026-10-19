@@ -215,6 +215,35 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .classification-hint{margin-top:10px;color:#60778b;font-size:12px;line-height:1.45}
 @media(max-width:560px){.classification-modal-box .modal-body{padding:16px!important}.classification-modal-box .modal-head{padding:16px!important}.classification-option-row{grid-template-columns:minmax(0,1fr) 44px!important;padding:12px!important;min-height:58px}.classification-modal-box .modal-foot{padding:12px 16px!important;flex-wrap:wrap}.classification-modal-box .modal-foot .btn{flex:1}}
 
+
+/* Resaltado bronce-dorado para campos obligatorios de Cumplimiento — solo visual */
+.compliance-modal-box .compliance-entry .field-required-highlight{
+  position:relative!important;
+  padding:10px 11px!important;
+  border:1px solid #e2b83f!important;
+  border-left:4px solid #c99a19!important;
+  border-radius:10px!important;
+  background:linear-gradient(135deg,#fff9dc 0%,#fff2b8 100%)!important;
+  box-shadow:0 3px 10px rgba(153,111,13,.10)!important;
+}
+.compliance-modal-box .compliance-entry .field-required-highlight label{
+  color:#76520b!important;
+  font-weight:850!important;
+}
+.compliance-modal-box .compliance-entry .field-required-highlight input{
+  border-color:#d8b64e!important;
+  background:#fffef7!important;
+}
+.compliance-modal-box .compliance-entry .field-required-highlight input:focus{
+  border-color:#b8860b!important;
+  box-shadow:0 0 0 3px rgba(201,154,25,.18)!important;
+}
+.compliance-modal-box .compliance-entry .field-required-highlight .muted{
+  color:#76520b!important;
+  font-size:12px!important;
+  margin-top:6px!important;
+}
+
 </style>
 
 <style id="dashboard-premium">
@@ -1442,10 +1471,10 @@ function complianceEntryTemplate(i=0, c={}){
       <div class="field"><label>Cursos / Entrenamientos *</label><select id="cCurso_${i}" onchange="entryCourseChanged(${i})" disabled><option value="">Seleccione un curso</option></select></div>
       <div class="field"><label>Método de entrega</label><input id="cMetodo_${i}" readonly value="${esc(c.metodo||'')}" placeholder="Se mostrará según el curso"></div>
       <div class="field"><label>Frecuencia</label><input id="cFrecuencia_${i}" readonly value="" placeholder="Se mostrará según el curso"></div>
-      <div class="field"><label>Fecha realización *</label><input id="cFecha_${i}" type="date" value="${esc(c.fechaRealizacion||'')}" onchange="entryDateChanged(${i})"></div>
+      <div class="field field-required-highlight"><label>Fecha realización *</label><input id="cFecha_${i}" type="date" value="${esc(c.fechaRealizacion||'')}" onchange="entryDateChanged(${i})"></div>
       <div class="field"><label>Fecha FIN</label><input id="cFechaFin_${i}" type="date" value="${esc(c.fechaFin||'')}" readonly></div>
       <div class="field"><label>Estado</label><div id="cEstado_${i}" style="padding-top:8px">${badge(c.id?statusFor(c):'PENDIENTE')}</div></div>
-      <div class="field full"><label>Documento soporte *</label><input id="cArchivos_${i}" type="file" accept="application/pdf,image/jpeg,image/png,image/webp,.pdf,.jpg,.jpeg,.png,.webp" onchange="previewComplianceReplacement(${i})">
+      <div class="field full field-required-highlight"><label>Documento soporte *</label><input id="cArchivos_${i}" type="file" accept="application/pdf,image/jpeg,image/png,image/webp,.pdf,.jpg,.jpeg,.png,.webp" onchange="previewComplianceReplacement(${i})">
         <div class="muted" id="cArchivoInfo_${i}">Máximo 1 documento. Obligatorio para guardar.</div>
         <div id="cArchivosExistentes_${i}" class="small"></div>
       </div>
@@ -3353,6 +3382,80 @@ header h1{font-size:clamp(14px,1.1vw,22px);line-height:1.12;letter-spacing:-.25p
 @media (max-width: 700px) {
   #modal .detail-course-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
 }
+
+
+/* Ajustes visuales exclusivos de Ver detalle: encabezados DOA por color y adjuntos compactos. */
+#modal .doa-detail-group[data-doa-index="0"] .detail-group-head,
+#modal .doa-detail-group[data-doa-index="2"] .detail-group-head,
+#modal .doa-detail-group[data-doa-index="4"] .detail-group-head,
+#modal .doa-detail-group[data-doa-index="6"] .detail-group-head {
+  background: linear-gradient(105deg,#eaf3fb 0%,#f5f9fd 100%) !important;
+  border-bottom: 1px solid #c9dced !important;
+  box-shadow: inset 4px 0 0 #5b91bd !important;
+}
+#modal .doa-detail-group[data-doa-index="0"] .detail-group-head h4,
+#modal .doa-detail-group[data-doa-index="2"] .detail-group-head h4,
+#modal .doa-detail-group[data-doa-index="4"] .detail-group-head h4,
+#modal .doa-detail-group[data-doa-index="6"] .detail-group-head h4 { color:#164b78 !important; }
+#modal .doa-detail-group[data-doa-index="0"] .detail-group-count,
+#modal .doa-detail-group[data-doa-index="2"] .detail-group-count,
+#modal .doa-detail-group[data-doa-index="4"] .detail-group-count,
+#modal .doa-detail-group[data-doa-index="6"] .detail-group-count {
+  background:#fff !important; border:1px solid #c9dced !important; color:#28618e !important;
+}
+#modal .doa-detail-group[data-doa-index="1"] .detail-group-head,
+#modal .doa-detail-group[data-doa-index="3"] .detail-group-head,
+#modal .doa-detail-group[data-doa-index="5"] .detail-group-head,
+#modal .doa-detail-group[data-doa-index="7"] .detail-group-head {
+  background: linear-gradient(105deg,#fff0df 0%,#fff8f0 100%) !important;
+  border-bottom: 1px solid #efd5b6 !important;
+  box-shadow: inset 4px 0 0 #d48a3d !important;
+}
+#modal .doa-detail-group[data-doa-index="1"] .detail-group-head h4,
+#modal .doa-detail-group[data-doa-index="3"] .detail-group-head h4,
+#modal .doa-detail-group[data-doa-index="5"] .detail-group-head h4,
+#modal .doa-detail-group[data-doa-index="7"] .detail-group-head h4 { color:#874a12 !important; }
+#modal .doa-detail-group[data-doa-index="1"] .detail-group-count,
+#modal .doa-detail-group[data-doa-index="3"] .detail-group-count,
+#modal .doa-detail-group[data-doa-index="5"] .detail-group-count,
+#modal .doa-detail-group[data-doa-index="7"] .detail-group-count {
+  background:#fff !important; border:1px solid #efd5b6 !important; color:#9a5a20 !important;
+}
+/* Separador claro y visible entre bloques de DOA, siguiendo el color del bloque siguiente. */
+#modal .doa-detail-group + .doa-detail-group { margin-top:24px !important; }
+#modal .doa-detail-group + .doa-detail-group::before {
+  height:3px !important; top:-14px !important; border-radius:3px !important;
+  background:linear-gradient(90deg,#5b91bd 0%,#d48a3d 50%,#5b91bd 100%) !important;
+}
+/* Adjunto compacto: menos altura, nombre truncado y botón fácil de identificar. */
+#modal .detail-file-btn,
+#modal .detail-file-warning {
+  display:flex !important; align-items:center !important; gap:8px !important;
+  min-height:38px !important; margin-top:7px !important; padding:6px 9px !important;
+  border-radius:8px !important;
+}
+#modal .detail-file-icon,
+#modal .detail-file-warning-icon {
+  flex:0 0 25px !important; width:25px !important; height:25px !important;
+  border-radius:6px !important; font-size:15px !important;
+}
+#modal .detail-file-btn b,
+#modal .detail-file-warning b { font-size:11px !important; line-height:1.2 !important; }
+#modal .detail-file-btn small,
+#modal .detail-file-warning small {
+  display:block !important; max-width:100% !important; margin-top:1px !important;
+  font-size:10px !important; line-height:1.25 !important;
+  white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+}
+#modal .detail-course { padding:11px !important; }
+#modal .detail-course-grid { gap:7px !important; margin-top:8px !important; }
+#modal .detail-course-grid div { padding:8px 9px !important; min-height:48px !important; }
+@media(max-width:620px) {
+  #modal .doa-detail-group + .doa-detail-group { margin-top:21px !important; }
+  #modal .detail-file-btn small,
+  #modal .detail-file-warning small { white-space:normal !important; overflow-wrap:anywhere !important; }
+}
+
 </style>
 
 </body></html>
