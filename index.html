@@ -481,6 +481,13 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .compliance-entry[data-auto-course-row="true"] .form-grid>.field:nth-child(3) label{color:#0d5ea8;font-weight:800}
 .compliance-entry[data-auto-course-row="true"] .form-grid>.field:nth-child(3) select:disabled{opacity:1;color:#18344f;background:#f2f7fb;font-weight:700}
 .compliance-course-note{font-size:12px;color:#5d7183;margin:0 0 10px;padding:10px 12px;background:#edf6fc;border:1px solid #d4e7f4;border-radius:9px}
+.compliance-existing-data{display:none!important}
+.compliance-modal-box .compliance-entry .field.has-existing-compliance-data{padding:10px 11px!important;border:1px solid #8dbce0!important;border-left:4px solid #1976c8!important;border-radius:10px!important;background:linear-gradient(135deg,#edf7ff 0%,#dceeff 100%)!important;box-shadow:0 3px 10px rgba(25,118,200,.10)!important}
+.compliance-modal-box .compliance-entry .field.has-existing-compliance-data label{color:#164f7c!important;font-weight:850!important}
+.compliance-modal-box .compliance-entry .field.has-existing-compliance-data input{border-color:#9dc7e8!important;background:#fafdff!important}
+.compliance-existing-document{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;padding:8px 10px;border:1px solid #b8d8f1;border-radius:8px;background:#f7fbff;color:#174f7c;font-size:12px}
+.compliance-existing-document .btn{font-size:11px;padding:6px 9px}
+
 
 
 .history-detail-hero{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid #d9e5ef;border-radius:14px;background:linear-gradient(135deg,#f4f8fc,#ffffff);margin-bottom:14px}.history-detail-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#0d5f9f;color:#fff;font-size:24px;font-weight:800;box-shadow:0 5px 14px rgba(13,95,159,.18)}.history-detail-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#60758a;font-weight:800}.history-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}.history-meta>div{padding:11px 13px;background:#f7fafc;border:1px solid #e0e8ef;border-radius:10px}.history-meta span,.history-info-item span,.history-change-label{display:block;font-size:11px;color:#718397;font-weight:700;margin-bottom:4px}.history-section-title{font-size:14px;font-weight:800;color:#123b5d;margin:18px 0 9px}.history-change-list{border:1px solid #dfe7ee;border-radius:12px;overflow:hidden}.history-change-row{padding:13px;border-bottom:1px solid #e7edf2}.history-change-row:last-child{border-bottom:0}.history-change-values{display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:stretch}.history-old,.history-new{padding:10px 12px;border-radius:9px;border:1px solid #dfe5ea;background:#fff}.history-old{background:#fafafa}.history-new{background:#f2f8fc;border-color:#cfe0ed}.history-old span,.history-new span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:#788898;margin-bottom:4px}.history-new span{color:#0d5f9f}.history-arrow{display:flex;align-items:center;justify-content:center;color:#0d5f9f;font-size:18px;font-weight:800}.history-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.history-info-item{padding:11px 13px;border:1px solid #dfe7ee;border-radius:10px;background:#fff}.history-note{margin-top:15px;padding:11px 13px;border-left:4px solid #0d5f9f;background:#f5f9fc;color:#60758a;border-radius:7px;font-size:12px}@media(max-width:640px){.history-meta,.history-info-grid{grid-template-columns:1fr}.history-change-values{grid-template-columns:1fr}.history-arrow{transform:rotate(90deg);height:22px}}
@@ -1676,7 +1683,7 @@ function renumberComplianceEntries(){
     const number=row.querySelector('.compliance-entry-number');if(number)number.textContent=String(n+1);
     const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent='Entrenamiento '+(n+1);
     // Mantener los identificadores internos alineados con el índice visual.
-    ['cEstandar','cDoa','cCurso','cMetodo','cFrecuencia','cFecha','cFechaFin','cEstado','cArchivos','cArchivoInfo','cArchivosExistentes','cDoaExceptionBtn','cDoaExceptionInfo'].forEach(prefix=>{
+    ['cEstandar','cDoa','cCurso','cMetodo','cFrecuencia','cFecha','cFechaFin','cEstado','cArchivos','cArchivoInfo','cArchivosExistentes','cDoaExceptionBtn','cDoaExceptionInfo','cExistingData'].forEach(prefix=>{
       const el=row.querySelector('[id="'+prefix+'_'+old+'"]');if(el)el.id=prefix+'_'+n;
       if(el){const h=el.getAttribute('onchange');if(h)el.setAttribute('onchange',h.replaceAll('('+old+')','('+n+')'));const click=el.getAttribute('onclick');if(click)el.setAttribute('onclick',click.replaceAll('('+old+')','('+n+')'));}
     });
@@ -1717,8 +1724,58 @@ async function buildComplianceCourseEntries(std,doa,courseRows){
   for(let n=0;n<uniqueRows.length;n++){
     await entryCourseChanged(n,true);
     const courseSelect=$('cCurso_'+n);if(courseSelect)courseSelect.disabled=true;
-    const row=container.querySelector(`.compliance-entry[data-entry-index="${n}"]`);if(row){const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent=uniqueRows[n].curso||('Entrenamiento '+(n+1));}
+    const row=container.querySelector(`.compliance-entry[data-entry-index="${n}"]`);
+    if(row){const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent=uniqueRows[n].curso||('Entrenamiento '+(n+1));}
+    await restoreRegisteredCourseData(n, uniqueRows[n]);
   }
+  const summaryEl=$('complianceCourseSummary');
+  if(summaryEl)summaryEl.textContent=`Se cargaron ${uniqueRows.length} curso(s) para el DOA “${doa}”. Revise los campos resaltados en azul: indican información recuperada de un cumplimiento relacionado.`;
+}
+async function restoreRegisteredCourseData(i, courseRow){
+  const userId=$('cUsuario')?.value||'';
+  if(!userId||!courseRow)return;
+  const [cs, standards]=await Promise.all([all('cumplimientos'),loadComplianceCatalog()]);
+  const identity=courseIdentity(courseRow);
+  const existing=cs.find(c=>{
+    if(String(c.usuarioId)!==String(userId))return false;
+    const sameCourse=complianceCourseIdentity(c,standards)===identity;
+    return sameCourse && (
+      String(c.fechaRealizacion||'').trim() || String(c.fechaFin||'').trim() ||
+      (Array.isArray(c.archivos)&&c.archivos.length) || c.archivoData || c.documentoNombre
+    );
+  });
+  if(!existing)return;
+  const date=$('cFecha_'+i), end=$('cFechaFin_'+i), state=$('cEstado_'+i);
+  const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+  const dateField=date?.closest('.field');
+  const fileInput=$('cArchivos_'+i), fileField=fileInput?.closest('.field');
+  if(date && existing.fechaRealizacion)date.value=String(existing.fechaRealizacion).slice(0,10);
+  let calculatedEnd=String(existing.fechaFin||'').slice(0,10);
+  if(!calculatedEnd && date?.value)calculatedEnd=calcEnd(date.value,courseRow.frecuenciaAnios,courseRow.frecuenciaDias)||'';
+  if(end)end.value=calculatedEnd;
+  if(state)state.innerHTML=badge(date?.value&&calculatedEnd?statusFor({fechaRealizacion:date.value,fechaFin:calculatedEnd}):(existing.estado||'PENDIENTE'));
+  if(dateField && date?.value)dateField.classList.add('has-existing-compliance-data');
+  if(row)row.dataset.restoredExistingData='true';
+
+  // La lista principal de cumplimientos no descarga los documentos; se consulta solo el registro coincidente.
+  let docs=Array.isArray(existing.archivos)?existing.archivos:[];
+  if(!docs.length && existing.id){
+    try{
+      const result=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(existing.id));
+      const saved=result?.[0];
+      if(saved && Array.isArray(saved.documentos))docs=saved.documentos;
+    }catch(err){console.warn('No se pudo consultar el nombre del documento existente.',err)}
+  }
+  const fileName=docs[0]?.nombre||existing.archivoNombre||existing.documentoNombre||'';
+  const fileBox=$('cArchivosExistentes_'+i);
+  if(fileName){
+    if(fileField)fileField.classList.add('has-existing-compliance-data');
+    if(fileBox)fileBox.innerHTML=`<div class="compliance-existing-document"><span aria-hidden="true">📎</span><span><b>Documento registrado:</b> ${esc(fileName)}</span><button type="button" class="btn btn-light" onclick="openComplianceAttachment('${String(existing.id).replace(/'/g,"\\'")}',0)">Ver documento</button></div>`;
+  }else if(fileBox){
+    fileBox.innerHTML='<div class="compliance-existing-document">Hay un cumplimiento relacionado, pero no se pudo recuperar el nombre del documento.</div>';
+  }
+  const info=$('cArchivoInfo_'+i);
+  if(info && fileName)info.textContent='Ya existe un documento asociado. Si selecciona otro archivo, reemplazará el documento existente al guardar.';
 }
 async function entryStandardChanged(i){
   const currentRow=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
@@ -1769,7 +1826,14 @@ async function entryCourseChanged(i,initial=false){
       const otherId=row.querySelector('select[id^="cCurso_"]')?.value||'';
       return otherId && courseIdentity(ss.find(x=>String(x.id)===String(otherId)))===selectedKey;
     });
-    if(existing||duplicateInModal){showComplianceDuplicateAlert();$('cCurso_'+i).value='';$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return}
+    if(existing||duplicateInModal){
+      const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+      if(row?.dataset.restoredExistingData==='true'){
+        showComplianceDuplicateAlert();
+        return;
+      }
+      showComplianceDuplicateAlert();$('cCurso_'+i).value='';$('cMetodo_'+i).value='';$('cFrecuencia_'+i).value='';entryDateChanged(i);return
+    }
   }
 }
 function entryDateChanged(i){
