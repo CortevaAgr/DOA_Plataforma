@@ -1775,7 +1775,10 @@ async function restoreRegisteredCourseData(i, courseRow){
   if(end)end.value=calculatedEnd;
   if(state)state.innerHTML=badge(date?.value&&calculatedEnd?statusFor({fechaRealizacion:date.value,fechaFin:calculatedEnd}):(existing.estado||'PENDIENTE'));
   if(dateField && date?.value)dateField.classList.add('has-existing-compliance-data');
-  if(row)row.dataset.restoredExistingData='true';
+  if(row){
+    row.dataset.restoredExistingData='true';
+    row.dataset.restoredComplianceId=String(existing.id||'');
+  }
 
   // La lista principal de cumplimientos no descarga los documentos; se consulta solo el registro coincidente.
   let docs=Array.isArray(existing.archivos)?existing.archivos:[];
@@ -1963,12 +1966,26 @@ async function saveComplianceForm(id=''){
 
       const currentId=row.dataset.existingId||'';
       const existing=currentId?cs.find(x=>String(x.id)===String(currentId)):null;
+      const restoredId=row.dataset.restoredComplianceId||'';
+      const restoredSource=restoredId?cs.find(x=>String(x.id)===String(restoredId)):null;
       const files=[...($('cArchivos_'+i)?.files||[])];
-      const oldDocs=docsForCompliance(existing,files);
       const remove=row.dataset.removeAttachment==='true';
+      let oldDocs=docsForCompliance(existing,files);
+
+      // Las tarjetas generadas pueden reutilizar el documento del mismo usuario y Course ID.
+      if(!files.length&&!remove&&!oldDocs.length&&restoredId){
+        if(restoredSource)oldDocs=docsForCompliance(restoredSource,[]);
+        if(!oldDocs.length){
+          try{
+            const result=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(restoredId));
+            const saved=result?.[0];
+            if(saved&&Array.isArray(saved.documentos))oldDocs=saved.documentos.slice(0,1);
+          }catch(err){console.warn('No se pudo recuperar el documento existente al guardar.',err)}
+        }
+      }
       const docs=files.length?[]:(remove?[]:oldDocs);
       for(const f of files)docs.push(await uploadComplianceFile(f,userId,currentId||'nuevo'));
-      if(!docs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}.`);
+      if(!docs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}. Adjunte un documento o conserve el que ya está registrado para este curso.`);
 
       const fechaFin=calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias);
       payloads.push({
