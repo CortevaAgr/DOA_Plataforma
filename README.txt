@@ -1,5 +1,5 @@
 GESTIÓN DE AUTORIZACIONES – DOA
-Corteva | Massy Energy
+Corteva
 
 VERSIÓN: Supabase + GitHub Pages / acceso público + cambios protegidos
 
