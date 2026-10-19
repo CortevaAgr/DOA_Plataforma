@@ -906,6 +906,7 @@ aside{
 
 const SUPABASE_URL='https://fxyhjxajzcqxaahevqfs.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Co7QU8QIzQXgAnVKZuL0EQ_Lmtmhoql';
+const DOA_STORAGE_BUCKET='doa-documentos';
 // Supabase browser key (Publishable). Keep this key public; never place the Secret key here.
 const SUPABASE_HEADERS={'apikey':SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'};
 let accessToken=localStorage.getItem('doa_access_token')||'',refreshToken=localStorage.getItem('doa_refresh_token')||'',currentAuthUser=null,adminUnlocked=false,currentAdmin='users',pendingAdminAction=null;
@@ -1256,7 +1257,7 @@ async function viewUser(id){
       let metodo=c?.metodo||r.metodo||'—';
       let cid=c?.courseId||r.courseId||'—';
       let archivo=(c?.archivos&&c.archivos[0])?c.archivos[0]:null;
-      let attach=archivo&&archivo.data
+      let attach=archivo&&(archivo.data||archivo.path||archivo.storage_path||archivo.url)
         ? `<button type="button" class="detail-file detail-file-btn" onclick="openComplianceAttachment('${esc(c.id)}',0)"><span class="detail-file-icon">↗</span><span><b>Ver adjunto</b><small>${esc(archivo.nombre||archivo.name||'Documento adjunto')}</small></span></button>`
         : '<button type="button" class="detail-file detail-file-warning" onclick="alert(\'Advertencia: este curso no tiene un documento adjunto registrado.\')"><span class="detail-file-warning-icon">&#9888;</span><span><b>Sin documento adjunto</b><small>Requiere revisión</small></span></button>';
       return `<div class="detail-course" data-course-status="${esc(status)}">
@@ -1749,7 +1750,7 @@ async function saveComplianceForm(id=''){
       const oldDocs=docsForCompliance(existing,files);
       const remove=row.dataset.removeAttachment==='true';
       const docs=files.length?[]:(remove?[]:oldDocs);
-      for(const f of files)docs.push({nombre:f.name,tipo:f.type,data:await fileToDataUrl(f)});
+      for(const f of files)docs.push(await uploadComplianceFile(f,userId,currentId||'nuevo'));
       if(!docs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}.`);
 
       const fechaFin=calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias);
@@ -1955,10 +1956,32 @@ async function complianceCourseChanged(){
 }
 async function complianceDateChanged(){const date=$('cFecha')?.value,rid=$('cCurso')?.value,r=rid?(await all('estandares')).find(x=>x.id===rid):null;const end=r?calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias):'';if($('cFechaFin'))$('cFechaFin').value=end||'';if($('cEstado'))$('cEstado').innerHTML=badge(date&&end?statusFor({fechaRealizacion:date,fechaFin:end}):'PENDIENTE')}
 function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=()=>reject(r.error||new Error('No fue posible leer el documento seleccionado.'));r.readAsDataURL(file)})}
+function storageObjectPath(doc){return String(doc?.path||doc?.storage_path||'')}
+function storagePublicUrl(path){return SUPABASE_URL+'/storage/v1/object/public/'+DOA_STORAGE_BUCKET+'/'+String(path||'').split('/').map(encodeURIComponent).join('/')}
+async function uploadComplianceFile(file,userId,complianceId){
+  if(!accessToken||!adminUnlocked)throw new Error('Para guardar adjuntos, inicia sesión con tu correo y contraseña de administración.');
+  if(file.size>15*1024*1024)throw new Error('El documento supera el límite de 15 MB.');
+  const safeName=String(file.name||'documento').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'_').replace(/^\.+/,'').slice(-120)||'documento';
+  const path=`cumplimientos/${String(userId).replace(/[^a-zA-Z0-9_-]/g,'_')}/${Date.now()}_${uid()}_${safeName}`;
+  const response=await fetch(SUPABASE_URL+'/storage/v1/object/'+DOA_STORAGE_BUCKET+'/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'apikey':SUPABASE_PUBLISHABLE_KEY,'Authorization':'Bearer '+accessToken,'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});
+  if(!response.ok){const t=await response.text();throw new Error('No se pudo guardar el adjunto en Supabase Storage. '+(t||('HTTP '+response.status))+' Comprueba las políticas de escritura del bucket.');}
+  return {nombre:file.name,tipo:file.type||'application/octet-stream',path,storage:'supabase'};
+}
 function validateComplianceFiles(){const files=[...($('cArchivos')?.files||[])];if(files.length>1){alert('Puede adjuntar máximo 1 documento por cumplimiento.');$('cArchivos').value='';return false}if(files.some(f=>!(String(f.type||'').startsWith('image/')||String(f.type||'')==='application/pdf'))){alert('Solo se permiten imágenes o PDF como documento soporte.');$('cArchivos').value='';return false}return true}
 function renderExistingComplianceFiles(c){const box=$('cArchivosExistentes');if(!box)return;const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);box.innerHTML=arr.length?`Documentos actuales: ${arr.slice(0,1).map((a,i)=>`<button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',${i})">${esc(a.nombre||'Documento')}</button>`).join(' ')}`:'Sin documentos adjuntos.'}
 async function deleteCompliance(id){if(!adminUnlocked)return requireAdmin(()=>deleteCompliance(id));if(!confirm('¿Desea eliminar este cumplimiento?'))return;await del('cumplimientos',id);await refresh()}
-async function openComplianceAttachment(cid,index=0){let arr=[];try{const rows=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(cid));const docs=rows?.[0]?.documentos;arr=Array.isArray(docs)?docs:[]}catch(e){alert('No fue posible cargar el documento. '+(e.message||''));return}const a=arr[index];if(!a?.data){alert('Este cumplimiento no tiene un documento disponible.');return}const link=document.createElement('a');link.href=a.data;link.target='_blank';link.rel='noopener';link.download=a.nombre||'documento';link.click()}
+async function openComplianceAttachment(cid,index=0){
+  let arr=[];try{const rows=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(cid));const docs=rows?.[0]?.documentos;arr=Array.isArray(docs)?docs:[]}catch(e){alert('No fue posible cargar el documento. '+(e.message||''));return}
+  const a=arr[index];if(!a){alert('Este cumplimiento no tiene un documento disponible.');return}
+  let url='';
+  if(a.data)url=a.data; // Compatibilidad con adjuntos guardados en la versión anterior.
+  else if(storageObjectPath(a))url=storagePublicUrl(storageObjectPath(a));
+  else if(a.url)url=a.url;
+  if(!url){alert('Este cumplimiento no tiene una ruta de documento disponible.');return}
+  // Abrir en otra pestaña sin atributo download: el navegador muestra el archivo si admite vista previa.
+  const win=window.open(url,'_blank','noopener,noreferrer');
+  if(!win)alert('El navegador bloqueó la pestaña del documento. Permite las ventanas emergentes para esta página e inténtalo de nuevo.');
+}
 async function editCompliance(uid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===uid);return c?openCompliance(c.id):openCompliance()}
 async function saveComplianceWithFile(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
 async function saveCompliance(userId,rid){const cs=await all('cumplimientos');const c=cs.find(x=>x.usuarioId===userId&&x.estandarId===rid);return c?openCompliance(c.id):openCompliance()}
