@@ -1058,7 +1058,17 @@ async function bootData(){
 function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||'',identificacion:x.identificacion||'',observaciones:x.observaciones||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.fecha_cambio||x.created_at||'',usuario:x.usuario_email||x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.datos_anteriores??x.informacion_anterior??null,nueva:x.datos_nuevos??x.informacion_nueva??null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeRel(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
 function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
 function normalizeClassification(x){return {id:String(x.id),estandar:x.estandar||'',clasificaciones:Array.isArray(x.clasificaciones)?x.clasificaciones:[]}}
-function normalizeCompliance(x,users,standards){const user=users.find(u=>String(u.id)===String(x.usuario||''))||users.find(u=>normalizeRel(u.nombre)===normalizeRel(x.usuario||''));const std=standards.find(r=>normalizeRel(r.estandar)===normalizeRel(x.estandar)&&normalizeRel(r.doa)===normalizeRel(x.doa)&&normalizeRel(r.curso)===normalizeRel(x.curso_entrenamiento));const docs=Array.isArray(x.documentos)?x.documentos:[];return {id:String(x.id),usuarioId:user?String(user.id):String(x.usuario||''),usuarioNombre:user?.nombre||String(x.usuario||''),cargo:x.cargo||user?.cargo||'',estandarId:std?String(std.id):'',cursoId:std?String(std.id):'',estandar:x.estandar||std?.estandar||'',doa:x.doa||std?.doa||'',curso:x.curso_entrenamiento||std?.curso||'',metodo:x.metodo_entrega||std?.metodo||'',frecuenciaAnios:Number(x.frecuencia_anios||std?.frecuenciaAnios||0),frecuenciaDias:Number(x.frecuencia_dias||std?.frecuenciaDias||0),fechaRealizacion:x.fecha_realizacion||'',fechaFin:x.fecha_fin||'',estado:x.estado||'',archivos:docs,archivoNombre:docs[0]?.nombre||'',archivoTipo:docs[0]?.tipo||'',archivoData:docs[0]?.data||''}}
+function normalizeCompliance(x,users,standards){const user=users.find(u=>String(u.id)===String(x.usuario||''))||users.find(u=>normalizeRel(u.nombre)===normalizeRel(x.usuario||''));const std=standards.find(r=>normalizeRel(r.estandar)===normalizeRel(x.estandar)&&normalizeRel(r.doa)===normalizeRel(x.doa)&&normalizeRel(r.curso)===normalizeRel(x.curso_entrenamiento));const docs=Array.isArray(x.documentos)?x.documentos:[];return {id:String(x.id),createdAt:x.created_at||'',usuarioId:user?String(user.id):String(x.usuario||''),usuarioNombre:user?.nombre||String(x.usuario||''),cargo:x.cargo||user?.cargo||'',estandarId:std?String(std.id):'',cursoId:std?String(std.id):'',estandar:x.estandar||std?.estandar||'',doa:x.doa||std?.doa||'',curso:x.curso_entrenamiento||std?.curso||'',metodo:x.metodo_entrega||std?.metodo||'',frecuenciaAnios:Number(x.frecuencia_anios||std?.frecuenciaAnios||0),frecuenciaDias:Number(x.frecuencia_dias||std?.frecuenciaDias||0),fechaRealizacion:x.fecha_realizacion||'',fechaFin:x.fecha_fin||'',estado:x.estado||'',archivos:docs,archivoNombre:docs[0]?.nombre||'',archivoTipo:docs[0]?.tipo||'',archivoData:docs[0]?.data||''}}
+function latestComplianceRows(rows){
+  const latest=new Map();
+  const stamp=c=>{const t=Date.parse(c.createdAt||'');if(Number.isFinite(t))return t;const n=Number(c.id);return Number.isFinite(n)?n:-1};
+  const keyOf=c=>[c.usuarioId||c.usuarioNombre,c.estandar,c.doa,c.curso].map(v=>normalizeRel(v)).join('|');
+  for(const c of rows){
+    const key=keyOf(c),prior=latest.get(key);
+    if(!prior||stamp(c)>stamp(prior))latest.set(key,c);
+  }
+  return [...latest.values()];
+}
 // Cache de datos en memoria: reutiliza consultas entre secciones y evita pedir las mismas tablas repetidamente.
 const dataCache=new Map();
 function invalidateDataCache(...keys){if(!keys.length){dataCache.clear();return}for(const key of keys)dataCache.delete(key)}
@@ -1071,8 +1081,8 @@ async function all(s,options={}){
     if(s==='estandares')return (await api('estandares_doa?select=*&order=id')).map(normalizeStandard);
     if(s==='clasificaciones')return (await api('clasificacion_estandares?select=*&order=estandar')).map(normalizeClassification);
     if(s==='cumplimientos'){
-      const [cs,us,ss]=await Promise.all([api('cumplimiento?select=id,usuario,cargo,estandar,doa,curso_entrenamiento,metodo_entrega,fecha_realizacion,frecuencia_anios,frecuencia_dias,fecha_fin,estado&order=id'),all('usuarios'),all('estandares')]);
-      return cs.map(x=>normalizeCompliance(x,us,ss));
+      const [cs,us,ss]=await Promise.all([api('cumplimiento?select=id,created_at,usuario,cargo,estandar,doa,curso_entrenamiento,metodo_entrega,fecha_realizacion,frecuencia_anios,frecuencia_dias,fecha_fin,estado&order=created_at.desc,id.desc'),all('usuarios'),all('estandares')]);
+      return latestComplianceRows(cs.map(x=>normalizeCompliance(x,us,ss)));
     }
     if(s==='excepciones_doa')return (await api('excepciones_doa?select=id,usuario_id,doa&order=id')).map(x=>({id:String(x.id),usuarioId:String(x.usuario_id),doa:String(x.doa||'')}));
     if(s==='historial')return (await api('historial_cambios?select=*&order=fecha_cambio.desc&limit=500')).map(normalizeHistory);
