@@ -1975,9 +1975,14 @@ async function saveComplianceForm(id=''){
     const profileDoas=new Set(profiles.filter(p=>normalizeRel(p.cargo)===normalizeRel(cargoReal)).flatMap(p=>doaList(p.doa).map(normalizeRel)));
     const payloads=[];
     const propagationPlans=[];
+    const incompleteCourses=[];
 
     for(const row of rows){
       const i=row.dataset.entryIndex, rid=$('cCurso_'+i)?.value||'', date=$('cFecha_'+i)?.value||'';
+      const selectedFiles=[...($('cArchivos_'+i)?.files||[])];
+      const hasAnyEntryData=!!(rid||date||selectedFiles.length||row.dataset.existingId||row.dataset.restoredComplianceId);
+      // Las filas completamente vacías no bloquean el guardado de otros cursos.
+      if(!hasAnyEntryData)continue;
       const selectedDoa=$('cDoa_'+i)?.value||'';
       const selectedStandard=$('cEstandar_'+i)?.value||'';
       if(!selectedStandard||!selectedDoa)return alert(`Complete Estándar y DOA en Entrenamiento ${Number(i)+1}.`);
@@ -1985,9 +1990,7 @@ async function saveComplianceForm(id=''){
       const validStandardDoa=ss.some(x=>normalizeRel(x.estandar)===normalizeRel(selectedStandard)&&normalizeRel(x.doa)===normalizeRel(selectedDoa));
       if(!validStandardDoa)return alert(`El DOA "${selectedDoa}" no corresponde al estándar "${selectedStandard}". No se guardó ningún dato.`);
       if(row.dataset.notApplicable==='true'||await isDoaNotApplicable(userId,selectedDoa))continue;
-      if(!rid)return alert(`Seleccione el curso / entrenamiento en Entrenamiento ${Number(i)+1}.`);
-      if(!date)return alert(`La Fecha realización es obligatoria en Entrenamiento ${Number(i)+1}.`);
-      if(!validateComplianceEntryFile(i))return;
+      if(!rid){incompleteCourses.push(`Entrenamiento ${Number(i)+1}: seleccione el curso`);continue;}
 
       const r=ss.find(x=>String(x.id)===String(rid));
       if(!r)return alert('El curso seleccionado ya no existe.');
@@ -2013,8 +2016,16 @@ async function saveComplianceForm(id=''){
         }
       }
       const docs=files.length?[]:(remove?[]:oldDocs);
+      // La obligatoriedad se evalúa por curso: un curso incompleto queda pendiente,
+      // pero no impide guardar los demás cursos que sí tienen fecha y soporte.
+      if(!date || (!files.length && !docs.length)){
+        const missing=[];if(!date)missing.push('fecha de realización');if(!files.length&&!docs.length)missing.push('documento soporte');
+        incompleteCourses.push(`${r.curso||'Entrenamiento '+(Number(i)+1)} (falta ${missing.join(' y ')})`);
+        continue;
+      }
+      if(!validateComplianceEntryFile(i))return;
       for(const f of files)docs.push(await uploadComplianceFile(f,userId,currentId||'nuevo'));
-      if(!docs.length)return alert(`El documento soporte es obligatorio en Entrenamiento ${Number(i)+1}. Adjunte un documento o conserve el que ya está registrado para este curso.`);
+      if(!docs.length){incompleteCourses.push(`${r.curso||'Entrenamiento '+(Number(i)+1)} (falta documento soporte)`);continue;}
 
       const fechaFin=calcEnd(date,r.frecuenciaAnios,r.frecuenciaDias);
       payloads.push({
@@ -2055,7 +2066,10 @@ async function saveComplianceForm(id=''){
       }
     }
 
-    if(!payloads.length){closeModal();await refresh();showAdmin('compliance');return alert('La excepción individual quedó guardada. No hay cursos aplicables para registrar en esta ventana.')}
+    if(!payloads.length){
+      if(incompleteCourses.length){closeModal();await refresh();showAdmin('compliance');return alert('Aún le quedan entrenamientos por registrar para obtener este DOA.\n\nNo se guardaron cursos incompletos; complete la fecha de realización y el documento soporte de cada curso.');}
+      closeModal();await refresh();showAdmin('compliance');return alert('No hay cursos completos para guardar en esta ventana.');
+    }
 
     // Validación dentro de la ventana: el mismo curso no se registra dos veces.
     const seen=new Set();
@@ -2134,7 +2148,9 @@ async function saveComplianceForm(id=''){
     }
 
     closeModal();await refresh();showAdmin('compliance');
-    if(extraTargets.length){
+    if(incompleteCourses.length){
+      setTimeout(()=>alert(`Se guardaron correctamente ${payloads.length} entrenamiento(s) que tenían fecha de realización y documento soporte.\n\nAún le quedan entrenamientos por registrar para obtener este DOA.\n\nPendientes o incompletos:\n• ${incompleteCourses.join('\n• ')}`),80);
+    }else if(extraTargets.length){
       setTimeout(()=>alert(`Cumplimiento guardado correctamente.\n\nTambién se actualizaron automáticamente ${extraTargets.length} requisito(s) del mismo curso para este usuario.`),80);
     }
   }catch(e){
