@@ -381,10 +381,11 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .doa-list{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .doa-chip{
   display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;
-  background:#eef5fb;border:1px solid #d4e3ef;color:#17486d;font-size:12px;font-weight:700;
+  background:#dceeff;border:1px solid #a8cfee;color:#174f7c;font-size:12px;font-weight:700;
 }
 /* Estado visual de los DOA en Usuarios: solo presentación, sin modificar datos ni reglas. */
 #usuarios .doa-chip.doa-chip-complete{background:#d9f2df;border-color:#a8d9b5;color:#205c32}
+#usuarios .doa-chip.doa-chip-incomplete{background:#dceeff;border-color:#a8cfee;color:#174f7c}
 #usuarios .doa-chip.doa-chip-exception{background:#b8bec5;border-color:#9da5ad;color:#303840}
 .empty-inline{color:#7c8b99;font-size:12px}
 .user-detail{display:flex;flex-direction:column;gap:18px}
@@ -1245,21 +1246,36 @@ async function renderDashboard(filter=dashboardFilter){
 async function renderUsers(){
   const us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';
   const visible=us.filter(x=>(!q||`${x.nombre} ${x.cargo}`.toLowerCase().includes(q)));
-  // Evita consultar usuario por usuario de forma secuencial: los datos compartidos vienen de la caché.
+  // Consultar solo el nombre del primer documento (metadato), no descargar el contenido/base64 de los adjuntos.
+  let documentNameById=new Map();
+  try{
+    const docs=await api('cumplimiento?select=id,documento_nombre:documentos->0->>nombre,documento_name:documentos->0->>name&order=id');
+    documentNameById=new Map((Array.isArray(docs)?docs:[]).map(r=>[String(r.id),String(r.documento_nombre||r.documento_name||'').trim()]));
+  }catch(err){
+    console.warn('No se pudo comprobar el metadato de los adjuntos para colorear los DOA.',err);
+  }
+  const [allStandards,allCompliance,allExceptions]=await Promise.all([all('estandares'),all('cumplimientos'),all('excepciones_doa')]);
   const rows=await Promise.all(visible.map(async u=>{
     const [x,doas,exceptions]=await Promise.all([authFor(u),profileDoas(u.cargo),userDoaExceptions(u)]);
     const state=x.ok?"AUTORIZADO PARA OPERAR":"NO AUTORIZADO";
     if(f&&f!==state)return '';
     const pct=x.total?Math.round(x.done/x.total*100):0;
-    // Verde claro únicamente cuando todos los cursos del DOA están completos y vigentes.
-    // Los DOA declarados no aplicables a esta persona se muestran en gris medio.
     const exceptionKeys=new Set(exceptions.map(normalizeRel));
+    const assignedKeys=new Set(doaList(doas.join(',')).map(normalizeRel));
+    const userRows=allCompliance.filter(c=>samePerson({id:c.usuarioId,nombre:c.usuarioNombre||c.nombre},u)||String(c.usuarioId||'')===String(u.id||''));
     const doaClasses={};
     uniqueDoas(doas).forEach(d=>{
       const key=normalizeRel(d);
       if(exceptionKeys.has(key)){doaClasses[key]='doa-chip-exception';return;}
-      const courses=x.details.filter(item=>normalizeRel(item.doa)===key);
-      if(courses.length&&courses.every(item=>statusFor({fechaRealizacion:item.fechaRealizacion,fechaFin:item.fechaFin})==='COMPLETO / VIGENTE'))doaClasses[key]='doa-chip-complete';
+      // Cada curso configurado para el cargo y el DOA debe tener fecha, adjunto y vigencia actual.
+      const required=allStandards.filter(r=>assignedKeys.has(normalizeRel(r.doa))&&normalizeRel(r.doa)===key);
+      const allCoursesComplete=required.length>0&&required.every(r=>{
+        const c=userRows.find(item=>String(item.estandarId||'')===String(r.id))||
+          userRows.find(item=>requirementKey(item)===requirementKey(r));
+        if(!c||!c.fechaRealizacion||!String(documentNameById.get(String(c.id))||'').trim())return false;
+        return statusFor({...c,frecuenciaAnios:Number(c.frecuenciaAnios??r.frecuenciaAnios??0),frecuenciaDias:Number(c.frecuenciaDias??r.frecuenciaDias??0)})==='COMPLETO / VIGENTE';
+      });
+      doaClasses[key]=allCoursesComplete?'doa-chip-complete':'doa-chip-incomplete';
     });
     const doaCell=doaListHtml(doas,'Sin DOA aplicables',doaClasses)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
     return `<tr>
@@ -1635,7 +1651,7 @@ async function openCompliance(id=''){
       <div class="field"><label>Usuario *</label><select id="cUsuario" onchange="complianceUserChanged()"><option value="">Seleccione un usuario inscrito</option>${userOptions}</select></div>
       <div class="field"><label>Cargo (automático)</label><input id="cCargo" readonly value="${esc(c.cargo||us.find(u=>String(u.id)===String(c.usuarioId))?.cargo||'')}" placeholder="Se completa al seleccionar usuario" title="El cargo se obtiene automáticamente del usuario seleccionado"></div>
     </div>
-    <div class="compliance-entries-title"><div><h4>Registro de entrenamientos</h4><span>Seleccione Usuario, Estándar y DOA. La plataforma cargará automáticamente una tarjeta por cada curso que aplique a ese DOA.</span><div class="small" style="margin-top:6px;color:#7a1f3d">Para cada entrenamiento debe registrar la fecha de realización y adjuntar un documento soporte. La fecha FIN y el estado se calculan automáticamente.</div></div></div>
+    <div class="compliance-entries-title"><div><h4>Registro de entrenamientos</h4><span>Seleccione Usuario, Estándar y DOA. La plataforma cargará automáticamente una tarjeta por cada curso que aplique a ese DOA.</span><div class="small" style="margin-top:6px;color:#7a1f3d">Los datos ya registrados se recuperan automáticamente. Complete solo los campos faltantes; si cambia la fecha o el documento, se actualizará el mismo registro. La fecha FIN y el estado se calculan automáticamente.</div></div></div>
     <div class="compliance-course-note" id="complianceCourseSummary">Primero seleccione un usuario, un estándar y un DOA para cargar los cursos correspondientes.</div>
     <div id="complianceEntries">${entryHtml}</div>
   `,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveComplianceForm('${id}')">Guardar cumplimiento</button>`);
@@ -1749,7 +1765,7 @@ async function buildComplianceCourseEntries(std,doa,courseRows){
     const exceptionBtn=$('cDoaExceptionBtn_'+n);if(exceptionBtn&&n>0)exceptionBtn.style.display='none';
     if(n>0){const title=row.querySelector('.compliance-entry-head strong');if(title)title.textContent=course.curso||('Entrenamiento '+(n+1));}
   });
-  const summary=$('complianceCourseSummary');if(summary)summary.textContent=`Se cargaron ${uniqueRows.length} curso(s) para el DOA “${doa}”. Complete la fecha de realización y el documento soporte de cada tarjeta.`;
+  const summary=$('complianceCourseSummary');if(summary)summary.textContent=`Se cargaron ${uniqueRows.length} curso(s) para el DOA “${doa}”. Revise la información recuperada y complete únicamente los datos faltantes; puede reemplazar fecha o documento para actualizar el registro existente.`;
   if(!uniqueRows.length){container.innerHTML='<div class="empty">No hay cursos configurados para este DOA.</div>';if(summary)summary.textContent='No se encontraron cursos para el DOA seleccionado.';return}
   for(let n=0;n<uniqueRows.length;n++){
     await entryCourseChanged(n,true);
@@ -1766,14 +1782,15 @@ async function restoreRegisteredCourseData(i, courseRow){
   if(!userId||!courseRow)return;
   const [cs, standards]=await Promise.all([all('cumplimientos'),loadComplianceCatalog()]);
   const identity=courseIdentity(courseRow);
-  const existing=cs.find(c=>{
-    if(String(c.usuarioId)!==String(userId))return false;
-    const sameCourse=complianceCourseIdentity(c,standards)===identity;
-    return sameCourse && (
-      String(c.fechaRealizacion||'').trim() || String(c.fechaFin||'').trim() ||
-      (Array.isArray(c.archivos)&&c.archivos.length) || c.archivoData || c.documentoNombre
-    );
-  });
+  // Priorizar la coincidencia exacta Usuario + Estándar + DOA + Curso.
+  // Solo se considera existente si hay datos de cumplimiento que conservar.
+  const hasComplianceData=c=>String(c.fechaRealizacion||'').trim() || String(c.fechaFin||'').trim() ||
+    (Array.isArray(c.archivos)&&c.archivos.length) || c.archivoData || c.documentoNombre;
+  const exactMatches=cs.filter(c=>String(c.usuarioId)===String(userId) &&
+    normalizeRel(c.estandar)===normalizeRel(courseRow.estandar) &&
+    normalizeRel(c.doa)===normalizeRel(courseRow.doa) &&
+    complianceCourseIdentity(c,standards)===identity && hasComplianceData(c));
+  const existing=exactMatches[0];
   if(!existing)return;
   const date=$('cFecha_'+i), end=$('cFechaFin_'+i), state=$('cEstado_'+i);
   const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
@@ -1788,6 +1805,8 @@ async function restoreRegisteredCourseData(i, courseRow){
   if(row){
     row.dataset.restoredExistingData='true';
     row.dataset.restoredComplianceId=String(existing.id||'');
+    // Reutilizar el ID existente para que Guardar actualice este registro en vez de insertar otro.
+    if(existing.id)row.dataset.existingId=String(existing.id);
   }
 
   // La lista principal de cumplimientos no descarga los documentos; se consulta solo el registro coincidente.
@@ -2061,9 +2080,10 @@ async function saveComplianceForm(id=''){
         );
       });
       if(duplicate){
-        const sourceRow=ss.find(r=>String(r.id)===String(p.cursoId));
         const sameRequirement=requirementKey(duplicate)===requirementKey(p);
-        if(sameRequirement)return alert(`El entrenamiento "${p.curso}" ya tiene un cumplimiento registrado. Vaya a Actualizar para modificarlo.`);
+        // Si coincide exactamente con el requisito, se permite actualizar el mismo ID.
+        // Solo bloquear una colisión cuando el formulario intenta crear otro registro.
+        if(sameRequirement && !p.id)return alert(`El entrenamiento "${p.curso}" ya tiene un cumplimiento registrado. Se recuperará su información para actualizar el mismo registro; cierre y vuelva a abrir el formulario si no aparece cargada.`);
       }
     }
 
