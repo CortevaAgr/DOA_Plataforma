@@ -497,6 +497,21 @@ main{flex:1;padding:30px;max-width:1680px;margin:auto;width:100%}.view{display:n
 .compliance-existing-document{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;padding:8px 10px;border:1px solid #b8d8f1;border-radius:8px;background:#f7fbff;color:#174f7c;font-size:12px}
 .compliance-existing-document .btn{font-size:11px;padding:6px 9px}
 
+/* Cumplimiento vencido: resaltar fecha y soporte en rojo, manteniendo el azul para datos vigentes recuperados. */
+.compliance-modal-box .compliance-entry .field.has-expired-compliance-data{
+  border:1px solid #e2a1a6!important;
+  border-left:4px solid #b4232f!important;
+  border-radius:10px!important;
+  padding:10px 11px!important;
+  background:linear-gradient(135deg,#fff0f1 0%,#ffe0e3 100%)!important;
+  box-shadow:0 3px 10px rgba(180,35,47,.12)!important;
+}
+.compliance-modal-box .compliance-entry .field.has-expired-compliance-data label{color:#8f1722!important;font-weight:850!important}
+.compliance-modal-box .compliance-entry .field.has-expired-compliance-data input{border-color:#d98a91!important;background:#fff9f9!important}
+.compliance-modal-box .compliance-entry .field.has-expired-compliance-data input:focus{border-color:#b4232f!important;box-shadow:0 0 0 3px rgba(180,35,47,.14)!important}
+.compliance-modal-box .compliance-entry .field.has-existing-compliance-data.has-expired-compliance-data{background:linear-gradient(135deg,#fff0f1 0%,#ffe0e3 100%)!important;border-color:#e2a1a6!important;border-left-color:#b4232f!important}
+
+
 
 
 .history-detail-hero{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid #d9e5ef;border-radius:14px;background:linear-gradient(135deg,#f4f8fc,#ffffff);margin-bottom:14px}.history-detail-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#0d5f9f;color:#fff;font-size:24px;font-weight:800;box-shadow:0 5px 14px rgba(13,95,159,.18)}.history-detail-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#60758a;font-weight:800}.history-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}.history-meta>div{padding:11px 13px;background:#f7fafc;border:1px solid #e0e8ef;border-radius:10px}.history-meta span,.history-info-item span,.history-change-label{display:block;font-size:11px;color:#718397;font-weight:700;margin-bottom:4px}.history-section-title{font-size:14px;font-weight:800;color:#123b5d;margin:18px 0 9px}.history-change-list{border:1px solid #dfe7ee;border-radius:12px;overflow:hidden}.history-change-row{padding:13px;border-bottom:1px solid #e7edf2}.history-change-row:last-child{border-bottom:0}.history-change-values{display:grid;grid-template-columns:1fr 32px 1fr;gap:8px;align-items:stretch}.history-old,.history-new{padding:10px 12px;border-radius:9px;border:1px solid #dfe5ea;background:#fff}.history-old{background:#fafafa}.history-new{background:#f2f8fc;border-color:#cfe0ed}.history-old span,.history-new span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:#788898;margin-bottom:4px}.history-new span{color:#0d5f9f}.history-arrow{display:flex;align-items:center;justify-content:center;color:#0d5f9f;font-size:18px;font-weight:800}.history-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.history-info-item{padding:11px 13px;border:1px solid #dfe7ee;border-radius:10px;background:#fff}.history-note{margin-top:15px;padding:11px 13px;border-left:4px solid #0d5f9f;background:#f5f9fc;color:#60758a;border-radius:7px;font-size:12px}@media(max-width:640px){.history-meta,.history-info-grid{grid-template-columns:1fr}.history-change-values{grid-template-columns:1fr}.history-arrow{transform:rotate(90deg);height:22px}}
@@ -1934,8 +1949,10 @@ async function restoreRegisteredCourseData(i, courseRow){
   let calculatedEnd=String(existing.fechaFin||'').slice(0,10);
   if(!calculatedEnd && date?.value)calculatedEnd=calcEnd(date.value,courseRow.frecuenciaAnios,courseRow.frecuenciaDias)||'';
   if(end)end.value=calculatedEnd;
-  if(state)state.innerHTML=badge(date?.value&&calculatedEnd?statusFor({fechaRealizacion:date.value,fechaFin:calculatedEnd,frecuenciaAnios:courseRow.frecuenciaAnios,frecuenciaDias:courseRow.frecuenciaDias}):(existing.estado||'PENDIENTE'));
+  const restoredStatus=date?.value&&calculatedEnd?statusFor({fechaRealizacion:date.value,fechaFin:calculatedEnd,frecuenciaAnios:courseRow.frecuenciaAnios,frecuenciaDias:courseRow.frecuenciaDias}):(existing.estado||'PENDIENTE');
+  if(state)state.innerHTML=badge(restoredStatus);
   if(dateField && date?.value)dateField.classList.add('has-existing-compliance-data');
+  applyComplianceExpiryHighlight(i,restoredStatus);
   if(row){
     row.dataset.restoredExistingData='true';
     row.dataset.restoredComplianceId=String(existing.id||'');
@@ -1955,7 +1972,7 @@ async function restoreRegisteredCourseData(i, courseRow){
   const fileName=docs[0]?.nombre||existing.archivoNombre||existing.documentoNombre||'';
   const fileBox=$('cArchivosExistentes_'+i);
   if(fileName){
-    if(fileField)fileField.classList.add('has-existing-compliance-data');
+    if(fileField && !row?.dataset.complianceExpired)fileField.classList.add('has-existing-compliance-data');
     if(fileBox)fileBox.innerHTML=`<div class="compliance-existing-document"><span aria-hidden="true">📎</span><span><b>Documento registrado:</b> ${esc(fileName)}</span><button type="button" class="btn btn-light" onclick="openComplianceAttachment('${String(existing.id).replace(/'/g,"\\'")}',0)">Ver documento</button></div>`;
   }else if(fileBox){
     fileBox.innerHTML='<div class="compliance-existing-document">Hay un cumplimiento relacionado, pero no se pudo recuperar el nombre del documento.</div>';
@@ -2031,11 +2048,36 @@ async function entryCourseChanged(i,initial=false){
     }
   }
 }
+function applyComplianceExpiryHighlight(i,status){
+  const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);
+  if(!row)return;
+  const expired=String(status||'').trim().toUpperCase()==='VENCIDO';
+  const dateField=$('cFecha_'+i)?.closest('.field');
+  const fileField=$('cArchivos_'+i)?.closest('.field');
+  [dateField,fileField].forEach(field=>{
+    if(!field)return;
+    field.classList.toggle('has-expired-compliance-data',expired);
+    if(expired)field.classList.remove('has-existing-compliance-data');
+  });
+  if(expired)row.dataset.complianceExpired='true';
+  else delete row.dataset.complianceExpired;
+}
 function entryDateChanged(i){
   const date=$('cFecha_'+i)?.value,rid=$('cCurso_'+i)?.value;
-  if(!rid){if($('cFechaFin_'+i))$('cFechaFin_'+i).value='';if($('cEstado_'+i))$('cEstado_'+i).innerHTML=badge('PENDIENTE');return}
-  const r=rid?(all('estandares').then(ss=>ss.find(x=>x.id===rid))):Promise.resolve(null);
-  r.then(x=>{const end=x?calcEnd(date,x.frecuenciaAnios,x.frecuenciaDias):'';if($('cFechaFin_'+i))$('cFechaFin_'+i).value=end||'';if($('cEstado_'+i))$('cEstado_'+i).innerHTML=badge(date?statusFor({fechaRealizacion:date,fechaFin:end,frecuenciaAnios:x?.frecuenciaAnios??0,frecuenciaDias:x?.frecuenciaDias??0}):'PENDIENTE')});
+  if(!rid){
+    if($('cFechaFin_'+i))$('cFechaFin_'+i).value='';
+    if($('cEstado_'+i))$('cEstado_'+i).innerHTML=badge('PENDIENTE');
+    applyComplianceExpiryHighlight(i,'PENDIENTE');
+    return;
+  }
+  all('estandares').then(ss=>{
+    const x=ss.find(x=>String(x.id)===String(rid));
+    const end=x?calcEnd(date,x.frecuenciaAnios,x.frecuenciaDias):'';
+    const status=date&&x?statusFor({fechaRealizacion:date,fechaFin:end,frecuenciaAnios:x.frecuenciaAnios??0,frecuenciaDias:x.frecuenciaDias??0}):'PENDIENTE';
+    if($('cFechaFin_'+i))$('cFechaFin_'+i).value=end||'';
+    if($('cEstado_'+i))$('cEstado_'+i).innerHTML=badge(status);
+    applyComplianceExpiryHighlight(i,status);
+  }).catch(err=>console.warn('No se pudo calcular el estado del cumplimiento.',err));
 }
 function validateComplianceEntryFile(i){
   const files=[...($('cArchivos_'+i)?.files||[])];
@@ -2308,6 +2350,7 @@ async function complianceUserChanged(){
   for(const row of document.querySelectorAll('.compliance-entry')){
     const i=row.dataset.entryIndex,el=$('cEstandar_'+i);
     if(!el)continue;
+    el.disabled=!id;
     const previous=userChanged?'':String(el.value||el.dataset.previousStandard||'').trim();
     if(userChanged){el.dataset.selectedDoa='';el.dataset.selectedCurso='';}
     setComplianceStandardOptions(el,standards,previous);
