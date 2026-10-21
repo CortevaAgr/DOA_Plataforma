@@ -1052,9 +1052,9 @@ async function adminSignIn(){const email=$('adminEmail')?.value.trim(),password=
 async function signOut(){clearSession();adminUnlocked=false;pendingAdminAction=null;await refresh()}
 function goToAdministration(){const b=document.querySelector('.nav[data-view="admin"]');if(b)b.click()}
 async function bootData(){
-  // Las tablas maestras no dependen unas de otras: cargarlas en paralelo reduce la espera inicial.
-  // all() conserva su caché de promesas y cumplimientos reutiliza usuarios/estándares ya solicitados.
-  await Promise.all([all('perfiles'),all('estandares'),all('usuarios'),all('cumplimientos')]);
+  // Precarga en paralelo solo los datos necesarios para calcular el Dashboard sin repetir consultas.
+  // Las demás secciones se dibujan cuando se abren, evitando bloquear la primera pantalla.
+  await Promise.all([all('perfiles'),all('estandares'),all('usuarios'),all('cumplimientos'),all('excepciones_doa')]);
 }
 function normalizeUser(x){return {id:String(x.id),nombre:x.nombre_completo||'',email:x.email||'',cargo:x.cargo||'',identificacion:x.identificacion||'',observaciones:x.observaciones||''}} function normalizeHistory(x){return {id:String(x.id),fecha:x.fecha_cambio||x.created_at||'',usuario:x.usuario_email||x.usuario_correo||'',entidad:x.entidad||'',registroId:x.registro_id||'',tipo:x.tipo_cambio||'',anterior:x.datos_anteriores??x.informacion_anterior??null,nueva:x.datos_nuevos??x.informacion_nueva??null}} function normalizeProfile(x){return {id:String(x.id),cargo:x.cargo||'',doa:x.doa||''}} function normalizeRel(v){return String(v??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ')}
 function normalizeStandard(x){return {id:String(x.id),estandar:x.estandar||'',doa:x.doa||'',curso:x.curso_entrenamiento||'',metodo:x.metodo_entrega||'',courseId:x.course_id||'',frecuenciaAnios:Number(x.frecuencia_anios||0),frecuenciaDias:Number(x.frecuencia_dias||0)}}
@@ -1163,9 +1163,15 @@ async function authFor(user){
  return {ok:total>0&&done===total,total,done,soon,expired,pending,pct,states,details,dashSoon,dashExpired};
 }
 function dashboardStatusFor(d){if(!d.fechaRealizacion)return 'PENDIENTE';if(Number(d.frecuenciaAnios||0)===0)return 'COMPLETO / VIGENTE';if(!d.fechaFin)return 'PENDIENTE';const end=new Date(d.fechaFin+'T23:59:59');if(isNaN(end))return 'PENDIENTE';const today=new Date();today.setHours(0,0,0,0);const limit=new Date();limit.setMonth(limit.getMonth()+3);limit.setHours(23,59,59,999);if(end<today)return 'VENCIDO';if(end<=limit)return 'PRÓXIMO A VENCER';return 'COMPLETO / VIGENTE'}
-async function refresh(){
+async function refresh(options={}){
+  // Una actualización invalida los cálculos derivados, pero conserva la caché de consultas a Supabase.
+  dashboardAuthCache=null;
   await Promise.all([all('usuarios'),all('perfiles'),all('estandares'),all('cumplimientos')]);
-  // Dashboard y tabla de usuarios usan la misma caché; renderizarlos en paralelo evita esperas acumuladas.
+  if(options.initial){
+    // Priorizar el Dashboard en el arranque. Usuarios, requisitos y administración se renderizan al abrirse.
+    await renderDashboard();
+    return;
+  }
   await Promise.all([renderDashboard(),renderUsers(),populateReqCargos()]);
   if($('reqCargo')?.value)await renderRequirements();
   await renderAdmin();
@@ -1193,11 +1199,38 @@ async function showUserQr(id){
 function closeModal(){$('modal').classList.remove('open');$('modal').querySelector('.modal-box')?.classList.remove('classification-modal-box')}
 function requireAdmin(fn){if(adminUnlocked){fn();return}pendingAdminAction=fn;openModal('Acceso para realizar cambios',`<div class="notice">Para agregar, actualizar o eliminar información, ingrese su usuario y contraseña de Supabase.</div><div class="field"><label>Correo electrónico</label><input id="adminEmail" type="email" autocomplete="username" placeholder="Correo electrónico"></div><div class="field"><label>Contraseña</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter')adminSignIn()"></div><div id="adminLoginError" style="display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:#fff1f2;color:#a51f2b;font-size:14px"></div>`, `<button class="btn btn-light" onclick="closeModal();pendingAdminAction=null">Cancelar</button><button id="adminLoginBtn" class="btn btn-primary" onclick="adminSignIn()">Ingresar</button>`)}
 let dashboardFilter='all';
+let dashboardAuthCache=null;
+function dashboardPersonKey(value){return normalizePersonName(value||'')}
+async function authForDashboardUsers(users){
+  if(dashboardAuthCache && dashboardAuthCache.userCount===users.length && dashboardAuthCache.userStamp===users.map(u=>String(u.id)+':'+u.cargo).join('|'))return dashboardAuthCache.results;
+  const [profiles,standards,exceptions,compliances]=await Promise.all([all('perfiles'),all('estandares'),all('excepciones_doa'),all('cumplimientos')]);
+  const doasByCargo=new Map();
+  for(const p of profiles){const cargo=String(p.cargo||'').trim().toLowerCase();if(!doasByCargo.has(cargo))doasByCargo.set(cargo,new Set());for(const d of doaList(p.doa))doasByCargo.get(cargo).add(d)}
+  const exceptionsByUser=new Map();
+  for(const e of exceptions){const id=String(e.usuarioId||'');if(!exceptionsByUser.has(id))exceptionsByUser.set(id,new Set());exceptionsByUser.get(id).add(normalizeRel(e.doa))}
+  const complianceById=new Map(),complianceByName=new Map(),complianceOrder=new Map();
+  compliances.forEach((c,index)=>{complianceOrder.set(c,index);const id=String(c.usuarioId||'');if(id){if(!complianceById.has(id))complianceById.set(id,[]);complianceById.get(id).push(c)}const name=dashboardPersonKey(c.usuarioNombre||c.nombre);if(name){if(!complianceByName.has(name))complianceByName.set(name,[]);complianceByName.get(name).push(c)}});
+  const standardByDoa=new Map();for(const r of standards){const key=String(r.doa||'').trim().toLowerCase();if(!standardByDoa.has(key))standardByDoa.set(key,[]);standardByDoa.get(key).push(r)}
+  const results=users.map(user=>{
+    const cargo=String(user.cargo||'').trim().toLowerCase(),doas=doasByCargo.get(cargo)||new Set(),excluded=exceptionsByUser.get(String(user.id||''))||new Set();
+    const req=[];for(const d of doas){for(const r of standardByDoa.get(d)||[]){if(!excluded.has(normalizeRel(r.doa)))req.push(r)}}
+    const personRows=[...(complianceById.get(String(user.id||''))||[])];
+    const byName=complianceByName.get(dashboardPersonKey(user.nombre))||[];
+    for(const c of byName)if(!personRows.includes(c))personRows.push(c);
+    personRows.sort((a,b)=>(complianceOrder.get(a)??0)-(complianceOrder.get(b)??0));
+    const byStdId=new Map(),byReqKey=new Map();for(const c of personRows){const sid=String(c.estandarId||'');if(sid&&!byStdId.has(sid))byStdId.set(sid,c);const key=requirementKey(c);if(!byReqKey.has(key))byReqKey.set(key,c)}
+    const states=[],details=req.map(r=>{const c=byStdId.get(String(r.id))||byReqKey.get(requirementKey(r));states.push(c?statusFor(c):'PENDIENTE');const d={estandar:r.estandar||'',doa:r.doa||'',curso:r.curso||'',fechaFin:c?.fechaFin||'',fechaRealizacion:c?.fechaRealizacion||'',frecuenciaAnios:Number(c?.frecuenciaAnios??r.frecuenciaAnios??0),frecuenciaDias:Number(c?.frecuenciaDias??r.frecuenciaDias??0)};d.status=dashboardStatusFor(d);return d});
+    const done=states.filter(st=>st==='COMPLETO / VIGENTE').length,soon=states.filter(st=>st==='PRÓXIMO A VENCER').length,expired=states.filter(st=>st==='VENCIDO').length,pending=states.filter(st=>st==='PENDIENTE').length,total=req.length,pct=total?Math.round(done/total*100):0;
+    return {ok:total>0&&done===total,total,done,soon,expired,pending,pct,details,dashSoon:details.filter(d=>d.status==='PRÓXIMO A VENCER').length,dashExpired:details.filter(d=>d.status==='VENCIDO').length};
+  });
+  dashboardAuthCache={userCount:users.length,userStamp:users.map(u=>String(u.id)+':'+u.cargo).join('|'),results};
+  return results;
+}
 async function filterDashboard(filter){dashboardFilter=filter;await renderDashboard(filter)}
 async function renderDashboard(filter=dashboardFilter){
  dashboardFilter=filter||'all';
  const us=await all('usuarios');
- const results=await Promise.all(us.map(u=>authFor(u)));
+ const results=await authForDashboardUsers(us);
  $('kUsers').textContent=us.length;
  $('kAuth').textContent=results.filter(x=>x.ok).length;
  $('kNoAuth').textContent=results.filter(x=>!x.ok).length;
@@ -2723,7 +2756,7 @@ function renderStandardsByName(){
 async function refreshStandardsConsultation(){invalidateDataCache('estandares','clasificaciones');await renderStandardsConsultation()}
 
 document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',async()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(b.dataset.view).classList.add('active');if(b.dataset.view==='dashboard')await renderDashboard();if(b.dataset.view==='usuarios')await renderUsers();if(b.dataset.view==='requisitos')await populateReqCargos();if(b.dataset.view==='consultarEstandares')await renderStandardsConsultation();if(b.dataset.view==='doaConsulta')await renderDoaProfilesView();if(b.dataset.view==='pendientes')await renderPendingRegistrations();if(b.dataset.view==='admin')await renderAdmin();}));
-(async()=>{try{showApp();await bootData();await refresh();const qrUserId=new URLSearchParams(window.location.search).get('usuario');if(qrUserId){await viewUser(qrUserId)}}catch(e){console.error('DOA: no fue posible cargar los datos públicos desde Supabase.',e);alert('No fue posible cargar los datos de la plataforma. Supabase respondió: '+(e.message||'error desconocido')+'\n\nSi las políticas públicas aún no fueron ejecutadas, use SUPABASE_PUBLIC_VIEW_POLICIES.sql del ZIP. No se modifica ni se borra ningún dato.')}})()
+(async()=>{try{showApp();await bootData();await refresh({initial:true});const qrUserId=new URLSearchParams(window.location.search).get('usuario');if(qrUserId){await viewUser(qrUserId)}}catch(e){console.error('DOA: no fue posible cargar los datos públicos desde Supabase.',e);alert('No fue posible cargar los datos de la plataforma. Supabase respondió: '+(e.message||'error desconocido')+'\n\nSi las políticas públicas aún no fueron ejecutadas, use SUPABASE_PUBLIC_VIEW_POLICIES.sql del ZIP. No se modifica ni se borra ningún dato.')}})()
 </script>
 
 <style>
