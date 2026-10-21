@@ -1246,15 +1246,13 @@ async function renderDashboard(filter=dashboardFilter){
 async function renderUsers(){
   const us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';
   const visible=us.filter(x=>(!q||`${x.nombre} ${x.cargo}`.toLowerCase().includes(q)));
-  // Consultar solo el nombre del primer documento (metadato), no descargar el contenido/base64 de los adjuntos.
+  // Solo metadatos del documento; nunca descargar archivos completos para pintar los DOA.
   let documentNameById=new Map();
   try{
     const docs=await api('cumplimiento?select=id,documento_nombre:documentos->0->>nombre,documento_name:documentos->0->>name&order=id');
     documentNameById=new Map((Array.isArray(docs)?docs:[]).map(r=>[String(r.id),String(r.documento_nombre||r.documento_name||'').trim()]));
-  }catch(err){
-    console.warn('No se pudo comprobar el metadato de los adjuntos para colorear los DOA.',err);
-  }
-  const [allStandards,allCompliance,allExceptions]=await Promise.all([all('estandares'),all('cumplimientos'),all('excepciones_doa')]);
+  }catch(err){console.warn('No se pudieron consultar los nombres de documentos para el estado visual de los DOA.',err);}
+  const [allStandards,allCompliance]=await Promise.all([all('estandares'),all('cumplimientos')]);
   const rows=await Promise.all(visible.map(async u=>{
     const [x,doas,exceptions]=await Promise.all([authFor(u),profileDoas(u.cargo),userDoaExceptions(u)]);
     const state=x.ok?"AUTORIZADO PARA OPERAR":"NO AUTORIZADO";
@@ -1262,20 +1260,45 @@ async function renderUsers(){
     const pct=x.total?Math.round(x.done/x.total*100):0;
     const exceptionKeys=new Set(exceptions.map(normalizeRel));
     const assignedKeys=new Set(doaList(doas.join(',')).map(normalizeRel));
-    const userRows=allCompliance.filter(c=>samePerson({id:c.usuarioId,nombre:c.usuarioNombre||c.nombre},u)||String(c.usuarioId||'')===String(u.id||''));
+    const userRows=allCompliance.filter(c=>String(c.usuarioId||'')===String(u.id||'')||samePerson({id:c.usuarioId,nombre:c.usuarioNombre||c.nombre},u));
     const doaClasses={};
     uniqueDoas(doas).forEach(d=>{
       const key=normalizeRel(d);
       if(exceptionKeys.has(key)){doaClasses[key]='doa-chip-exception';return;}
-      // Cada curso configurado para el cargo y el DOA debe tener fecha, adjunto y vigencia actual.
+      // Cada fila de Estándares/DOA representa un entrenamiento requerido para ese DOA.
       const required=allStandards.filter(r=>assignedKeys.has(normalizeRel(r.doa))&&normalizeRel(r.doa)===key);
-      const allCoursesComplete=required.length>0&&required.every(r=>{
-        const c=userRows.find(item=>String(item.estandarId||'')===String(r.id))||
-          userRows.find(item=>requirementKey(item)===requirementKey(r));
-        if(!c||!c.fechaRealizacion||!String(documentNameById.get(String(c.id))||'').trim())return false;
-        return statusFor({...c,frecuenciaAnios:Number(c.frecuenciaAnios??r.frecuenciaAnios??0),frecuenciaDias:Number(c.frecuenciaDias??r.frecuenciaDias??0)})==='COMPLETO / VIGENTE';
+      if(!required.length){doaClasses[key]='doa-chip-incomplete';return;}
+      let documented=0,expired=0;
+      required.forEach(r=>{
+        const matches=userRows.filter(item=>
+          (String(item.estandarId||'')===String(r.id) || requirementKey(item)===requirementKey(r)) &&
+          (!item.doa || normalizeRel(item.doa)===key)
+        );
+        // all('cumplimientos') ya prioriza el registro vigente/último por persona y curso.
+        const c=matches[0];
+        const hasDoc=!!(c && (String(documentNameById.get(String(c.id))||'').trim() ||
+          String(c.documentoNombre||'').trim() ||
+          (Array.isArray(c.archivos)&&c.archivos.length) || c.archivoData));
+        const hasDate=!!String(c?.fechaRealizacion||'').trim();
+        const courseStatus=c?statusFor({...c,
+          frecuenciaAnios:Number(c.frecuenciaAnios??r.frecuenciaAnios??0),
+          frecuenciaDias:Number(c.frecuenciaDias??r.frecuenciaDias??0)
+        }):'PENDIENTE';
+        if(hasDate&&hasDoc)documented++;
+        if(hasDate&&courseStatus==='VENCIDO')expired++;
       });
-      doaClasses[key]=allCoursesComplete?'doa-chip-complete':'doa-chip-incomplete';
+      const total=required.length, documentedPct=Math.round(documented/total*100), expiredPct=Math.round(expired/total*100);
+      if(documented===total&&expired===0){
+        doaClasses[key]='doa-chip-complete';
+      }else if(expired>0){
+        doaClasses[key]=`doa-chip-progress doa-chip-expired`;
+        doaClasses[key]+=`" style="--doa-documented:${documentedPct}%;--doa-expired:${expiredPct}%;`;
+      }else if(documented>0){
+        doaClasses[key]=`doa-chip-progress doa-chip-partial`;
+        doaClasses[key]+=`" style="--doa-progress:${documentedPct}%;`;
+      }else{
+        doaClasses[key]='doa-chip-incomplete';
+      }
     });
     const doaCell=doaListHtml(doas,'Sin DOA aplicables',doaClasses)+(exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):'');
     return `<tr>
@@ -1302,7 +1325,7 @@ function uniqueDoas(list){
 function doaListHtml(doas, empty='Sin DOA aplicables', classes={}){
   let arr=uniqueDoas(doas);
   if(!arr.length)return `<div class="empty-inline">${empty}</div>`;
-  return `<div class="doa-list">${arr.map(d=>`<span class="doa-chip ${classes[normalizeRel(d)]||''}">${esc(d)}</span>`).join('')}</div>`;
+  return `<div class="doa-list">${arr.map(d=>{const raw=classes[normalizeRel(d)]||'';const split=String(raw).split('" style="');const cls=split[0];const style=split[1]?` style="${esc(split[1].replace(/;?$/,';'))}"`:'';return `<span class="doa-chip ${cls}"${style}>${esc(d)}</span>`}).join('')}</div>`;
 }
 // Presenta las excepciones individuales sin modificar los DOA configurados para el Cargo.
 async function userDoaExceptions(user){
@@ -3708,4 +3731,36 @@ header h1{font-size:clamp(14px,1.1vw,22px);line-height:1.12;letter-spacing:-.25p
 
 </style>
 
+
+<style id="users-doa-progressive-status">
+#usuarios .doa-chip{position:relative;overflow:hidden;isolation:isolate;transition:background .35s ease,border-color .35s ease,color .25s ease}
+#usuarios .doa-chip-complete{background:#d9f2df!important;border-color:#a8d9b5!important;color:#205c32!important}
+#usuarios .doa-chip-incomplete{background:#dceeff!important;border-color:#a8cfee!important;color:#174f7c!important}
+#usuarios .doa-chip-exception{background:#e7eaee!important;border-color:#c7cdd3!important;color:#505963!important}
+#usuarios .doa-chip-progress.doa-chip-partial{background:linear-gradient(90deg,#f8e8a5 0%,#f8e8a5 var(--doa-progress),#fffdf4 var(--doa-progress),#fffdf4 100%)!important;border-color:#e5cf77!important;color:#6c5714!important}
+#usuarios .doa-chip-progress.doa-chip-expired{background:linear-gradient(90deg,#f3b9bd 0%,#f3b9bd var(--doa-expired),#f8e8a5 var(--doa-expired),#f8e8a5 calc(var(--doa-expired) + var(--doa-documented)),#fffdf4 calc(var(--doa-expired) + var(--doa-documented)),#fffdf4 100%)!important;border-color:#d99a9f!important;color:#7e252d!important}
+#usuarios .doa-list{gap:7px}
+</style>
+
+<script id="users-doa-live-refresh">
+(function(){
+  let running=false;
+  async function refreshUserDoaData(){
+    if(running||document.hidden||typeof all!=='function'||typeof renderUsers!=='function')return;
+    running=true;
+    try{
+      if(typeof invalidateDataCache==='function')invalidateDataCache('usuarios','perfiles','estandares','cumplimientos','excepciones_doa');
+      await Promise.all([
+        all('usuarios',{force:true}),all('perfiles',{force:true}),all('estandares',{force:true}),
+        all('cumplimientos',{force:true}),all('excepciones_doa',{force:true})
+      ]);
+      if(document.querySelector('#usuarios.active')||document.querySelector('#usuarios[style*="display: block"]'))await renderUsers();
+    }catch(e){console.warn('No se pudo actualizar automáticamente el estado de los DOA; se reintentará en el siguiente ciclo.',e);}
+    finally{running=false;}
+  }
+  window.addEventListener('focus',refreshUserDoaData);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshUserDoaData()});
+  window.setInterval(refreshUserDoaData,60000);
+})();
+</script>
 </body></html>
