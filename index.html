@@ -1769,8 +1769,8 @@ function complianceEntryTemplate(i=0, c={}){
       <div class="field field-required-highlight"><label>Fecha realización *</label><input id="cFecha_${i}" type="date" value="${esc(c.fechaRealizacion||'')}" onchange="entryDateChanged(${i})"></div>
       <div class="field"><label>Fecha FIN</label><input id="cFechaFin_${i}" type="date" value="${esc(c.fechaFin||'')}" readonly></div>
       <div class="field"><label>Estado</label><div id="cEstado_${i}" style="padding-top:8px">${badge(c.id?statusFor(c):'PENDIENTE')}</div></div>
-      <div class="field full field-required-highlight"><label>Documento soporte *</label><input id="cArchivos_${i}" type="file" accept="application/pdf,image/jpeg,image/png,image/webp,.pdf,.jpg,.jpeg,.png,.webp" onchange="previewComplianceReplacement(${i})">
-        <div class="muted" id="cArchivoInfo_${i}">Máximo 1 documento. Obligatorio para guardar.</div>
+      <div class="field full field-required-highlight"><label>Documento soporte 1 *</label><input id="cArchivos_${i}" type="file" multiple accept="application/pdf,image/jpeg,image/png,image/webp,.pdf,.jpg,.jpeg,.png,.webp" onchange="previewComplianceReplacement(${i})">
+        <div class="muted" id="cArchivoInfo_${i}">Adjunto 1 obligatorio. Adjunto 2 opcional. Puede seleccionar hasta 2 archivos (PDF, JPG, PNG o WEBP; máximo 15 MB cada uno).</div>
         <div id="cArchivosExistentes_${i}" class="small"></div>
       </div>
     </div>
@@ -2081,7 +2081,7 @@ function entryDateChanged(i){
 }
 function validateComplianceEntryFile(i){
   const files=[...($('cArchivos_'+i)?.files||[])];
-  if(files.length>1){alert('Puede adjuntar máximo 1 documento por cumplimiento.');$('cArchivos_'+i).value='';return false}
+  if(files.length>2){alert('Puede adjuntar máximo 2 documentos por cumplimiento. El segundo es opcional.');$('cArchivos_'+i).value='';return false}
   if(files.some(f=>!isAllowedComplianceFile(f))){alert('Solo se permiten archivos PDF, JPG, PNG o WEBP.');$('cArchivos_'+i).value='';return false}
   if(files.some(f=>f.size>15*1024*1024)){alert('El documento supera el límite de 15 MB.');$('cArchivos_'+i).value='';return false}
   return true;
@@ -2094,14 +2094,15 @@ function previewComplianceReplacement(i){
   if(!file)return;
   row.dataset.removeAttachment='false';
   const box=$('cArchivosExistentes_'+i);
-  if(box)box.innerHTML=`<div class="notice" style="margin-top:8px"><b>Nuevo adjunto seleccionado:</b> ${esc(file.name)}<br><span class="small">Este documento reemplazará automáticamente el adjunto anterior al guardar.</span></div>`;
+  const chosen=[...(input.files||[])];
+  if(box)box.innerHTML=`<div class="notice" style="margin-top:8px"><b>${chosen.length} adjunto(s) seleccionado(s):</b><br>${chosen.map((f,n)=>`${n+1}. ${esc(f.name)}${n===1?' (opcional)':''}`).join('<br>')}<br><span class="small">Los archivos seleccionados reemplazarán los adjuntos anteriores al guardar.</span></div>`;
   const info=$('cArchivoInfo_'+i);
-  if(info)info.textContent='El nuevo documento reemplazará automáticamente el adjunto anterior.';
+  if(info)info.textContent=`${chosen.length} de 2 adjunto(s) seleccionado(s). El segundo es opcional.`;
 }
 function renderExistingComplianceFilesForEntry(c,i){
   const box=$('cArchivosExistentes_'+i);if(!box)return;
   const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);
-  box.innerHTML=arr.length?`<div class="existing-attachment"><button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',0)">Ver adjunto: ${esc(arr[0].nombre||'Documento')}</button><button type="button" class="btn btn-light btn-remove-attachment" onclick="removeComplianceAttachment(${i})">Eliminar adjunto</button></div>`:'Sin documentos adjuntos.';
+  box.innerHTML=arr.length?`<div class="existing-attachment">${arr.slice(0,2).map((a,n)=>`<button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',${n})">Ver adjunto ${n+1}: ${esc(a.nombre||'Documento')}</button>`).join(' ')}<button type="button" class="btn btn-light btn-remove-attachment" onclick="removeComplianceAttachment(${i})">Eliminar adjuntos</button></div>`:'Sin documentos adjuntos.';
 }
 function removeComplianceAttachment(i){
   const row=document.querySelector(`.compliance-entry[data-entry-index="${i}"]`);if(!row)return;
@@ -2130,7 +2131,7 @@ async function applicableCourseRowsForUser(userId, sourceRow, standards){
 function docsForCompliance(existing, files){
   const oldDocs=Array.isArray(existing?.archivos)?existing.archivos:
     (existing?.archivoData?[{nombre:existing.archivoNombre||'Documento',tipo:existing.archivoTipo||'',data:existing.archivoData}]:[]);
-  return files?.length ? [] : oldDocs.slice(0,1);
+  return files?.length ? [] : oldDocs.slice(0,2);
 }
 
 async function saveComplianceForm(id=''){
@@ -2187,7 +2188,7 @@ async function saveComplianceForm(id=''){
           try{
             const result=await api('cumplimiento?select=id,documentos&id=eq.'+encodeURIComponent(restoredId));
             const saved=result?.[0];
-            if(saved&&Array.isArray(saved.documentos))oldDocs=saved.documentos.slice(0,1);
+            if(saved&&Array.isArray(saved.documentos))oldDocs=saved.documentos.slice(0,2);
           }catch(err){console.warn('No se pudo recuperar el documento existente al guardar.',err)}
         }
       }
@@ -2424,9 +2425,9 @@ async function uploadComplianceFile(file,userId,complianceId){
   if(!response.ok){const t=await response.text();throw new Error('No se pudo guardar el adjunto en Supabase Storage. '+(t||('HTTP '+response.status))+' Comprueba las políticas de escritura del bucket.');}
   return {nombre:file.name,tipo:file.type||'application/octet-stream',path,storage:'supabase'};
 }
-function validateComplianceFiles(){const files=[...($('cArchivos')?.files||[])];if(files.length>1){alert('Puede adjuntar máximo 1 documento por cumplimiento.');$('cArchivos').value='';return false}if(files.some(f=>!isAllowedComplianceFile(f))){alert('Solo se permiten archivos PDF, JPG, PNG o WEBP.');$('cArchivos').value='';return false}if(files.some(f=>f.size>15*1024*1024)){alert('El documento supera el límite de 15 MB.');$('cArchivos').value='';return false}return true}
+function validateComplianceFiles(){const files=[...($('cArchivos')?.files||[])];if(files.length>2){alert('Puede adjuntar máximo 2 documentos por cumplimiento. El segundo es opcional.');$('cArchivos').value='';return false}if(files.some(f=>!isAllowedComplianceFile(f))){alert('Solo se permiten archivos PDF, JPG, PNG o WEBP.');$('cArchivos').value='';return false}if(files.some(f=>f.size>15*1024*1024)){alert('El documento supera el límite de 15 MB.');$('cArchivos').value='';return false}return true}
 function isAllowedComplianceFile(file){const type=String(file?.type||'').toLowerCase();const name=String(file?.name||'').toLowerCase();return type==='application/pdf'||type==='image/jpeg'||type==='image/png'||type==='image/webp'||(/\.(pdf|jpe?g|png|webp)$/.test(name)&&(!type||type==='application/octet-stream'))}
-function renderExistingComplianceFiles(c){const box=$('cArchivosExistentes');if(!box)return;const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);box.innerHTML=arr.length?`Documentos actuales: ${arr.slice(0,1).map((a,i)=>`<button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',${i})">${esc(a.nombre||'Documento')}</button>`).join(' ')}`:'Sin documentos adjuntos.'}
+function renderExistingComplianceFiles(c){const box=$('cArchivosExistentes');if(!box)return;const arr=Array.isArray(c.archivos)?c.archivos:(c.archivoData?[{nombre:c.archivoNombre||'Documento',tipo:c.archivoTipo||'',data:c.archivoData}]:[]);box.innerHTML=arr.length?`Documentos actuales: ${arr.slice(0,2).map((a,i)=>`<button type="button" class="btn btn-light" onclick="openComplianceAttachment('${c.id}',${i})">${esc(a.nombre||'Documento')}</button>`).join(' ')}`:'Sin documentos adjuntos.'}
 async function deleteCompliance(id){if(!adminUnlocked)return requireAdmin(()=>deleteCompliance(id));if(!confirm('¿Desea eliminar este cumplimiento?'))return;await del('cumplimientos',id);await refresh()}
 async function openComplianceAttachment(cid,index=0){
   // Abrir la pestaña de forma síncrona durante el clic del usuario para evitar que Edge/Chrome la bloqueen mientras se consulta Supabase.
