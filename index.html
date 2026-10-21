@@ -907,6 +907,84 @@ aside{
 }
 </style>
 
+
+<style id="ver-detalle-selected-state-polish">
+/* Realce visual del filtro activo en Ver detalle. Solo CSS; no modifica la lógica ni los datos. */
+#modal .detail-stat.detail-filter {
+  position: relative;
+  isolation: isolate;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  outline: none;
+}
+#modal .detail-stat.detail-filter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 17px rgba(18, 58, 88, .12);
+}
+#modal .detail-stat.detail-filter:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, .35);
+  outline-offset: 3px;
+}
+#modal .detail-stat.detail-filter.active {
+  transform: translateY(-2px);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .10), 0 8px 23px rgba(18, 58, 88, .16);
+}
+#modal .detail-stat.detail-filter.active:after {
+  content: "✓";
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  color: #fff;
+  background: #2563eb;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 2px 7px rgba(15, 23, 42, .18);
+}
+#modal .detail-stat.detail-filter.active.stat-total {
+  border-color: #3682c4 !important;
+  background: linear-gradient(145deg, #eff7ff 0%, #ffffff 100%) !important;
+  box-shadow: 0 0 0 3px rgba(54, 130, 196, .16), 0 8px 23px rgba(24, 89, 145, .16) !important;
+}
+#modal .detail-stat.detail-filter.active.stat-total:after { background: #2878ad; }
+#modal .detail-stat.detail-filter.active.stat-ok {
+  border-color: #23945f !important;
+  background: linear-gradient(145deg, #e8f8ef 0%, #ffffff 100%) !important;
+  box-shadow: 0 0 0 3px rgba(35, 148, 95, .17), 0 8px 23px rgba(35, 132, 91, .18) !important;
+}
+#modal .detail-stat.detail-filter.active.stat-ok:before { background: #16834f !important; width: 6px; }
+#modal .detail-stat.detail-filter.active.stat-ok:after { background: #16834f; }
+#modal .detail-stat.detail-filter.active.stat-soon {
+  border-color: #d5a11c !important;
+  background: linear-gradient(145deg, #fff7dc 0%, #ffffff 100%) !important;
+  box-shadow: 0 0 0 3px rgba(213, 161, 28, .20), 0 8px 23px rgba(180, 130, 12, .17) !important;
+}
+#modal .detail-stat.detail-filter.active.stat-soon:before { background: #c18a00 !important; width: 6px; }
+#modal .detail-stat.detail-filter.active.stat-soon:after { background: #b78100; }
+#modal .detail-stat.detail-filter.active.stat-expired {
+  border-color: #9f2441 !important;
+  background: linear-gradient(145deg, #fff0f3 0%, #ffffff 100%) !important;
+  box-shadow: 0 0 0 3px rgba(159, 36, 65, .17), 0 8px 23px rgba(159, 36, 65, .17) !important;
+}
+#modal .detail-stat.detail-filter.active.stat-expired:before { background: #8f1d3a !important; width: 6px; }
+#modal .detail-stat.detail-filter.active.stat-expired:after { background: #8f1d3a; }
+#modal .detail-stat.detail-filter.active.stat-pending {
+  border-color: #397fb6 !important;
+  background: linear-gradient(145deg, #eaf4ff 0%, #ffffff 100%) !important;
+  box-shadow: 0 0 0 3px rgba(57, 127, 182, .17), 0 8px 23px rgba(57, 127, 182, .16) !important;
+}
+#modal .detail-stat.detail-filter.active.stat-pending:before { background: #2878ad !important; width: 6px; }
+#modal .detail-stat.detail-filter.active.stat-pending:after { background: #2878ad; }
+@media (prefers-reduced-motion: reduce) {
+  #modal .detail-stat.detail-filter { transition: none; }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
