@@ -1000,6 +1000,327 @@ aside{
 }
 </style>
 
+
+<style id="dashboard-executive-refresh">
+#dashboard .page-title{margin-bottom:22px}
+#dashboard .page-title h2{font-size:clamp(25px,2vw,34px);letter-spacing:-.6px;color:#092f60}
+#dashboard .subtitle{color:#60758d;font-size:14px;margin-top:5px}
+#dashboard .cards{gap:14px;margin-bottom:22px}
+#dashboard .cards .card{min-height:118px;border:1px solid #e0e9f2;border-radius:15px;box-shadow:0 5px 18px rgba(17,57,95,.055);padding:19px 20px;position:relative;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+#dashboard .cards .card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(17,57,95,.1)}
+#dashboard .cards .card[aria-pressed="true"]{border-color:#1676bd;box-shadow:0 0 0 2px rgba(22,118,189,.12),0 8px 20px rgba(17,57,95,.08)}
+#dashboard .cards .n{font-size:clamp(29px,2.2vw,39px);font-weight:800;line-height:1.1;color:#092f60}
+#dashboard .cards .l{font-size:12px;line-height:1.35;color:#5c7189;font-weight:700;margin-top:10px}
+#dashboard .dashboard-main-panel .panel{border:1px solid #e0e9f2;border-radius:17px;padding:22px;box-shadow:0 8px 26px rgba(17,57,95,.055)}
+#dashboard .dashboard-panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+#dashboard .dashboard-panel-head h3{font-size:19px;font-weight:800;color:#092f60;margin:0 0 5px}
+#dashboard .dashboard-live{font-size:11px;letter-spacing:.3px;text-transform:uppercase;color:#58718a;white-space:nowrap}
+#dashboard .dashboard-search-row{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+#dashboard .dashboard-search-row input{width:min(100%,390px);border:1px solid #d8e3ee;border-radius:10px;padding:11px 13px;font-size:13px;color:#173d62;background:#fbfdff;outline:none}
+#dashboard .dashboard-search-row input:focus{border-color:#1680c7;box-shadow:0 0 0 3px rgba(22,128,199,.1)}
+#dashboard .dashboard-results-count{margin-left:auto;color:#71839a;font-size:12px}
+#dashboard .dash-person{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(210px,.7fr);gap:20px;align-items:center;border:1px solid #e3ebf3;border-radius:13px;padding:16px 18px;margin-bottom:10px;background:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+#dashboard .dash-person:hover{border-color:#c5d9ea;box-shadow:0 5px 15px rgba(17,57,95,.045)}
+#dashboard .dash-person-name{font-size:15px;font-weight:800;color:#12395f;line-height:1.35}
+#dashboard .dash-person-role{font-size:12px;color:#70839a;margin-top:4px}
+#dashboard .dash-person-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+#dashboard .dash-chip{display:inline-flex;align-items:center;gap:5px;border-radius:7px;padding:5px 8px;font-size:11px;font-weight:700;background:#f1f6fa;color:#526b84}
+#dashboard .dash-chip.good{background:#e8f6ef;color:#18724d}
+#dashboard .dash-chip.warn{background:#fff4df;color:#946000}
+#dashboard .dash-chip.bad{background:#fbecef;color:#8e263c}
+#dashboard .dash-person-status{display:flex;flex-direction:column;align-items:stretch;gap:9px}
+#dashboard .dash-status-line{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#dashboard .dash-status-pill{display:inline-flex;align-items:center;gap:7px;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:800;letter-spacing:.2px}
+#dashboard .dash-status-pill:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+#dashboard .dash-status-pill.authorized{color:#16724d;background:#e8f6ef}
+#dashboard .dash-status-pill.unauthorized{color:#8e263c;background:#fbecef}
+#dashboard .dash-progress{height:6px;background:#edf2f7;border-radius:99px;overflow:hidden}
+#dashboard .dash-progress span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#0b6eb5,#22a0d7)}
+#dashboard .dash-progress-caption{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#70839a}
+#dashboard .dash-details{margin-top:12px;border-top:1px solid #edf2f7;padding-top:10px}
+#dashboard .dash-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;color:#17669e;font-size:12px;font-weight:800;outline:none}
+#dashboard .dash-details summary::-webkit-details-marker{display:none}
+#dashboard .dash-details summary:after{content:"＋";margin-left:auto;font-size:15px}
+#dashboard .dash-details[open] summary:after{content:"−"}
+#dashboard .dash-doa-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:11px}
+#dashboard .dash-doa-item{border:1px solid #e3ebf3;border-radius:9px;padding:10px 11px;min-width:0}
+#dashboard .dash-doa-name{font-size:12px;font-weight:800;color:#254b70;overflow-wrap:anywhere}
+#dashboard .dash-doa-state{font-size:11px;margin-top:5px;color:#71839a}
+#dashboard .dash-doa-state.good{color:#16724d}
+#dashboard .dash-doa-state.bad{color:#a12d43}
+#dashboard .dash-course-alerts{margin-top:10px;font-size:12px;color:#60758d;line-height:1.5}
+#dashboard .dash-empty{padding:32px 18px;text-align:center;color:#71839a;border:1px dashed #cfdae6;border-radius:12px;background:#fbfdff}
+@media(max-width:900px){#dashboard .cards{grid-template-columns:repeat(3,minmax(0,1fr))}#dashboard .dash-person{grid-template-columns:1fr;gap:13px}}
+@media(max-width:640px){#dashboard .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#dashboard .cards .card{min-height:96px;padding:14px}#dashboard .dashboard-main-panel .panel{padding:14px}#dashboard .dashboard-panel-head{align-items:flex-start;flex-direction:column}#dashboard .dashboard-search-row{flex-direction:column;align-items:stretch}#dashboard .dashboard-search-row input{width:100%}#dashboard .dashboard-results-count{margin-left:0}#dashboard .dash-doa-list{grid-template-columns:1fr}}
+</style>
+
+
+<style id="dashboard-final-polish">
+/* Pulido visual del Dashboard: jerarquía, aire, contraste y estados claros */
+#dashboard{--dash-ink:#082f59;--dash-blue:#0878cf;--dash-muted:#607b99}
+#dashboard .dashboard-page-heading{display:flex;align-items:center;justify-content:space-between;margin:0 0 clamp(20px,1.8vw,34px);padding:0 0 16px;border-bottom:1px solid #d7e5f2;position:relative}
+#dashboard .dashboard-page-heading:after{content:"";position:absolute;bottom:-1px;left:0;width:82px;height:3px;border-radius:3px;background:linear-gradient(90deg,#0878cf,#43a9e5)}
+#dashboard .dashboard-page-heading h2{font-size:clamp(30px,2.45vw,48px);font-weight:850;letter-spacing:-1.15px;line-height:1.08;color:#082f59;margin:0}
+#dashboard .cards{align-items:stretch;gap:clamp(10px,1.15vw,22px);margin-bottom:clamp(22px,2vw,38px)}
+#dashboard .cards .card{position:relative;isolation:isolate;overflow:hidden;min-width:0;min-height:clamp(112px,8.5vw,154px);padding:clamp(17px,1.5vw,27px);border-radius:17px;border:1px solid #dce8f2;background:linear-gradient(145deg,#fff 0%,#f9fcff 78%,#f2f8fd 100%);box-shadow:0 7px 22px rgba(8,47,89,.065);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+#dashboard .cards .card:before{content:"";position:absolute;z-index:-1;left:0;top:0;bottom:0;width:5px;background:#0878cf;border-radius:17px 0 0 17px}
+#dashboard .cards .card:nth-child(2):before{background:#16845c}
+#dashboard .cards .card:nth-child(3):before{background:#b52f49}
+#dashboard .cards .card:nth-child(4):before{background:#d99419}
+#dashboard .cards .card:nth-child(5):before{background:#7b1e3a}
+#dashboard .cards .card:after{content:"";position:absolute;z-index:-1;width:115px;height:115px;right:-49px;top:-54px;border-radius:50%;background:rgba(8,120,207,.055);pointer-events:none}
+#dashboard .cards .card:hover{transform:translateY(-3px);border-color:#bfd5e8;box-shadow:0 13px 28px rgba(8,47,89,.11)}
+#dashboard .cards .card[aria-pressed="true"]{border-color:#1680c7;box-shadow:0 0 0 2px rgba(22,128,199,.12),0 10px 24px rgba(8,47,89,.09);background:linear-gradient(145deg,#fff 0%,#f1f8ff 100%)}
+#dashboard .cards .n{font-size:clamp(30px,2.15vw,43px);font-weight:850;line-height:1;color:#092f60;letter-spacing:-1px}
+#dashboard .cards .l{font-size:clamp(11px,.85vw,15px);line-height:1.4;color:#4d6783;font-weight:750;margin-top:12px;max-width:190px}
+#dashboard .dashboard-main-panel .panel{border:1px solid #dce8f2;border-radius:19px;padding:clamp(17px,1.65vw,30px);background:rgba(255,255,255,.96);box-shadow:0 9px 28px rgba(8,47,89,.055)}
+#dashboard .dashboard-panel-head{align-items:center;gap:18px;margin-bottom:20px;padding-bottom:17px;border-bottom:1px solid #e8eff6}
+#dashboard .dashboard-panel-head h3{font-size:clamp(17px,1.25vw,23px);font-weight:850;color:#082f59;letter-spacing:-.25px;margin:0 0 6px}
+#dashboard .dashboard-panel-head .small{font-size:clamp(12px,.88vw,15px);line-height:1.55;color:#627a94;max-width:780px}
+#dashboard .dashboard-live{display:inline-flex;align-items:center;gap:8px;border:1px solid #d9eee4;background:#f0faf5;color:#28734f;border-radius:999px;padding:8px 12px;font-size:10px;font-weight:800;letter-spacing:.5px}
+#dashboard .dashboard-search-row{display:flex;align-items:center;gap:12px;margin:0 0 16px}
+#dashboard .dashboard-search-row input{width:min(100%,430px);min-height:43px;border:1px solid #d5e2ee;border-radius:11px;padding:11px 14px 11px 40px;font-size:13px;color:#173d62;background:#fbfdff;outline:none;box-shadow:inset 0 1px 2px rgba(8,47,89,.025);background-image:radial-gradient(circle at 17px 17px,transparent 5px,#8aa2b8 5.5px,#8aa2b8 6.5px,transparent 7px),linear-gradient(45deg,transparent 46%,#8aa2b8 47%,#8aa2b8 56%,transparent 57%);background-size:18px 18px,7px 7px;background-position:9px 8px,25px 24px;background-repeat:no-repeat}
+#dashboard .dashboard-search-row input:focus{border-color:#1680c7;box-shadow:0 0 0 3px rgba(22,128,199,.1);background-color:#fff}
+#dashboard .dashboard-results-count{margin-left:auto;color:#6a8199;font-size:12px;font-weight:650}
+#dashboard .dash-person{grid-template-columns:minmax(0,1.5fr) minmax(220px,.7fr);gap:clamp(14px,1.7vw,28px);padding:clamp(15px,1.25vw,22px);border:1px solid #e0eaf3;border-radius:15px;margin-bottom:11px;background:linear-gradient(110deg,#fff 0%,#fff 72%,#f9fcff 100%);box-shadow:0 2px 8px rgba(8,47,89,.018)}
+#dashboard .dash-person:hover{border-color:#bfd6e9;box-shadow:0 7px 18px rgba(8,47,89,.065)}
+#dashboard .dash-person-name{font-size:clamp(14px,1vw,17px);font-weight:850;color:#12395f;letter-spacing:-.15px}
+#dashboard .dash-person-role{font-size:12px;color:#70839a;margin-top:5px}
+#dashboard .dash-person-meta{gap:7px;margin-top:12px}
+#dashboard .dash-chip{border:1px solid #e1eaf2;border-radius:7px;padding:6px 9px;font-size:10px;font-weight:800;background:#f5f8fb;color:#536c84}
+#dashboard .dash-chip.good{background:#eaf7f0;border-color:#d4eddf;color:#18724d}
+#dashboard .dash-chip.warn{background:#fff6e5;border-color:#f5e4bb;color:#946000}
+#dashboard .dash-chip.bad{background:#fbecf0;border-color:#f2d7de;color:#8e263c}
+#dashboard .dash-status-pill{justify-content:center;border-radius:9px;padding:9px 11px;font-size:10px;letter-spacing:.35px}
+#dashboard .dash-progress{height:7px;background:#eaf0f5;border-radius:99px}
+#dashboard .dash-progress-caption{font-size:11px;color:#71839a}
+#dashboard .dash-progress-caption b{color:#2b4e70;font-size:12px}
+#dashboard .dash-details{margin-top:14px;padding-top:11px;border-top:1px solid #edf2f7}
+#dashboard .dash-details summary{font-size:12px;padding:2px 0}
+#dashboard .dash-doa-list{gap:9px}
+#dashboard .dash-doa-item{background:#fbfdff;border-color:#e1eaf2;border-radius:10px;padding:12px}
+#dashboard .dash-doa-name{font-size:12px;line-height:1.45;color:#23496e}
+#dashboard .dash-doa-state{font-size:11px;line-height:1.45}
+#dashboard .dash-empty{padding:40px 20px;background:#fbfdff;border-color:#cbdbea;border-radius:14px;font-size:13px}
+@media(max-width:1150px){#dashboard .cards{grid-template-columns:repeat(3,minmax(0,1fr))}#dashboard .cards .card{min-height:112px}}
+@media(max-width:900px){#dashboard .cards{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard .dashboard-panel-head{align-items:flex-start;flex-direction:column}#dashboard .dashboard-live{align-self:flex-start}#dashboard .dash-person{grid-template-columns:1fr}}
+@media(max-width:640px){#dashboard .dashboard-page-heading{margin-bottom:18px;padding-bottom:13px}#dashboard .dashboard-page-heading h2{font-size:30px}#dashboard .cards{gap:9px;margin-bottom:18px}#dashboard .cards .card{min-height:100px;padding:15px 13px 15px 17px;border-radius:13px}#dashboard .cards .n{font-size:29px}#dashboard .cards .l{font-size:11px;margin-top:9px}#dashboard .dashboard-main-panel .panel{padding:14px;border-radius:15px}#dashboard .dashboard-search-row{align-items:stretch;flex-direction:column}#dashboard .dashboard-search-row input{width:100%}#dashboard .dashboard-results-count{margin-left:0}#dashboard .dash-person{padding:14px;border-radius:12px}#dashboard .dash-doa-list{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){#dashboard .cards .card,#dashboard .dash-person{transition:none}}
+</style>
+
+
+<style id="user-detail-doa-summary-polish">
+.detail-doa-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0 12px}
+.detail-doa-pill{min-width:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border:1px solid #dce7f0;border-left:4px solid #8ba0b4;border-radius:11px;background:linear-gradient(135deg,#fff,#f8fbfe);box-shadow:0 3px 10px rgba(20,55,85,.04)}
+.detail-doa-pill-label{font-size:12px;font-weight:750;line-height:1.35;color:#4e6780}
+.detail-doa-pill b{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:34px;height:34px;padding:0 8px;border-radius:9px;background:#edf3f8;color:#244968;font-size:17px;font-weight:850}
+.detail-doa-pill.doa-authorized{border-left-color:#21845d;background:linear-gradient(135deg,#fff,#f3fbf6)}
+.detail-doa-pill.doa-authorized b{background:#e1f4e9;color:#18724d}
+.detail-doa-pill.doa-progress{border-left-color:#d39a25;background:linear-gradient(135deg,#fff,#fffbf0)}
+.detail-doa-pill.doa-progress b{background:#fff0c9;color:#8c6009}
+.detail-doa-pill.doa-issues{border-left-color:#a33149;background:linear-gradient(135deg,#fff,#fff6f7)}
+.detail-doa-pill.doa-issues b{background:#f9e5e9;color:#922c43}
+@media(max-width:700px){.detail-doa-summary{grid-template-columns:1fr;gap:8px}.detail-doa-pill{padding:10px 12px}}
+</style>
+
+
+<style id="compact-course-cards">
+/* Tarjetas de cursos: menos altura, sin sacrificar legibilidad */
+#modal .detail-training-section{padding:18px;border-radius:16px}
+#modal .detail-section-title{padding-bottom:12px;gap:10px}
+#modal .detail-section-title h3{font-size:16px}
+#modal .detail-section-title small{font-size:11px}
+#modal .doa-detail-group{margin-top:12px;border-radius:13px}
+#modal .doa-detail-group .detail-group-head{padding:12px 16px 11px 20px}
+#modal .doa-detail-group .detail-group-head h4{font-size:15px;line-height:1.35}
+#modal .detail-group-count{margin-top:4px;padding:3px 8px;font-size:10px}
+#modal .detail-courses{padding:7px 9px 9px}
+#modal .detail-course{margin-top:7px;padding:12px 13px 11px;border-radius:10px}
+#modal .detail-course-head{gap:10px;padding-bottom:8px}
+#modal .detail-course-title-wrap{gap:8px}
+#modal .detail-course-index{flex-basis:27px;width:27px;height:27px;border-radius:8px}
+#modal .detail-course-name{font-size:12px;line-height:1.4}
+#modal .detail-meta{font-size:10px;line-height:1.45;margin-top:3px}
+#modal .detail-course-head>.badge{flex:0 0 auto;font-size:10px;padding:6px 9px;white-space:nowrap}
+#modal .detail-course-grid{gap:7px;margin-top:8px}
+#modal .detail-course-grid div{padding:8px 9px;border-radius:8px}
+#modal .detail-course-grid span{font-size:9px;margin-bottom:3px}
+#modal .detail-course-grid b{font-size:11px;line-height:1.4}
+#modal .detail-file-btn{margin-top:7px;padding:7px 9px;border-radius:8px;gap:8px}
+#modal .detail-file-icon{width:25px;height:25px;flex-basis:25px;border-radius:7px}
+#modal .detail-file-btn b{font-size:11px}
+#modal .detail-file-btn small{font-size:10px}
+@media(max-width:700px){
+ #modal .detail-training-section{padding:12px}
+ #modal .doa-detail-group .detail-group-head{padding:11px 12px 10px 17px}
+ #modal .detail-courses{padding:6px}
+ #modal .detail-course{padding:10px}
+ #modal .detail-course-head{align-items:flex-start}
+ #modal .detail-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #modal .detail-course-head>.badge{white-space:normal;text-align:center}
+}
+@media(max-width:420px){#modal .detail-course-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style id="course-header-horizontal-polish">
+/* Cabecera de cada entrenamiento: nombre, estándar y Course ID en una línea flexible */
+.detail-course-title-wrap{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  min-width:0;
+  flex:1 1 auto;
+}
+.detail-course-title-wrap > div:last-child{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  column-gap:12px;
+  row-gap:4px;
+  min-width:0;
+  flex:1 1 auto;
+}
+.detail-course-name{
+  display:inline;
+  font-size:12px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.detail-meta{
+  display:inline;
+  font-size:11px;
+  line-height:1.5;
+  color:#536f89;
+  overflow-wrap:anywhere;
+}
+.detail-meta span{
+  display:inline;
+  color:#244f73;
+  font-weight:800;
+  margin:0 3px 0 0;
+}
+.detail-course-head{
+  align-items:flex-start;
+  gap:12px;
+}
+.detail-course-head > .badge{
+  flex:0 0 auto;
+  margin-left:auto;
+}
+@media(max-width:700px){
+  .detail-course-head{flex-wrap:wrap}
+  .detail-course-title-wrap{flex-basis:100%}
+  .detail-course-head > .badge{margin-left:42px}
+  .detail-course-title-wrap > div:last-child{column-gap:8px}
+}
+</style>
+
+
+<style id="interactive-doa-summary-polish">
+.detail-doa-summary .detail-doa-pill{
+  appearance:none;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease;
+}
+.detail-doa-summary .detail-doa-pill:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 13px rgba(18,63,99,.09);
+}
+.detail-doa-summary .detail-doa-pill:focus-visible{
+  outline:3px solid rgba(22,128,199,.28);
+  outline-offset:2px;
+}
+.detail-doa-summary .detail-doa-pill.selected{
+  border-color:#4a91c8;
+  box-shadow:0 0 0 2px rgba(42,125,188,.14),0 5px 14px rgba(18,63,99,.08);
+  background-color:#f4f9ff;
+}
+.detail-doa-names-panel{
+  margin-top:-8px;
+  padding:12px 15px 14px;
+  border:1px solid #d9e7f3;
+  border-radius:12px;
+  background:linear-gradient(135deg,#fbfdff,#f4f9fd);
+  animation:doaNamesIn .18s ease-out;
+}
+.detail-doa-names-panel[hidden]{display:none!important}
+.detail-doa-names-heading{
+  color:#173f63;
+  font-size:12px;
+  font-weight:850;
+  margin-bottom:9px;
+}
+.detail-doa-names-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.detail-doa-name-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  min-width:min(100%,240px);
+  max-width:100%;
+  padding:8px 10px;
+  border:1px solid #e0eaf3;
+  border-radius:9px;
+  background:#fff;
+  flex:1 1 230px;
+}
+.detail-doa-name-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex:0 0 7px}
+.detail-doa-name-dot.good{background:#21845b}
+.detail-doa-name-dot.progress{background:#d99a20}
+.detail-doa-name-dot.issue{background:#9a2d46}
+.detail-doa-name-text{min-width:0;display:flex;flex-direction:column;gap:3px}
+.detail-doa-name-text b{font-size:11px;line-height:1.4;color:#214768;overflow-wrap:anywhere}
+.detail-doa-name-text small{font-size:10px;line-height:1.4;color:#71849a}
+.detail-doa-name-empty{font-size:12px;color:#73869a;padding:5px 0}
+@keyframes doaNamesIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.detail-doa-names-panel{animation:none}.detail-doa-summary .detail-doa-pill{transition:none}}
+</style>
+
+
+<style id="user-detail-selection-and-heading-polish">
+.detail-auth .badge{display:none!important}
+.detail-doa-summary .detail-doa-pill{position:relative;padding-right:42px}
+.detail-doa-summary .detail-doa-pill.selected:after,
+.detail-summary .detail-filter.active:after{
+  content:"✓";position:absolute;right:9px;top:9px;width:21px;height:21px;
+  display:grid;place-items:center;border-radius:50%;background:#287fb4;color:#fff;
+  font-size:13px;font-weight:900;box-shadow:0 2px 5px rgba(18,63,99,.18)
+}
+.detail-doa-summary .detail-doa-pill.selected{border-color:#5c9dcc;box-shadow:0 0 0 2px rgba(42,125,188,.12),0 5px 14px rgba(18,63,99,.07)}
+.detail-summary .detail-filter{position:relative;cursor:pointer;transition:background .16s ease,border-color .16s ease,box-shadow .16s ease}
+.detail-summary .detail-filter.active{border-color:#5b9dce;background:#f4f9ff;box-shadow:0 0 0 2px rgba(42,125,188,.12)}
+.detail-training-section .detail-section-title{margin-bottom:13px}
+.detail-training-section .detail-section-title h3{font-size:15px;color:#173f63}
+.detail-training-section .detail-section-title small{display:block;margin-top:4px;color:#8a98a7;font-size:11px;font-weight:500}
+.detail-training-content[hidden]{display:none!important}
+.detail-training-content{margin-top:4px}
+@media(max-width:650px){
+  .detail-doa-summary .detail-doa-pill{padding-right:38px}
+  .detail-doa-summary .detail-doa-pill.selected:after,.detail-summary .detail-filter.active:after{right:7px;top:7px}
+}
+</style>
+
+
+<style id="training-subtitle-safe-adjustment">
+.detail-training-subtitle{
+  margin:0 0 9px 2px;
+  color:#8a98a7;
+  font-size:12px;
+  line-height:1.4;
+  font-weight:600;
+  letter-spacing:.1px;
+}
+.detail-training-section > .detail-section-title{
+  display:none!important;
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
@@ -1025,20 +1346,20 @@ aside{
 </aside>
 <main>
 <section id="dashboard" class="view active">
-<div class="page-title"><div><h2>Dashboard</h2><div class="subtitle">Estado actual de autorizaciones y cumplimiento</div></div></div>
+<div class="page-title dashboard-page-heading"><div><h2>Dashboard</h2></div></div>
 <div class="cards">
-<div class="card"><div class="n" id="kUsers">0</div><div class="l">Total usuarios</div></div>
-<div class="card"><div class="n" id="kAuth">0</div><div class="l">Autorizados</div></div>
-<div class="card"><div class="n" id="kNoAuth">0</div><div class="l">No autorizados</div></div>
-<div class="card"><div class="n" id="kSoon">0</div><div class="l">Próximos a vencer</div></div>
-<div class="card"><div class="n" id="kExpired">0</div><div class="l">Vencidos</div></div>
+<div class="card"><div class="n" id="kUsers">0</div><div class="l">Usuarios registrados</div></div>
+<div class="card"><div class="n" id="kAuth">0</div><div class="l">Con DOA autorizado</div></div>
+<div class="card"><div class="n" id="kNoAuth">0</div><div class="l">Sin DOA autorizado</div></div>
+<div class="card"><div class="n" id="kSoon">0</div><div class="l">Con cursos por vencer</div></div>
+<div class="card"><div class="n" id="kExpired">0</div><div class="l">Con cursos vencidos</div></div>
 </div>
-<div class="dashboard-main-panel"><div class="panel"><div class="dashboard-panel-head"><div><h3>Usuarios y autorización</h3><div class="small">Cumplimiento calculado según Cargo, DOA aplicables y registros de Cumplimiento</div></div><div class="dashboard-live"><span class="live-dot"></span> Datos en tiempo real</div></div><div id="dashUsers"></div></div></div>
+<div class="dashboard-main-panel"><div class="panel"><div class="dashboard-panel-head"><div><h3>Estado por persona</h3><div class="small">Una persona puede tener DOA autorizados y otros todavía en proceso. Cada DOA se evalúa por separado.</div></div><div class="dashboard-live"><span class="live-dot"></span> Datos en tiempo real</div></div><div id="dashUsers"></div></div></div>
 </section>
 
 <section id="usuarios" class="view">
 <div class="page-title"><div><h2>Usuarios</h2><div class="subtitle">Consulta, creación y actualización de personas</div></div><button class="btn btn-primary" onclick="openUser()">+ Nuevo usuario</button></div>
-<div class="panel"><div class="toolbar"><input class="input" id="userSearch" placeholder="Buscar por nombre o cargo..." oninput="renderUsers()"><select class="select" id="authFilter" onchange="renderUsers()"><option value="">Todos los estados</option><option>AUTORIZADO PARA OPERAR</option><option>NO AUTORIZADO</option></select></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Cargo</th><th>DOA</th><th>Autorización</th><th>Cumplimiento</th><th>Acciones</th></tr></thead><tbody id="usersBody"></tbody></table></div></div>
+<div class="panel"><div class="toolbar"><input class="input" id="userSearch" placeholder="Buscar por nombre o cargo..." oninput="renderUsers()"><select class="select" id="authFilter" onchange="renderUsers()"><option value="">Todos los estados</option><option>AUTORIZADO PARA OPERAR</option><option>NO AUTORIZADO</option></select></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Cargo</th><th>DOA</th><th>Cumplimiento</th><th>Acciones</th></tr></thead><tbody id="usersBody"></tbody></table></div></div>
 </section>
 
 <section id="requisitos" class="view">
@@ -1314,7 +1635,20 @@ async function authForDashboardUsers(users){
     const byStdId=new Map(),byReqKey=new Map();for(const c of personRows){const sid=String(c.estandarId||'');if(sid&&!byStdId.has(sid))byStdId.set(sid,c);const key=requirementKey(c);if(!byReqKey.has(key))byReqKey.set(key,c)}
     const states=[],details=req.map(r=>{const c=byStdId.get(String(r.id))||byReqKey.get(requirementKey(r));states.push(c?statusFor(c):'PENDIENTE');const d={estandar:r.estandar||'',doa:r.doa||'',curso:r.curso||'',fechaFin:c?.fechaFin||'',fechaRealizacion:c?.fechaRealizacion||'',frecuenciaAnios:Number(c?.frecuenciaAnios??r.frecuenciaAnios??0),frecuenciaDias:Number(c?.frecuenciaDias??r.frecuenciaDias??0)};d.status=dashboardStatusFor(d);return d});
     const done=states.filter(st=>st==='COMPLETO / VIGENTE').length,soon=states.filter(st=>st==='PRÓXIMO A VENCER').length,expired=states.filter(st=>st==='VENCIDO').length,pending=states.filter(st=>st==='PENDIENTE').length,total=req.length,pct=total?Math.round(done/total*100):0;
-    return {ok:total>0&&done===total,total,done,soon,expired,pending,pct,details,dashSoon:details.filter(d=>d.status==='PRÓXIMO A VENCER').length,dashExpired:details.filter(d=>d.status==='VENCIDO').length};
+    // La autorización se determina por DOA: basta con completar todos los cursos
+    // vigentes de al menos un DOA aplicable; los demás DOA pueden seguir en proceso.
+    const doaMap=new Map();
+    for(const d of details){
+      const key=normalizeRel(d.doa||'');
+      if(!key)continue;
+      if(!doaMap.has(key))doaMap.set(key,{doa:d.doa,required:0,done:0,ok:false});
+      const group=doaMap.get(key);
+      group.required++;
+      if(d.status==='COMPLETO / VIGENTE')group.done++;
+    }
+    const doaGroups=[...doaMap.values()].map(g=>({...g,ok:g.required>0&&g.done===g.required}));
+    const authorizedDoas=doaGroups.filter(g=>g.ok);
+    return {ok:authorizedDoas.length>0,total,done,soon,expired,pending,pct,details,doaGroups,authorizedDoas,doasInProgress:doaGroups.filter(g=>!g.ok),dashSoon:details.filter(d=>d.status==='PRÓXIMO A VENCER').length,dashExpired:details.filter(d=>d.status==='VENCIDO').length};
   });
   dashboardAuthCache={userCount:users.length,userStamp:users.map(u=>String(u.id)+':'+u.cargo).join('|'),results};
   return results;
@@ -1329,45 +1663,70 @@ async function renderDashboard(filter=dashboardFilter){
  $('kNoAuth').textContent=results.filter(x=>!x.ok).length;
  $('kSoon').textContent=results.filter(x=>x.dashSoon>0).length;
  $('kExpired').textContent=results.filter(x=>x.dashExpired>0).length;
- const nAuth=results.filter(x=>x.ok).length, nNo=results.filter(x=>!x.ok).length, nSoon=results.filter(x=>x.dashSoon>0).length, nExpired=results.filter(x=>x.dashExpired>0).length;
- const total=Math.max(1,us.length), pctAuth=nAuth/total*100, pctNo=nNo/total*100, pctSoon=nSoon/total*100;
- const bars=[{label:'Autorizados',value:nAuth,color:'#0878cf'},{label:'No autorizados',value:nNo,color:'#15966b'},{label:'Próximos a vencer',value:nSoon,color:'#d93650'},{label:'Vencidos',value:nExpired,color:'#e9a02a'}];
- const barsEl=$('dashboardBars'); if(barsEl) barsEl.innerHTML=bars.map(b=>`<div class="dashboard-bar-item"><div class="dashboard-bar" title="${b.label}: ${b.value}" style="height:${Math.max(4,b.value/Math.max(1,...bars.map(z=>z.value))*78)}%;background:${b.color}"></div><div class="dashboard-bar-label">${b.label}</div></div>`).join('');
- const donut=$('dashboardDonut'); if(donut){const a=pctAuth*3.6,b=pctNo*3.6,c=pctSoon*3.6;donut.style.background=`conic-gradient(#169b70 0deg ${a}deg,#d93650 ${a}deg ${a+b}deg,#e9a02a ${a+b}deg ${Math.min(360,a+b+c)}deg,#8da3b8 ${Math.min(360,a+b+c)}deg 360deg)`;donut.title=`Autorizados: ${nAuth}; No autorizados: ${nNo}; Próximos a vencer: ${nSoon}; Vencidos: ${nExpired}`;}
- const legend=$('dashboardLegend'); if(legend) legend.innerHTML=[{label:'Autorizados',value:nAuth,color:'#169b70'},{label:'No Autorizados',value:nNo,color:'#d93650'},{label:'Próximos a Vencer',value:nSoon,color:'#e9a02a'},{label:'Vencidos',value:nExpired,color:'#8da3b8'}].map(x=>`<div class="dashboard-legend-row"><span class="dashboard-legend-dot" style="background:${x.color}"></span><span>${x.label}</span><b>${x.value}</b></div>`).join('');
 
  const filters=['all','authorized','unauthorized','soon','expired'];
  document.querySelectorAll('#dashboard .cards .card').forEach((card,i)=>{
    const key=filters[i]||'all';
    card.style.cursor='pointer';card.setAttribute('role','button');card.setAttribute('tabindex','0');
    card.setAttribute('aria-pressed',String(dashboardFilter===key));
-   card.style.outline=dashboardFilter===key?'2px solid #0d5ea8':'';
-   card.style.outlineOffset=dashboardFilter===key?'2px':'';
    card.onclick=()=>filterDashboard(key);
    card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();filterDashboard(key)}};
  });
- const selected=us.map((u,i)=>({u,x:results[i]})).filter(({x})=>
-   dashboardFilter==='all' ||
-   (dashboardFilter==='authorized'&&x.ok) ||
-   (dashboardFilter==='unauthorized'&&!x.ok) ||
-   (dashboardFilter==='soon'&&x.dashSoon>0) ||
-   (dashboardFilter==='expired'&&x.dashExpired>0)
- );
+
+ const query=(document.getElementById('dashSearch')?.value||'').trim().toLocaleLowerCase();
+ const selected=us.map((u,i)=>({u,x:results[i]})).filter(({u,x})=>{
+   const statusMatch=dashboardFilter==='all' ||
+     (dashboardFilter==='authorized'&&x.ok) ||
+     (dashboardFilter==='unauthorized'&&!x.ok) ||
+     (dashboardFilter==='soon'&&x.dashSoon>0) ||
+     (dashboardFilter==='expired'&&x.dashExpired>0);
+   const queryMatch=!query||`${u.nombre||''} ${u.cargo||''}`.toLocaleLowerCase().includes(query);
+   return statusMatch&&queryMatch;
+ });
+ const labels={all:'todos los usuarios',authorized:'personas con al menos un DOA autorizado',unauthorized:'personas sin DOA autorizado',soon:'personas con cursos próximos a vencer',expired:'personas con cursos vencidos'};
  let rows='';
  for(const {u,x} of selected){
-   const relevant=x.details.filter(d=>(dashboardFilter==='soon'&&d.status==='PRÓXIMO A VENCER')||(dashboardFilter==='expired'&&d.status==='VENCIDO'));
-   const courseDetails=relevant.length?`<div class="small" style="margin-top:8px"><b>${dashboardFilter==='soon'?'Cursos próximos a vencer':'Cursos vencidos'}:</b><ul style="margin:5px 0 0;padding-left:19px">${relevant.map(d=>`<li>${esc(d.curso||d.doa||d.estandar||'Curso sin nombre')}${d.fechaFin?' — fecha límite: '+esc(d.fechaFin):''}</li>`).join('')}</ul></div>`:'';
-   rows+=`<div class="kpi-row">
-     <div><b>${esc(u.nombre)}</b><div class="small">${esc(u.cargo||'Sin cargo')}</div>
-       <div class="small" style="margin-top:4px">${x.done} de ${x.total} entrenamientos vigentes · ${x.dashExpired} vencidos · ${x.pending} pendientes</div>${courseDetails}
+   const doaGroups=x.doaGroups||[];
+   const authorized=x.authorizedDoas||[];
+   const inProgress=x.doasInProgress||[];
+   const doaPct=doaGroups.length?Math.round(authorized.length/doaGroups.length*100):0;
+   const relevant=x.details.filter(d=>
+     (dashboardFilter==='soon'&&d.status==='PRÓXIMO A VENCER')||
+     (dashboardFilter==='expired'&&d.status==='VENCIDO'));
+   const alerts=relevant.length?`<div class="dash-course-alerts"><b>${dashboardFilter==='soon'?'Cursos próximos a vencer':'Cursos vencidos'}:</b> ${relevant.map(d=>`${esc(d.curso||d.doa||d.estandar||'Curso sin nombre')}${d.fechaFin?' ('+esc(d.fechaFin)+')':''}`).join(' · ')}</div>`:'';
+   const doaMarkup=doaGroups.length?doaGroups.map(g=>{
+     const isGood=g.ok;
+     const doneCount=Number(g.done||0),requiredCount=Number(g.required||0);
+     return `<div class="dash-doa-item"><div class="dash-doa-name">${esc(g.doa||'DOA sin nombre')}</div><div class="dash-doa-state ${isGood?'good':'bad'}">${isGood?'✓ Autorizado para este DOA':`En proceso · ${doneCount} de ${requiredCount} cursos vigentes`}</div></div>`;
+   }).join(''):'<div class="dash-doa-item"><div class="dash-doa-name">Sin DOA aplicables identificados</div><div class="dash-doa-state">Verifique la asignación del cargo.</div></div>';
+   rows+=`<article class="dash-person">
+     <div>
+       <div class="dash-person-name">${esc(u.nombre||'Usuario sin nombre')}</div>
+       <div class="dash-person-role">${esc(u.cargo||'Cargo sin asignar')}</div>
+       <div class="dash-person-meta">
+         <span class="dash-chip good">${authorized.length} DOA autorizados</span>
+         <span class="dash-chip">${inProgress.length} en proceso</span>
+         ${x.pending?`<span class="dash-chip">${x.pending} cursos pendientes</span>`:''}
+         ${x.dashSoon?`<span class="dash-chip warn">${x.dashSoon} por vencer</span>`:''}
+         ${x.dashExpired?`<span class="dash-chip bad">${x.dashExpired} vencidos</span>`:''}
+       </div>
+       <details class="dash-details">
+         <summary>Ver detalle de DOA (${doaGroups.length})</summary>
+         <div class="dash-doa-list">${doaMarkup}</div>
+         ${alerts}
+       </details>
      </div>
-     <div style="min-width:220px">${x.ok?badge('AUTORIZADO PARA OPERAR'):badge('NO AUTORIZADO')}
-       <div class="progress" style="margin-top:7px"><span style="width:${x.pct}%"></span></div>
-       <div style="display:flex;justify-content:space-between;gap:10px;margin-top:4px"><b>${x.pct}%</b><span class="small">${x.done}/${x.total} vigentes</span></div>
-     </div></div>`;
+     <div class="dash-person-status">
+       <div class="dash-status-line"><span class="dash-status-pill ${x.ok?'authorized':'unauthorized'}">${x.ok?'AUTORIZADO PARA OPERAR':'SIN DOA AUTORIZADO'}</span></div>
+       <div class="dash-progress"><span style="width:${doaPct}%;background:${x.ok?'linear-gradient(90deg,#14845c,#31b47e)':'linear-gradient(90deg,#a12d43,#d65b6d)'}"></span></div>
+       <div class="dash-progress-caption"><span>DOA autorizados</span><b>${authorized.length} / ${doaGroups.length}</b></div>
+     </div>
+   </article>`;
  }
- const labels={all:'todos los usuarios',authorized:'usuarios autorizados',unauthorized:'usuarios no autorizados',soon:'usuarios con cursos que vencen en los próximos 3 meses',expired:'usuarios con cursos vencidos'};
- $('dashUsers').innerHTML=`<div class="small" style="margin-bottom:10px">Mostrando ${selected.length} de ${us.length} ${labels[dashboardFilter]||labels.all}.</div>`+(rows||'<div class="empty">No hay usuarios que coincidan con este estado.</div>');
+ const countLabel=`Mostrando ${selected.length} de ${us.length} ${labels[dashboardFilter]||labels.all}.`;
+ $('dashUsers').innerHTML=`<div class="dashboard-search-row"><input id="dashSearch" type="search" placeholder="Buscar persona o cargo..." value="${esc(query)}" aria-label="Buscar persona o cargo"><span class="dashboard-results-count">${countLabel}</span></div>`+(rows||'<div class="dash-empty">No se encontraron personas con estos criterios.</div>');
+ const searchInput=document.getElementById('dashSearch');
+ if(searchInput)searchInput.addEventListener('input',()=>{const pos=searchInput.selectionStart;renderDashboard(dashboardFilter).then(()=>{const next=document.getElementById('dashSearch');if(next){next.focus();try{next.setSelectionRange(pos,pos)}catch(_){}}})},{once:true});
 }
 async function renderUsers(){
   const us=await all('usuarios'),q=($('userSearch')?.value||'').toLowerCase(),f=$('authFilter')?.value||'';
@@ -1431,12 +1790,11 @@ async function renderUsers(){
       <td><b>${esc(u.nombre)}</b><div class="small">${esc(u.email||'')}</div></td>
       <td>${esc(u.cargo||'')}</td>
       <td>${doaCell}</td>
-      <td>${badge(state)}</td>
       <td><b>${pct}%</b><div class="progress"><span style="width:${pct}%"></span></div><div class="small">${x.done} de ${x.total} entrenamientos vigentes</div></td>
       <td><button class="btn btn-light" onclick="viewUser('${u.id}')">Ver detalle</button> <button class="btn btn-light" onclick="showUserQr('${u.id}')">QR</button> <button class="btn btn-light" onclick="openUser('${u.id}')">Editar</button></td>
     </tr>`;
   }));
-  $('usersBody').innerHTML=rows.filter(Boolean).join('')||'<tr><td colspan="6" class="empty">No hay usuarios.</td></tr>';
+  $('usersBody').innerHTML=rows.filter(Boolean).join('')||'<tr><td colspan="5" class="empty">No hay usuarios.</td></tr>';
 }
 async function profileDoas(cargo){
   let p=await all('perfiles');
@@ -1499,6 +1857,14 @@ async function syncRequirements(user){let req=await applicable(user),cs=await al
 function filterUserDetailCourses(filter,button){
   const modalBody=$("modalBody");
   if(!modalBody)return;
+  const training=modalBody.querySelector("#detailTrainingContent");
+  const doaPanel=modalBody.querySelector("#detailDoaNamesPanel");
+  if(training)training.hidden=false;
+  if(doaPanel)doaPanel.hidden=true;
+  modalBody.querySelectorAll(".detail-doa-summary [data-doa-filter]").forEach(item=>{
+    item.classList.remove("selected");
+    item.setAttribute("aria-pressed","false");
+  });
   const courses=[...modalBody.querySelectorAll(".detail-course[data-course-status]")];
   let shown=0;
   courses.forEach(course=>{
@@ -1517,11 +1883,10 @@ function filterUserDetailCourses(filter,button){
   });
   let empty=modalBody.querySelector(".detail-filter-empty");
   if(!shown){
-    if(!empty){empty=document.createElement("div");empty.className="empty detail-filter-empty";empty.textContent="No hay entrenamientos con este estado para este usuario.";const section=modalBody.querySelector(".detail-training-section");if(section)section.appendChild(empty);}
+    if(!empty){empty=document.createElement("div");empty.className="empty detail-filter-empty";empty.textContent="No hay entrenamientos con este estado para este usuario.";const section=modalBody.querySelector("#detailTrainingContent");if(section)section.appendChild(empty);}
     empty.hidden=false;
   }else if(empty){empty.hidden=true;}
 }
-
 async function viewUser(id){
   let u=(await all('usuarios')).find(x=>String(x.id)===String(id));
   if(!u)return;
@@ -1573,6 +1938,10 @@ async function viewUser(id){
   });
 
   let groups=Object.values(grouped);
+  // Resumen por DOA: cada DOA se evalúa con sus propios entrenamientos.
+  const doaAuthorizedCount=groups.filter(g=>g.cursos.length>0&&g.cursos.every(item=>item.status==='COMPLETO / VIGENTE')).length;
+  const doaInProgressCount=groups.length-doaAuthorizedCount;
+  const doaWithIssuesCount=groups.filter(g=>g.cursos.some(item=>item.status==='PENDIENTE'||item.status==='VENCIDO')).length;
   let detail=groups.map((g,gi)=>{
     let courses=g.cursos.map(({r,c,status},ci)=>{
       let fecha=c?.fechaRealizacion?c.fechaRealizacion:'—';
@@ -1605,15 +1974,27 @@ async function viewUser(id){
     </div>`;
   }).join('');
 
+  window.__userDetailDoaGroups=groups;
+
   openModal(
     'Detalle del usuario',
     `<div class="user-detail">
       <div class="user-detail-hero">
         <div class="detail-identity"><div class="detail-avatar">${esc((u.nombre||'U').trim().charAt(0).toUpperCase())}</div><div><div class="detail-kicker">USUARIO</div><h2>${esc(u.nombre||'Sin nombre')}</h2><div class="detail-role">${esc(u.cargo||'Sin cargo')}</div></div></div>
-        <div class="detail-auth">${badge(x.ok?'AUTORIZADO PARA OPERAR':'NO AUTORIZADO')}<div class="detail-percent">${pct}%</div><div class="small">cumplimiento vigente</div></div>
+        <div class="detail-auth"><div class="detail-percent">${pct}%</div><div class="small">cumplimiento vigente</div></div>
       </div>
+      <div class="detail-doa-summary" aria-label="Resumen de autorización por DOA">
+        <button type="button" class="detail-doa-pill doa-authorized" data-doa-filter="authorized" onclick="toggleUserDetailDoas('authorized',this)" aria-pressed="false"><span class="detail-doa-pill-label">DOA autorizados</span><b>${doaAuthorizedCount}</b></button>
+        <button type="button" class="detail-doa-pill doa-progress" data-doa-filter="progress" onclick="toggleUserDetailDoas('progress',this)" aria-pressed="false"><span class="detail-doa-pill-label">DOA en proceso</span><b>${doaInProgressCount}</b></button>
+        <button type="button" class="detail-doa-pill doa-issues" data-doa-filter="issues" onclick="toggleUserDetailDoas('issues',this)" aria-pressed="false"><span class="detail-doa-pill-label">DOA con cursos pendientes o vencidos</span><b>${doaWithIssuesCount}</b></button>
+      </div>
+      <div class="detail-doa-names-panel" id="detailDoaNamesPanel" hidden aria-live="polite">
+        <div class="detail-doa-names-heading" id="detailDoaNamesHeading"></div>
+        <div class="detail-doa-names-list" id="detailDoaNamesList"></div>
+      </div>
+      <div class="detail-training-subtitle">Detalle de los entrenamientos</div>
       <div class="detail-summary">
-        <button type="button" class="detail-stat stat-total detail-filter active" data-filter="TODOS" onclick="filterUserDetailCourses('TODOS',this)" aria-pressed="true"><span>Todos los entrenamientos</span><b>${x.total}</b></button>
+        <button type="button" class="detail-stat stat-total detail-filter" data-filter="TODOS" onclick="filterUserDetailCourses('TODOS',this)" aria-pressed="false"><span>Todos los entrenamientos</span><b>${x.total}</b></button>
         <button type="button" class="detail-stat stat-ok detail-filter" data-filter="COMPLETO / VIGENTE" onclick="filterUserDetailCourses('COMPLETO / VIGENTE',this)" aria-pressed="false"><span>Vigentes</span><b>${vigente}</b></button>
         <button type="button" class="detail-stat stat-soon detail-filter" data-filter="PRÓXIMO A VENCER" onclick="filterUserDetailCourses('PRÓXIMO A VENCER',this)" aria-pressed="false"><span>Próximos a vencer</span><b>${soon}</b></button>
         <button type="button" class="detail-stat stat-expired detail-filter" data-filter="VENCIDO" onclick="filterUserDetailCourses('VENCIDO',this)" aria-pressed="false"><span>Vencidos</span><b>${expired}</b></button>
@@ -1621,14 +2002,57 @@ async function viewUser(id){
       </div>
       ${exceptions.length?doaExceptionNoticeHtml(exceptions,u.cargo):''}
       <div class="detail-section detail-training-section">
-        <div class="detail-section-title"><div><h3>Entrenamientos por DOA</h3><small>Cada DOA reúne todos sus cursos, fechas, frecuencia y documentos</small></div><span>${x.done} de ${x.total} vigentes</span></div>
-        ${detail||'<div class="empty">No hay entrenamientos configurados para este Cargo.</div>'}
+        <div class="detail-section-title"><div><h3>Detalle de entrenamientos</h3><small>Cada DOA reúne sus cursos, fechas, frecuencia y documentos</small></div><span>${x.done} de ${x.total} vigentes</span></div>
+        <div class="detail-training-content" id="detailTrainingContent" hidden>
+          ${detail||'<div class="empty">No hay entrenamientos configurados para este Cargo.</div>'}
+        </div>
       </div>
     </div>`,
     `<button class="btn btn-light" onclick="closeModal()">Cerrar</button>`
   )
 }
 
+
+function toggleUserDetailDoas(kind,button){
+  const panel=document.getElementById('detailDoaNamesPanel');
+  const heading=document.getElementById('detailDoaNamesHeading');
+  const list=document.getElementById('detailDoaNamesList');
+  const training=document.getElementById('detailTrainingContent');
+  if(!panel||!heading||!list)return;
+  const wasActive=button.getAttribute('aria-pressed')==='true';
+  document.querySelectorAll('.detail-doa-summary [data-doa-filter]').forEach(b=>{
+    b.classList.remove('selected');
+    b.setAttribute('aria-pressed','false');
+  });
+  document.querySelectorAll('.detail-filter').forEach(b=>{
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed','false');
+  });
+  if(training)training.hidden=true;
+  if(wasActive){
+    panel.hidden=true;
+    return;
+  }
+  button.classList.add('selected');
+  button.setAttribute('aria-pressed','true');
+  const groups=window.__userDetailDoaGroups||[];
+  const selected=groups.filter(g=>{
+    const courses=g.cursos||[];
+    const authorized=courses.length>0&&courses.every(c=>c.status==='COMPLETO / VIGENTE');
+    const hasIssues=courses.some(c=>c.status==='PENDIENTE'||c.status==='VENCIDO');
+    return kind==='authorized'?authorized:(kind==='progress'?!authorized:hasIssues);
+  });
+  const titles={authorized:'DOA autorizados',progress:'DOA en proceso',issues:'DOA con cursos pendientes o vencidos'};
+  heading.textContent=titles[kind]||'DOA';
+  list.innerHTML=selected.length?selected.map(g=>{
+    const courses=g.cursos||[];
+    const done=courses.filter(c=>c.status==='COMPLETO / VIGENTE').length;
+    const hasIssues=courses.some(c=>c.status==='PENDIENTE'||c.status==='VENCIDO');
+    const state=kind==='authorized'?'Autorizado':(hasIssues?'Requiere cursos pendientes o revisión de vencimientos':`En proceso · ${done} de ${courses.length} entrenamientos vigentes`);
+    return `<div class="detail-doa-name-item"><span class="detail-doa-name-dot ${kind==='authorized'?'good':kind==='issues'?'issue':'progress'}"></span><span class="detail-doa-name-text"><b>${esc(g.doa||'Sin DOA')}</b><small>${esc(state)}</small></span></div>`;
+  }).join(''):'<div class="detail-doa-name-empty">No hay DOA en esta categoría.</div>';
+  panel.hidden=false;
+}
 async function populateReqCargos(){
   const profiles=await all('perfiles');
   const sel=$('reqCargo');
