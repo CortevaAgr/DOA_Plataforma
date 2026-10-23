@@ -1321,6 +1321,176 @@ aside{
 }
 </style>
 
+
+<style id="training-hint-subtle-polish">
+.detail-training-hint{
+  margin:0 0 10px 2px;
+  color:#8997a6;
+  font-size:11px;
+  line-height:1.45;
+  font-weight:500;
+  letter-spacing:.08px;
+}
+</style>
+
+
+<style id="doa-hint-position-final">
+.detail-doa-hint{
+  margin:0 0 9px 2px;
+  color:#8997a6;
+  font-size:11px;
+  line-height:1.4;
+  font-weight:500;
+  letter-spacing:.08px;
+}
+</style>
+
+
+<style id="professional-compact-detail-spacing">
+/* Espaciado compacto y consistente en la ventana Ver detalle */
+.detail-doa-hint{
+  margin:2px 0 5px 2px !important;
+  font-size:10.5px !important;
+  line-height:1.3 !important;
+  color:#8493a3 !important;
+}
+.detail-doa-summary{
+  margin:0 0 10px !important;
+  gap:8px !important;
+}
+.detail-doa-pill{
+  padding:8px 12px !important;
+  min-height:48px;
+}
+.detail-doa-pill b{
+  min-width:30px !important;
+  height:30px !important;
+  font-size:15px !important;
+}
+.detail-doa-names-panel{
+  margin:0 0 10px !important;
+  padding:10px 12px !important;
+}
+.detail-training-subtitle{
+  margin:0 0 6px 2px !important;
+  font-size:10.5px !important;
+  line-height:1.3 !important;
+}
+.detail-summary{
+  gap:8px !important;
+}
+.detail-stat{
+  padding:10px 11px !important;
+  border-radius:11px !important;
+}
+.detail-stat span{
+  margin-bottom:3px !important;
+  line-height:1.3 !important;
+}
+.detail-stat b{
+  font-size:20px !important;
+  line-height:1.2 !important;
+}
+@media(max-width:700px){
+  .detail-doa-summary{gap:6px !important}
+  .detail-doa-pill{padding:8px 9px !important}
+  .detail-doa-pill-label{font-size:11px !important}
+  .detail-summary{gap:6px !important}
+  .detail-stat{padding:9px 7px !important}
+}
+</style>
+
+
+<style id="doa-cards-visual-polish-only">
+/* Refinamiento visual de las tarjetas DOA sin agrupar ni reordenar la información */
+.detail-doa-names-panel{
+  margin-top:0 !important;
+  padding:13px !important;
+  border:1px solid #d5e3ef !important;
+  border-radius:13px !important;
+  background:linear-gradient(180deg,#f8fbfe 0%,#f2f7fc 100%) !important;
+  box-shadow:0 4px 14px rgba(27,65,97,.045) !important;
+}
+.detail-doa-names-heading{
+  margin:0 0 10px !important;
+  padding:0 0 8px !important;
+  border-bottom:1px solid #dce7f1;
+  font-size:12px !important;
+  letter-spacing:.1px;
+}
+.detail-doa-names-list{
+  gap:8px !important;
+}
+.detail-doa-name-item{
+  position:relative;
+  min-height:68px;
+  padding:10px 12px !important;
+  border:1px solid #dbe6f0 !important;
+  border-left:3px solid #8aa9c3 !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  box-shadow:0 2px 6px rgba(28,61,91,.035) !important;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.detail-doa-name-item:has(.detail-doa-name-dot.good){
+  border-left-color:#25845e !important;
+  background:linear-gradient(110deg,#ffffff 0%,#fbfefc 100%) !important;
+}
+.detail-doa-name-item:has(.detail-doa-name-dot.progress){
+  border-left-color:#d49a22 !important;
+  background:linear-gradient(110deg,#ffffff 0%,#fffdf8 100%) !important;
+}
+.detail-doa-name-item:has(.detail-doa-name-dot.issue){
+  border-left-color:#a8334c !important;
+  background:linear-gradient(110deg,#ffffff 0%,#fffafb 100%) !important;
+}
+.detail-doa-name-item:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 12px rgba(28,61,91,.09) !important;
+  border-color:#c6d9e9 !important;
+}
+.detail-doa-name-text{gap:4px !important}
+.detail-doa-name-text b{
+  color:#1b4264 !important;
+  font-size:11.5px !important;
+  line-height:1.45 !important;
+}
+.detail-doa-name-text small{
+  font-size:10px !important;
+  line-height:1.45 !important;
+  color:#718398 !important;
+}
+.detail-doa-name-dot{margin-top:5px !important}
+@media(max-width:650px){
+  .detail-doa-names-panel{padding:10px !important}
+  .detail-doa-name-item{min-height:0;padding:9px 10px !important}
+}
+@media(prefers-reduced-motion:reduce){
+  .detail-doa-name-item{transition:none}
+}
+</style>
+
+
+<style id="usuarios-full-view-visual-update">
+#usuarios .page-title{margin-bottom:18px}
+#usuarios .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+#usuarios #userSearch{width:min(100%,420px);min-width:260px}
+#usuarios .table-wrap{
+  max-height:none !important;
+  height:auto !important;
+  overflow:visible !important;
+  width:100%;
+}
+#usuarios table{width:100%;table-layout:auto}
+#usuarios table th,#usuarios table td{padding:13px 14px}
+@media(max-width:700px){
+  #usuarios #userSearch{width:100%;min-width:0}
+  #usuarios .panel{padding:12px}
+  #usuarios .table-wrap{overflow-x:auto !important}
+  #usuarios table{min-width:720px}
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen"><div class="auth-box"><div class="auth-brand">
@@ -1358,8 +1528,8 @@ aside{
 </section>
 
 <section id="usuarios" class="view">
-<div class="page-title"><div><h2>Usuarios</h2><div class="subtitle">Consulta, creación y actualización de personas</div></div><button class="btn btn-primary" onclick="openUser()">+ Nuevo usuario</button></div>
-<div class="panel"><div class="toolbar"><input class="input" id="userSearch" placeholder="Buscar por nombre o cargo..." oninput="renderUsers()"><select class="select" id="authFilter" onchange="renderUsers()"><option value="">Todos los estados</option><option>AUTORIZADO PARA OPERAR</option><option>NO AUTORIZADO</option></select></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Cargo</th><th>DOA</th><th>Cumplimiento</th><th>Acciones</th></tr></thead><tbody id="usersBody"></tbody></table></div></div>
+<div class="page-title"><div><h2>Usuarios</h2></div><button class="btn btn-primary" onclick="openUser()">+ Nuevo usuario</button></div>
+<div class="panel"><div class="toolbar"><input class="input" id="userSearch" placeholder="Buscar por nombre o cargo..." oninput="renderUsers()"></div><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Cargo</th><th>DOA</th><th>Cumplimiento</th><th>Acciones</th></tr></thead><tbody id="usersBody"></tbody></table></div></div>
 </section>
 
 <section id="requisitos" class="view">
@@ -1983,6 +2153,7 @@ async function viewUser(id){
         <div class="detail-identity"><div class="detail-avatar">${esc((u.nombre||'U').trim().charAt(0).toUpperCase())}</div><div><div class="detail-kicker">USUARIO</div><h2>${esc(u.nombre||'Sin nombre')}</h2><div class="detail-role">${esc(u.cargo||'Sin cargo')}</div></div></div>
         <div class="detail-auth"><div class="detail-percent">${pct}%</div><div class="small">cumplimiento vigente</div></div>
       </div>
+      <div class="detail-doa-hint">Seleccione un BOTON para OBTENER más detalles.</div>
       <div class="detail-doa-summary" aria-label="Resumen de autorización por DOA">
         <button type="button" class="detail-doa-pill doa-authorized" data-doa-filter="authorized" onclick="toggleUserDetailDoas('authorized',this)" aria-pressed="false"><span class="detail-doa-pill-label">DOA autorizados</span><b>${doaAuthorizedCount}</b></button>
         <button type="button" class="detail-doa-pill doa-progress" data-doa-filter="progress" onclick="toggleUserDetailDoas('progress',this)" aria-pressed="false"><span class="detail-doa-pill-label">DOA en proceso</span><b>${doaInProgressCount}</b></button>
@@ -1993,6 +2164,7 @@ async function viewUser(id){
         <div class="detail-doa-names-list" id="detailDoaNamesList"></div>
       </div>
       <div class="detail-training-subtitle">Detalle de los entrenamientos</div>
+      
       <div class="detail-summary">
         <button type="button" class="detail-stat stat-total detail-filter" data-filter="TODOS" onclick="filterUserDetailCourses('TODOS',this)" aria-pressed="false"><span>Todos los entrenamientos</span><b>${x.total}</b></button>
         <button type="button" class="detail-stat stat-ok detail-filter" data-filter="COMPLETO / VIGENTE" onclick="filterUserDetailCourses('COMPLETO / VIGENTE',this)" aria-pressed="false"><span>Vigentes</span><b>${vigente}</b></button>
