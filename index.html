@@ -3201,30 +3201,90 @@ async function confirmAdminQuickAction(type,action){
   if(type==='profiles')return action==='update'?openProfile(id):deleteProtected('perfiles',id);
   if(type==='standards')return action==='update'?openStandard(id):deleteProtected('estandares',id);   if(type==='compliance')return action==='update'?openCompliance(id):deleteCompliance(id);
 }
-async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?ps.filter(x=>String(x.cargo||'').trim()===String(p.cargo||'').trim()):[];let ss=await all('estandares');let doaMap=new Map();ss.forEach(x=>{const d=String(x.doa||'').trim();const e=String(x.estandar||'').trim();if(!d)return;if(!doaMap.has(d))doaMap.set(d,new Set());if(e)doaMap.get(d).add(e)});let doas=[...doaMap.keys()].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>{const standards=[...doaMap.get(d)].sort((a,b)=>a.localeCompare(b,'es'));const label=standards.length?`${d} (Estándar: ${standards.join(' · ')})`:d;return `<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(label)}</option>`}).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Técnico"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
+async function openProfile(id=''){if(!adminUnlocked){return requireAdmin(()=>{})}let ps=await all('perfiles');let p=id?ps.find(x=>String(x.id)===String(id)):{};let cargoRows=id?[...new Map(ps.filter(x=>normalizeDuplicateText(x.cargo)===normalizeDuplicateText(p.cargo)&&String(x.doa||'').trim()).map(x=>[normalizeDuplicateText(x.doa),x])).values()]:[];let ss=await all('estandares');let doaMap=new Map();ss.forEach(x=>{const d=String(x.doa||'').trim();const e=String(x.estandar||'').trim();if(!d)return;if(!doaMap.has(d))doaMap.set(d,new Set());if(e)doaMap.get(d).add(e)});let doas=[...doaMap.keys()].sort((a,b)=>a.localeCompare(b,'es'));let buildOptions=(selected='')=>'<option value="">Seleccione un DOA</option>'+doas.map(d=>{const standards=[...doaMap.get(d)].sort((a,b)=>a.localeCompare(b,'es'));const label=standards.length?`${d} (Estándar: ${standards.join(' · ')})`:d;return `<option value="${esc(d)}"${String(selected||'').trim()===d?' selected':''}>${esc(label)}</option>`}).join('');let rows=cargoRows.length?cargoRows: [{id:'',doa:''}];let doaFields=rows.map((r,i)=>`<div class="field full profile-doa-row" id="profileDoaRow${i}"><label>DOA ${i+1}${i===0?' *':''}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${buildOptions(r.doa)}</select>${i>0?`<button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button>`:''}</div></div>`).join('');openModal(id?'Editar perfil':'Nuevo perfil',`<div class="form-grid"><div class="field full"><label>Cargo *</label><input id="pCargo" value="${esc(p.cargo)}" placeholder="Ej. Técnico"></div><div class="field full"><label>DOA aplicables</label><div id="profileDoaFields">${doaFields}</div><button type="button" class="btn btn-light" style="margin-top:8px" onclick="addProfileDoaField()">+ Agregar otro DOA</button><div class="small" style="margin-top:8px">Puede agregar todos los DOA que apliquen al mismo Cargo.</div></div></div>`,`<button class="btn btn-light" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProfile('${id}')">Guardar</button>`)}
 function profileDoaOptions(selected=''){let opts=[...document.querySelectorAll('#profileDoaFields select')].length;return ''}
 function addProfileDoaField(){let box=$('profileDoaFields');if(!box)return;let i=box.querySelectorAll('.profile-doa-row').length;let first=box.querySelector('select');let options=first?first.innerHTML:'<option value="">Seleccione un DOA</option>';/* Evita copiar una selección previa al nuevo campo. */options=options.replace(/\sselected(?:="selected"|='selected'|=selected)?/gi,'');let row=document.createElement('div');row.className='field full profile-doa-row';row.id='profileDoaRow'+i;row.innerHTML=`<label>DOA ${i+1}</label><div style="display:flex;gap:8px;align-items:center"><select id="pDoa${i}" class="profile-doa-select" required>${options}</select><button type="button" class="btn btn-light" onclick="removeProfileDoa(${i})" title="Quitar DOA">✕</button></div>`;box.appendChild(row);let select=row.querySelector('select');if(select)select.value=''}
 function removeProfileDoa(i){let row=$('profileDoaRow'+i);if(row)row.remove();[...document.querySelectorAll('#profileDoaFields .profile-doa-row')].forEach((r,n)=>{r.id='profileDoaRow'+n;let l=r.querySelector('label');if(l)l.textContent='DOA '+(n+1)+(n===0?' *':'');let sel=r.querySelector('select');if(sel)sel.id='pDoa'+n;let b=r.querySelector('button');if(b)b.setAttribute('onclick',`removeProfileDoa(${n})`)})}
 async function saveProfile(id){
-  let cargo=$('pCargo').value.trim();
-  let doa=[...document.querySelectorAll('#profileDoaFields select')].map(s=>s.value.trim()).filter(Boolean);
+  const cargo=$('pCargo').value.trim();
+  const selectedDoa=[...document.querySelectorAll('#profileDoaFields select')]
+    .map(s=>String(s.value||'').trim()).filter(Boolean);
   if(!cargo)return alert('El Cargo es obligatorio.');
-  if(!doa.length)return alert('Seleccione al menos un DOA.');
-  if(new Set(doa).size!==doa.length)return alert('No puede repetir el mismo DOA dentro del mismo Cargo.');
-  let allProfiles=await all('perfiles');
-  let current= id ? allProfiles.find(x=>String(x.id)===String(id)) : null;
-  let oldRows=id?allProfiles.filter(x=>String(x.cargo||'').trim()===String((current||{}).cargo||'').trim()):[];
-  let oldIds=new Set(oldRows.map(x=>String(x.id)));
-  let duplicate=allProfiles.find(x=>!oldIds.has(String(x.id)) && normalizeDuplicateText(x.cargo)===normalizeDuplicateText(cargo) && doa.includes(String(x.doa||'').trim()));
-  if(duplicate){
-    showMasterDuplicateAlert('profiles','Este Perfil ya está ingresado','El Cargo y el DOA seleccionados ya se encuentran registrados. Para modificar ese dato, vaya a la sesión Actualizar.');
-    return;
+  if(!selectedDoa.length)return alert('Seleccione al menos un DOA.');
+
+  // Evita duplicados incluso si cambian mayúsculas, tildes o espacios.
+  const cargoKey=normalizeDuplicateText(cargo);
+  const doaKey=d=>normalizeDuplicateText(d);
+  const selectedKeys=selectedDoa.map(doaKey);
+  if(new Set(selectedKeys).size!==selectedKeys.length){
+    return alert('No puede repetir el mismo DOA dentro del mismo Cargo. Revise los campos seleccionados; se consideran iguales aunque cambien las mayúsculas, tildes o espacios.');
   }
-  let otherRows=allProfiles.filter(x=>!oldRows.some(o=>String(o.id)===String(x.id))&&String(x.cargo||'').trim()===cargo);
-  for(const r of oldRows){await del('perfiles',r.id)}
-  for(const r of otherRows){if(doa.includes(String(r.doa||'').trim()))doa=doa.filter(d=>d!==String(r.doa||'').trim())}
-  for(const d of doa){await put('perfiles',{id:uid(),cargo,doa:d})}
-  closeModal();await refresh()
+
+  let saveButton=null;
+  try{
+    // Forzar lectura actualizada para no validar contra datos antiguos en caché.
+    const allProfiles=await all('perfiles',{force:true});
+    const current=id?allProfiles.find(x=>String(x.id)===String(id)):null;
+    if(id&&!current){
+      return alert('No se encontró el perfil que intenta actualizar. Cierre la ventana, actualice la plataforma e inténtelo de nuevo.');
+    }
+
+    // Un perfil está compuesto por varias filas, una por cada DOA del Cargo.
+    const oldRows=current
+      ?allProfiles.filter(x=>normalizeDuplicateText(x.cargo)===normalizeDuplicateText(current.cargo))
+      :[];
+    const oldIds=new Set(oldRows.map(x=>String(x.id)));
+    const otherRows=allProfiles.filter(x=>
+      !oldIds.has(String(x.id)) &&
+      normalizeDuplicateText(x.cargo)===cargoKey
+    );
+
+    const duplicate=otherRows.find(x=>selectedKeys.includes(doaKey(x.doa)));
+    if(duplicate){
+      showMasterDuplicateAlert(
+        'profiles',
+        'Este DOA ya está asignado al Cargo',
+        `El Cargo «${cargo}» ya tiene registrado el DOA «${duplicate.doa}». No se guardaron cambios para evitar duplicarlo. Abra el perfil existente para actualizar sus DOA.`
+      );
+      return;
+    }
+
+    // Reutiliza las filas existentes que coincidan y solo crea las que falten.
+    // Las filas sobrantes se eliminan al final, no antes de guardar.
+    const retainedIds=new Set();
+    if(current && normalizeDuplicateText(current.cargo)===cargoKey){
+      const remaining=[...oldRows];
+      for(const d of selectedDoa){
+        const matchIndex=remaining.findIndex(r=>doaKey(r.doa)===doaKey(d));
+        if(matchIndex>=0){
+          const row=remaining.splice(matchIndex,1)[0];
+          await put('perfiles',{id:row.id,cargo,doa:d});
+          retainedIds.add(String(row.id));
+        }else{
+          const created={id:uid(),cargo,doa:d};
+          await put('perfiles',created);
+          if(created.id!==undefined)retainedIds.add(String(created.id));
+        }
+      }
+      for(const r of oldRows){
+        if(!retainedIds.has(String(r.id)))await del('perfiles',r.id);
+      }
+    }else{
+      // Si el Cargo cambió, primero guarda el nuevo perfil y después elimina el anterior.
+      for(const d of selectedDoa){
+        await put('perfiles',{id:uid(),cargo,doa:d});
+      }
+      for(const r of oldRows)await del('perfiles',r.id);
+    }
+
+    invalidateDataCache('perfiles','excepciones_doa','cumplimientos');
+    closeModal();
+    await refresh();
+  }catch(e){
+    console.error('Error al guardar perfil:',e);
+    invalidateDataCache('perfiles','excepciones_doa','cumplimientos');
+    alert('No se pudo completar el guardado del perfil. Por seguridad, actualice la plataforma y revise el perfil antes de volver a intentarlo. Detalle: '+(e?.message||e));
+  }
 }
 function standardCourseRow(c={},index=0){return `<div class="course-config-row" data-course-id="${esc(c.id||'')}" style="border:1px solid #d9e2ec;border-radius:12px;padding:14px;margin-top:12px;background:#f8fafc"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><b>Curso / Entrenamiento ${index+1}</b>${index>0?`<button type="button" class="btn btn-light" onclick="removeStandardCourse(this)">Quitar</button>`:''}</div><div class="form-grid"><div class="field"><label>Curso / Entrenamiento *</label><input class="sCurso" value="${esc(c.curso||'')}" placeholder="Nombre del curso o entrenamiento"></div><div class="field"><label>Método de entrega</label><input class="sMetodo" value="${esc(c.metodo||'')}" placeholder="Método de entrega"></div><div class="field"><label>Course ID</label><input class="sCid" value="${esc(c.courseId||'')}" placeholder="Course ID"></div><div class="field"><label>Frecuencia (años)</label><input class="sYears" type="number" min="0" value="${Number(c.frecuenciaAnios||0)}"></div><div class="field"><label>Frecuencia (días)</label><input class="sDays" type="number" min="0" value="${Number(c.frecuenciaDias||0)}"></div></div></div>`}
 const STANDARD_CLASSIFICATION_OPTIONS=['Estándar legal','Estándar de Seguridad Corteva EHSS','Estándar de Seguridad - Otros','Estándar de Procedimientos'];
